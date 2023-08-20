@@ -1,0 +1,22 @@
+[debug] [2023-08-20T09:59:16.427Z] ----------------------------------------------------------------------
+[debug] [2023-08-20T09:59:16.452Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\97mjh\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-08-20T09:59:16.458Z] CLI Version:   12.4.7
+[debug] [2023-08-20T09:59:16.459Z] Platform:      win32
+[debug] [2023-08-20T09:59:16.461Z] Node Version:  v18.14.2
+[debug] [2023-08-20T09:59:16.509Z] Time:          Sun Aug 20 2023 18:59:16 GMT+0900 (Korean Standard Time)
+[debug] [2023-08-20T09:59:16.522Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-08-20T09:59:17.627Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-08-20T09:59:17.642Z] > authorizing via signed-in user (97mjh1012@gmail.com)
+[debug] [2023-08-20T09:59:17.643Z] [iam] checking project blind-route for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-08-20T09:59:17.677Z] > refreshing access token with scopes: []
+[debug] [2023-08-20T09:59:17.709Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-08-20T09:59:17.710Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-08-20T09:59:18.609Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-08-20T09:59:18.610Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-08-20T09:59:18.640Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/blind-route:testIamPermissions [none]
+[debug] [2023-08-20T09:59:18.640Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/blind-route:testIamPermissions x-goog-quota-user=projects/blind-route
+[debug] [2023-08-20T09:59:18.641Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/blind-route:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-08-20T09:59:19.704Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/blind-route:testIamPermissions 200
+[debug] [2023-08-20T09:59:19.704Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/blind-route:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-08-20T09:59:19.712Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/blind-route [none]
