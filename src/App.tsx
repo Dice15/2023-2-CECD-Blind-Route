@@ -1,11 +1,10 @@
-import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
 
   const handleLoginWithKeycloak = () => {
-    window.location.href = "http://localhost:8081/oauth2/authorization/keycloak";
+    window.location.href = "http://localhost:8081/oauth2/authorization/google";
   };
 
   return (
