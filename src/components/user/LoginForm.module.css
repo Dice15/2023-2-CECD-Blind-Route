@@ -1,0 +1,25 @@
+.login_form {
+    width: 100%;
+}
+
+.login_form__button_field {
+    padding-left: 90%;
+}
+
+.login_form__button {
+    cursor: pointer;
+    color: var(--basic-white);
+    background-color: var(--active-color);
+    font-size: 13px;
+    font-weight: 600;
+    border: 3px solid #cbd8e4;
+    border-radius: 6px;
+    margin-top: 5px;
+    margin-left: 5px;
+    padding: 5px 5px;
+    width: 80px;
+}
+
+.login_form__button:hover {
+    background-color: var(--active-hover-color);
+}
