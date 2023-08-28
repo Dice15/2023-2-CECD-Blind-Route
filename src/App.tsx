@@ -3,13 +3,15 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './components/home/Home';
 
 function App() {
+
+  //blind-route 
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </BrowserRouter>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </BrowserRouter>
     </div>
   );
 }
