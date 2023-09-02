@@ -15,8 +15,12 @@ export default function LoginForm() {
         try {
             const response = await axios.post("https://blindroute-springboot.koyeb.app/search/station", {
                 searchKeyword: '서울'
+            }, {
+                withCredentials: true
             });
 
+
+            //const response = await axios.post("/search/station", { searchKeyword: '서울' });
             console.log(response.data);
 
         } catch (error) {
