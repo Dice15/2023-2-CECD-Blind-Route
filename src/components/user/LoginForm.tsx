@@ -4,14 +4,15 @@ import axios from "axios";
 import qs from 'qs';
 
 //"https://blindroute-springboot.koyeb.app
+// "http://localhost:8081"
 
 export default function LoginForm() {
     const onLogin = () => {
-        window.location.href = "http://localhost:8081/oauth2/authorization/google";
+        window.location.href = "https://blindroute-springboot.koyeb.app/oauth2/authorization/google";
     };
 
     const onLogout = () => {
-        window.location.href = "http://localhost:8081/logout";
+        window.location.href = "https://blindroute-springboot.koyeb.app/logout";
     };
 
     /*const onTest = async () => {
@@ -42,7 +43,7 @@ export default function LoginForm() {
         try {
             const data = qs.stringify({ searchKeyword: '서울' });
             const response = await axios.post(
-                "http://localhost:8081/search/station",
+                "https://blindroute-springboot.koyeb.app/search/station",
                 data,
                 {
                     headers: {
