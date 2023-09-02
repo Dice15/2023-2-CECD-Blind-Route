@@ -12,8 +12,10 @@ export default function LoginForm() {
     };
 
     const onTest = async () => {
+        // "proxy": "https://blindroute-springboot.koyeb.app"
+
         try {
-            const response = await axios.post("/search/station", {
+            const response = await axios.post("https://blindroute-springboot.koyeb.app/search/station", {
                 searchKeyword: '서울'
             }, {
                 withCredentials: true
