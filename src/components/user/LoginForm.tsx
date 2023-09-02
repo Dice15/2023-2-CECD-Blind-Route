@@ -13,12 +13,11 @@ export default function LoginForm() {
 
     const onTest = async () => {
         try {
-            const response = await axios.post("https://blindroute.web.app/search/station", {
+            const response = await axios.post("https://blindroute-springboot.koyeb.app/search/station", {
                 searchKeyword: '서울'
             });
 
             console.log(response.data);
-            // 요청이 성공적으로 완료된 후의 로직을 추가하시면 됩니다.
 
         } catch (error) {
             console.error("Search request failed:", error);
