@@ -1,6 +1,7 @@
 import styles from "./LoginForm.module.css"
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import qs from 'qs';
 
 export default function LoginForm() {
     const onLogin = () => {
@@ -11,9 +12,7 @@ export default function LoginForm() {
         window.location.href = "https://blindroute-springboot.koyeb.app/logout";
     };
 
-    const onTest = async () => {
-        // "proxy": "https://blindroute-springboot.koyeb.app"
-
+    /*const onTest = async () => {
         try {
             const response = await fetch("https://blindroute-springboot.koyeb.app/search/station", {
                 method: 'POST',
@@ -21,7 +20,7 @@ export default function LoginForm() {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: `searchKeyword=서울`,
-                credentials: 'include' // withCredentials in axios corresponds to credentials: 'include' in fetch
+                credentials: 'include'
             });
 
             if (!response.ok) {
@@ -35,6 +34,27 @@ export default function LoginForm() {
             console.error("Search request failed:", error);
         }
 
+    };*/
+
+    const onTest = async () => {
+        try {
+            const data = qs.stringify({ searchKeyword: '서울' });
+            const response = await axios.post(
+                "https://blindroute-springboot.koyeb.app/search/station",
+                data,
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    withCredentials: true
+                }
+            );
+
+            console.log(response.data);
+
+        } catch (error) {
+            console.error("Search request failed:", error);
+        }
     };
 
     return (
