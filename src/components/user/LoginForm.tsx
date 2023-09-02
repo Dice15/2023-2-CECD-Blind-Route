@@ -15,18 +15,28 @@ export default function LoginForm() {
         // "proxy": "https://blindroute-springboot.koyeb.app"
 
         try {
-            const response = await axios.post("https://blindroute-springboot.koyeb.app/search/station", {
-                searchKeyword: '서울'
-            }, {
-                withCredentials: true
+            const response = await fetch("https://blindroute-springboot.koyeb.app/search/station", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: JSON.stringify({
+                    searchKeyword: '서울'
+                }),
+                credentials: 'include' // withCredentials in axios corresponds to credentials: 'include' in fetch
             });
 
-            //const response = await axios.post("/search/station", { searchKeyword: '서울' });
-            console.log(response.data);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
 
         } catch (error) {
             console.error("Search request failed:", error);
         }
+
     };
 
     return (
