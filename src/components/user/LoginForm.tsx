@@ -20,9 +20,7 @@ export default function LoginForm() {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: JSON.stringify({
-                    searchKeyword: '서울'
-                }),
+                body: `searchKeyword=서울`,
                 credentials: 'include' // withCredentials in axios corresponds to credentials: 'include' in fetch
             });
 
