@@ -13,16 +13,15 @@ export default function LoginForm() {
 
     const onTest = async () => {
         try {
-            const response = await axios.post("https://blindroute-springboot.koyeb.app/logout");
-            console.log(response.data);
+            const response = await axios.post("https://blindroute.web.app/search/station", {
+                searchKeyword: '서울'
+            });
 
-            // 요청이 성공적으로 완료된 후의 로직 (예: 페이지 리다이렉트 등)
-            if (response.status === 200) {
-                // 로그아웃 후 리다이렉트하려면 다음 코드 사용
-                window.location.href = "/";  // 원하는 경로로 수정하세요.
-            }
+            console.log(response.data);
+            // 요청이 성공적으로 완료된 후의 로직을 추가하시면 됩니다.
+
         } catch (error) {
-            console.error("Logout failed:", error);
+            console.error("Search request failed:", error);
         }
     };
 
