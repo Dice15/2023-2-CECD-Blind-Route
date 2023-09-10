@@ -82,7 +82,6 @@ export default function HomeMiddle() {
 
 
 
-
     return (
         <div className={style.stationList}>
             <div className={style.stationList__loading}>
@@ -112,7 +111,6 @@ export default function HomeMiddle() {
                                 selectStation(e);
                             }}>
                                 <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
-                                <div className={itemClassName} style={itemStyles[1]}>{stationInfo.stationId}</div>
                                 <div className={itemClassName} style={itemStyles[2]}>{stationInfo.stationName}</div>
                             </div>
                         );
