@@ -28,7 +28,6 @@ export async function getStationList(params: { searchKeyword: string }) {
     catch (error) {
         console.error("Search request failed:", error);
     }
-    console.log(data);
     return data;
 }
 
@@ -51,7 +50,6 @@ export async function getRoute(params: { stId: string }) {
     catch (error) {
         console.error("Search request failed:", error);
     }
-    console.log(data);
     return data;
 }
 
