@@ -1,6 +1,6 @@
 .home {
     height: calc(100vh - 20px);
-    width: calc(100vw - 30px);
+    width: calc(100vw - px);
     display: flex;
     flex-direction: column;
     flex-grow: 1;

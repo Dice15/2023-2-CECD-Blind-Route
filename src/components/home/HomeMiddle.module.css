@@ -6,33 +6,33 @@
 }
 
 .stationList__loading {
-    height: 50px;
+    height: 40px;
     width: 100%;
     position: relative;
 }
 
 .stationList__loading_text {
     width: 70%;
-    height: 33px;
+    height: 24px;
     border-radius: 6px;
     background-color: var(--basic-white);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 400;
-    border: 3px solid #cbd8e4;
+    border: 2px solid #cbd8e4;
     position: relative;
     left: 2%;
 }
 
 .stationList__loading_button {
     width: 20%;
-    height: 40px;
+    height: 30px;
     cursor: pointer;
     color: var(--basic-white);
     background-color: var(--active-color);
     border-radius: 6px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 400;
-    border: 3px solid #cbd8e4;
+    border: 2px solid #cbd8e4;
     position: relative;
     left: 5%;
 }

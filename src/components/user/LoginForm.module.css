@@ -27,10 +27,10 @@
     background-color: var(--active-color);
     font-size: 8px;
     font-weight: 400;
-    border: 3px solid #cbd8e4;
+    border: 2px solid #cbd8e4;
     border-radius: 6px;
-    padding: 5px;
-    width: 55px;
+    padding: 3px;
+    width: 54px;
 }
 
 .login_form__button:hover {

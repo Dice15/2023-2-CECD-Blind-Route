@@ -20,8 +20,8 @@ export default function HomeMiddle() {
 
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [
-        { name: "\u00A0", style: { width: "40px", minWidth: "40px", maxWidth: "40px" } },
-        { name: "정류장 이름", style: { width: "calc(100% - 40px)" } },
+        { name: "", style: { width: "50px", minWidth: "50px", maxWidth: "50px" } },
+        { name: "", style: { width: "calc(100% - 50px)" } },
     ];
 
     /** 브라우저의 확대/축소에 따른 가상테이블 높이 재설정 */
@@ -65,7 +65,6 @@ export default function HomeMiddle() {
     const loadStation = async () => {
         if (setStationList && stationName.current) {
             const apiData: IStationApi = await getStationList({ searchKeyword: stationName.current.value });
-            console.log(apiData);
             const stationInstances: Station[] = apiData.busStations.map((station) => {
                 return new Station(
                     station.arsId,
@@ -74,6 +73,9 @@ export default function HomeMiddle() {
                 );
             });
             setStationList(stationInstances);
+            if (stationInstances.length === 0) {
+                alert("검색된 정류장이 없음");
+            }
         }
     };
 
@@ -84,7 +86,7 @@ export default function HomeMiddle() {
 
         if (selectedStation) {
             const result = await getRoute({ stId: selectedStation.stationId });
-            alert(result ? `서버에 ${selectedStation.stationName}의 stationId 전송 성공` : `서버에 ${selectedStation.stationName}의 stationId 전송 실패`);
+            alert(result ? `서버에 '${selectedStation.stationName}'의 stationId 전송 성공` : `서버에 '${selectedStation.stationName}'의 stationId 전송 실패`);
         }
     }, [stationList]);
 
@@ -101,7 +103,7 @@ export default function HomeMiddle() {
                     windowHeight={stationListHeight}
 
                     numColumns={tableColumns.length}
-                    columnHeight={30}
+                    columnHeight={0}
                     columnWidths={tableColumns.map((column) => column.style)}
                     renderColumns={({ index, columnClassName, columnStyle }) => {
                         return (
