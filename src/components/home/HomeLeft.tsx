@@ -83,10 +83,13 @@ export default function HomeLeft() {
 
     /** 정류장 선택 */
     const selectStation = useCallback(async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        const selectedIndex = parseInt(e.currentTarget.parentElement?.parentElement?.id || "-1");
+        const selectedIndex = parseInt(e.currentTarget.parentElement?.id || "-1");
         const selectedStation = stationList[selectedIndex];
-        const result = await getRoute({ stId: selectedStation.stationId });
-        console.log(selectedStation, result);
+        console.log(selectedStation);
+        if (selectedStation) {
+            const result = await getRoute({ stId: selectedStation.stationId });
+            console.log(result);
+        }
     }, [stationList]);
 
 
