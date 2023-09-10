@@ -19,8 +19,8 @@ export default function HomeMiddle() {
 
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [
-        { name: "\u00A0", style: { width: "30px", minWidth: "30px", maxWidth: "30px" } },
-        { name: "정류장 이름", style: { width: "calc(100% - 30px)" } },
+        { name: "\u00A0", style: { width: "40px", minWidth: "40px", maxWidth: "40px" } },
+        { name: "정류장 이름", style: { width: "calc(100% - 40px)" } },
     ];
 
     /** 브라우저의 확대/축소에 따른 가상테이블 높이 재설정 */
@@ -111,7 +111,7 @@ export default function HomeMiddle() {
                                 selectStation(e);
                             }}>
                                 <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
-                                <div className={itemClassName} style={itemStyles[2]}>{stationInfo.stationName}</div>
+                                <div className={itemClassName} style={itemStyles[1]}>{stationInfo.stationName}</div>
                             </div>
                         );
                     }}
