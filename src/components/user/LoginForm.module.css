@@ -2,6 +2,21 @@
     width: 100%;
 }
 
+.login_form__alert {
+    white-space: nowrap;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    background-color: var(--header-bg-color);
+    border-radius: 8px;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 .login_form__button_field {
     padding-left: 90%;
 }

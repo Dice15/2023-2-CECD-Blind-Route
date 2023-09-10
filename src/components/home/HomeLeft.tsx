@@ -1,6 +1,6 @@
 import style from "./HomeLeft.module.css"
-import { useContext, useEffect, useRef, useState } from "react";
-import { SetStationListContext, StationListContext } from "./Home";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { SelectedStationContext, SetSelectedStationContext, SetStationListContext, StationListContext } from "./Home";
 import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
 import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
 import { IStationApi, getStationList } from "../../cores/api/Blindroute";
@@ -11,7 +11,8 @@ export default function HomeLeft() {
     const stationTable = useRef<HTMLDivElement>(null);
 
     /** context */
-    const [stationListContext, setStationListContext] = [useContext(StationListContext), useContext(SetStationListContext)];
+    const [stationList, setStationList] = [useContext(StationListContext), useContext(SetStationListContext)];
+    const [selectedStation, setSelectedStation] = [useContext(SelectedStationContext), useContext(SetSelectedStationContext)];
 
     /** state */
     const [stationListHeight, setStationListHeight] = useState<number>(0);
@@ -66,7 +67,7 @@ export default function HomeLeft() {
 
     /** 정류장 불러오기 */
     const loadStation = async () => {
-        if (setStationListContext) {
+        if (setStationList) {
             const apiData: IStationApi = await getStationList({ searchKeyword: '서울' });
             console.log(apiData);
             const stationInstances: Station[] = apiData.busStations.map((station) => {
@@ -76,9 +77,19 @@ export default function HomeLeft() {
                     station.stNm
                 );
             });
-            setStationListContext(stationInstances);
+            setStationList(stationInstances);
         }
     };
+
+    /** 정류장 선택 */
+    const selectStation = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        const selectedIndex = parseInt(e.currentTarget.parentElement?.parentElement?.id || "-1");
+        const selectedStation = stationList[selectedIndex];
+        if (setSelectedStation) {
+            setSelectedStation(selectedStation);
+            console.log(selectedStation);
+        }
+    }, [stationList]);
 
 
 
@@ -102,12 +113,14 @@ export default function HomeLeft() {
                         );
                     }}
 
-                    numRows={stationListContext.length}
+                    numRows={stationList.length}
                     rowHeight={30}
                     renderRows={({ index, rowClassName, rowStyle, itemClassName, itemStyles }) => {
-                        const stationInfo = stationListContext[index].print();
+                        const stationInfo = stationList[index].print();
                         return (
-                            <div key={index} id={`${index}`} className={rowClassName} style={rowStyle}>
+                            <div key={index} id={`${index}`} className={rowClassName} style={rowStyle} onClick={(e) => {
+                                selectStation(e);
+                            }}>
                                 <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
                                 <div className={itemClassName} style={itemStyles[1]}>{stationInfo.stationId}</div>
                                 <div className={itemClassName} style={itemStyles[2]}>{stationInfo.stationName}</div>
