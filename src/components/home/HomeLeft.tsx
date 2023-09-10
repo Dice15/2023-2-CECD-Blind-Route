@@ -18,8 +18,9 @@ export default function HomeLeft() {
 
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [
-        { name: "번호", style: { minWidth: "100px" } },
-        { name: "정류장", style: { minWidth: "30px" } },
+        { name: "\u00A0", style: { minWidth: "30px" } },
+        { name: "정류장 ID", style: { minWidth: "120px" } },
+        { name: "정류장 이름", style: { minWidth: "360px" } },
     ];
 
     const totalMinWidth = tableColumns.reduce((acc, column) => {
@@ -66,9 +67,9 @@ export default function HomeLeft() {
     /** 정류장 불러오기 */
     const loadStation = async () => {
         if (setStationListContext) {
-            const apiData: IStationApi[] = await getStationList({ searchKeyword: '서울' });
+            const apiData: IStationApi = await getStationList({ searchKeyword: '서울' });
             console.log(apiData);
-            const stationInstances: Station[] = apiData.map((station: IStationApi) => {
+            const stationInstances: Station[] = apiData.busStations.map((station) => {
                 return new Station(
                     station.arsId,
                     station.stId,
@@ -107,8 +108,9 @@ export default function HomeLeft() {
                         const stationInfo = stationListContext[index].print();
                         return (
                             <div key={index} id={`${index}`} className={rowClassName} style={rowStyle}>
-                                <div className={itemClassName} style={itemStyles[0]}>{stationInfo.stationId}</div>
-                                <div className={itemClassName} style={itemStyles[1]}>{stationInfo.stationName}</div>
+                                <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
+                                <div className={itemClassName} style={itemStyles[1]}>{stationInfo.stationId}</div>
+                                <div className={itemClassName} style={itemStyles[2]}>{stationInfo.stationName}</div>
                             </div>
                         );
                     }}

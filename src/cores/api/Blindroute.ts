@@ -2,13 +2,15 @@ import axios from "axios";
 import qs from 'qs';
 
 export interface IStationApi {
-    arsId?: string;
-    stId?: string;
-    stNm?: string;
+    busStations: {
+        arsId?: string;
+        stId?: string;
+        stNm?: string;
+    }[];
 }
 
 export async function getStationList(params: { searchKeyword: string }) {
-    let data: IStationApi[] = [];
+    let data: IStationApi = { busStations: [] };
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(

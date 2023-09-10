@@ -1,7 +1,4 @@
 import styles from "./LoginForm.module.css"
-import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-import qs from 'qs';
 
 export default function LoginForm() {
     const onLogin = () => {
@@ -12,26 +9,26 @@ export default function LoginForm() {
         window.location.href = "https://blindroute-springboot.koyeb.app/logout";
     };
 
-    const onLoadStation = async () => {
-        try {
-            const data = qs.stringify({ searchKeyword: '서울' });
-            const response = await axios.post(
-                "https://blindroute-springboot.koyeb.app/search/station",
-                data,
-                {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    withCredentials: true
-                }
-            );
+    // const onLoadStation = async () => {
+    //     try {
+    //         const data = qs.stringify({ searchKeyword: '서울' });
+    //         const response = await axios.post(
+    //             "https://blindroute-springboot.koyeb.app/search/station",
+    //             data,
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "application/x-www-form-urlencoded"
+    //                 },
+    //                 withCredentials: true
+    //             }
+    //         );
 
-            console.log(response.data);
+    //         console.log(response.data);
 
-        } catch (error) {
-            console.error("Search request failed:", error);
-        }
-    };
+    //     } catch (error) {
+    //         console.error("Search request failed:", error);
+    //     }
+    // };
 
     return (
         <form className={styles.login_form} action="">
@@ -39,7 +36,6 @@ export default function LoginForm() {
                 <div className={styles.login_form__button_field}>
                     <button className={styles.login_form__button} type="button" onClick={onLogin}>로그인</button>
                     <button className={styles.login_form__button} type="button" onClick={onLogout}>로그아웃</button>
-                    <button className={styles.login_form__button} type="button" onClick={onLoadStation}>정류장 검색</button>
                 </div>
             </div>
         </form>
@@ -47,47 +43,3 @@ export default function LoginForm() {
 }
 
    //https://blindroute.web.app//search/station?searchKeyword=서울
-
-/*const onLogin = useGoogleLogin({
-    scope: "email profile",
-    onSuccess: async ({ code }) => {
-        axios
-            .post("https://blindroute-springboot.koyeb.app/oauth2/authorization/google", { code })
-            .then(({ data }) => {
-                console.log(data);
-            });
-    },
-    onError: (errorResponse) => {
-        console.error(errorResponse);
-    },
-    flow: "auth-code",
-});*/
-
-/* const onLogin = useGoogleLogin({
-     onSuccess: async (res) => {
-         console.log(res.access_token);
-         await axios({
-             method: "post",
-             url: "https://blindroute-springboot.koyeb.app/oauth2/authorization/google",
-             data: { access_token: res.access_token },
-         }).then((res) => {
-             console.log(res);
-         }).catch((e) => console.log(e));
-     }
- });*/
-
-/* const onLogin = useGoogleLogin({
-     onSuccess: async (res) => {
-         console.log(res.access_token);
-         const accessToken = res.access_token;
- 
-         // URL에 액세스 토큰을 쿼리 파라미터로 추가
-         const fullURL = `https://blindroute-springboot.koyeb.app/oauth2/authorization/google?access_token=${accessToken}`;
- 
-         await axios.get(fullURL)
-             .then((res) => {
-                 console.log(res);
-             })
-             .catch((e) => console.log(e));
-     }
- });*/
