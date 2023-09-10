@@ -1,0 +1,36 @@
+.stationList {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.stationList__loading {
+    height: 50px;
+    width: 100%;
+    position: relative;
+}
+
+.stationList__loading_button {
+    width: 120px;
+    height: 40px;
+    cursor: pointer;
+    color: var(--basic-white);
+    background-color: var(--active-color);
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 400;
+    border: 3px solid #cbd8e4;
+}
+
+.stationList__loading_button:hover {
+    background-color: var(--active-hover-color);
+}
+
+.stationList__display {
+    display: flex;
+    flex-grow: 1;
+    padding: 10px;
+    position: relative;
+    background-color: var(--basic-white);
+}

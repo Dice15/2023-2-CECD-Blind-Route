@@ -3,9 +3,6 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import qs from 'qs';
 
-//"https://blindroute-springboot.koyeb.app
-// "http://localhost:8081"
-
 export default function LoginForm() {
     const onLogin = () => {
         window.location.href = "https://blindroute-springboot.koyeb.app/oauth2/authorization/google";
@@ -15,31 +12,7 @@ export default function LoginForm() {
         window.location.href = "https://blindroute-springboot.koyeb.app/logout";
     };
 
-    /*const onTest = async () => {
-        try {
-            const response = await fetch("https://blindroute-springboot.koyeb.app/search/station", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `searchKeyword=서울`,
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log(data);
-
-        } catch (error) {
-            console.error("Search request failed:", error);
-        }
-
-    };*/
-
-    const onTest = async () => {
+    const onLoadStation = async () => {
         try {
             const data = qs.stringify({ searchKeyword: '서울' });
             const response = await axios.post(
@@ -66,7 +39,7 @@ export default function LoginForm() {
                 <div className={styles.login_form__button_field}>
                     <button className={styles.login_form__button} type="button" onClick={onLogin}>로그인</button>
                     <button className={styles.login_form__button} type="button" onClick={onLogout}>로그아웃</button>
-                    <button className={styles.login_form__button} type="button" onClick={onTest}>테스트</button>
+                    <button className={styles.login_form__button} type="button" onClick={onLoadStation}>정류장 검색</button>
                 </div>
             </div>
         </form>
