@@ -9,6 +9,7 @@ import Station from "../../cores/types/Station";
 export default function HomeMiddle() {
     /** ref */
     const stationTable = useRef<HTMLDivElement>(null);
+    const stationName = useRef<HTMLInputElement>(null);
 
     /** context */
     const [stationList, setStationList] = [useContext(StationListContext), useContext(SetStationListContext)];
@@ -53,10 +54,17 @@ export default function HomeMiddle() {
         };
     }, [stationListHeight]);
 
+    /** 정류장이 비어있다면, 테이블을 보이지 않게 함 */
+    useEffect(() => {
+        if (stationTable.current) {
+            stationTable.current.style.visibility = stationList.length ? "visible" : "hidden";
+        }
+    }, [stationList]);
+
     /** 정류장 불러오기 */
     const loadStation = async () => {
-        if (setStationList) {
-            const apiData: IStationApi = await getStationList({ searchKeyword: '서울' });
+        if (setStationList && stationName.current) {
+            const apiData: IStationApi = await getStationList({ searchKeyword: stationName.current.value });
             console.log(apiData);
             const stationInstances: Station[] = apiData.busStations.map((station) => {
                 return new Station(
@@ -85,9 +93,10 @@ export default function HomeMiddle() {
     return (
         <div className={style.stationList}>
             <div className={style.stationList__loading}>
-                <button className={style.stationList__loading_button} type="button" onClick={loadStation}>정류장 검색</button>
+                <input className={style.stationList__loading_text} type="text" placeholder="정류장 검색" ref={stationName} />
+                <button className={style.stationList__loading_button} type="button" onClick={loadStation}>검색</button>
             </div>
-            <div className={style.stationList__display} ref={stationTable}>
+            <div className={style.stationList__display} ref={stationTable} style={{ visibility: "hidden" }}>
                 <VirtualizedTable
                     windowHeight={stationListHeight}
 

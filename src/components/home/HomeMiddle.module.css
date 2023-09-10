@@ -11,8 +11,20 @@
     position: relative;
 }
 
+.stationList__loading_text {
+    width: 70%;
+    height: 33px;
+    border-radius: 6px;
+    background-color: var(--basic-white);
+    font-size: 15px;
+    font-weight: 400;
+    border: 3px solid #cbd8e4;
+    position: relative;
+    left: 2%;
+}
+
 .stationList__loading_button {
-    width: 100%;
+    width: 20%;
     height: 40px;
     cursor: pointer;
     color: var(--basic-white);
@@ -21,6 +33,8 @@
     font-size: 15px;
     font-weight: 400;
     border: 3px solid #cbd8e4;
+    position: relative;
+    left: 5%;
 }
 
 .stationList__loading_button:hover {
