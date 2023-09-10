@@ -35,6 +35,7 @@ export default function HomeLeft() {
 
     /** 브라우저의 확대/축소에 따른 가상테이블 높이 재설정 */
     useEffect(() => {
+        const currentTable = stationTable.current;
         let frameId: number | null = null;
 
         const observerCallback = () => {
@@ -48,13 +49,13 @@ export default function HomeLeft() {
 
         const observer = new ResizeObserver(observerCallback);
 
-        if (stationTable.current) {
-            observer.observe(stationTable.current);
+        if (currentTable) {
+            observer.observe(currentTable);
         }
 
         return () => {
-            if (stationTable.current) {
-                observer.unobserve(stationTable.current);
+            if (currentTable) {
+                observer.unobserve(currentTable);
             }
             if (frameId) {
                 cancelAnimationFrame(frameId);
