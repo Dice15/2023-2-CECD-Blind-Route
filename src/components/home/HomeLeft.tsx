@@ -67,6 +67,7 @@ export default function HomeLeft() {
     const loadStation = async () => {
         if (setStationListContext) {
             const apiData: IStationApi[] = await getStationList({ searchKeyword: '서울' });
+            console.log(apiData);
             const stationInstances: Station[] = apiData.map((station: IStationApi) => {
                 return new Station(
                     station.arsId,

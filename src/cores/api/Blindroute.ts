@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import qs from 'qs';
 
 export interface IStationApi {
@@ -8,7 +8,7 @@ export interface IStationApi {
 }
 
 export async function getStationList(params: { searchKeyword: string }) {
-    let data: IStationApi[];
+    let data: IStationApi[] = [];
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
@@ -25,7 +25,7 @@ export async function getStationList(params: { searchKeyword: string }) {
     }
     catch (error) {
         console.error("Search request failed:", error);
-        data = [];
     }
+    console.log(data);
     return data;
 }
