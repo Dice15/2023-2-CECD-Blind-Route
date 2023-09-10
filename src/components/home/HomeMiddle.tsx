@@ -19,21 +19,9 @@ export default function HomeMiddle() {
 
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [
-        { name: "\u00A0", style: { minWidth: "30px" } },
-        { name: "정류장 ID", style: { minWidth: "120px" } },
-        { name: "정류장 이름", style: { minWidth: "360px" } },
+        { name: "\u00A0", style: { width: "30px", minWidth: "30px", maxWidth: "30px" } },
+        { name: "정류장 이름", style: { width: "calc(100% - 30px)" } },
     ];
-
-    const totalMinWidth = tableColumns.reduce((acc, column) => {
-        return acc + (column.style.minWidth ? parseInt(column.style.minWidth.toString(), 10) : 0);
-    }, 0);
-
-    tableColumns.forEach(column => {
-        if (column.style.minWidth) {
-            const widthPercentage = (parseInt(column.style.minWidth.toString(), 10) / totalMinWidth) * 100;
-            column.style.width = `${widthPercentage}%`;
-        }
-    });
 
     /** 브라우저의 확대/축소에 따른 가상테이블 높이 재설정 */
     useEffect(() => {
@@ -88,7 +76,7 @@ export default function HomeMiddle() {
 
         if (selectedStation) {
             const result = await getRoute({ stId: selectedStation.stationId });
-            alert(result ? `서버에 ${selectedStation}의 stationId 전송 성공` : `서버에 ${selectedStation}의 stationId 전송 실패`);
+            alert(result ? `서버에 ${selectedStation.stationName}의 stationId 전송 성공` : `서버에 ${selectedStation.stationName}의 stationId 전송 실패`);
         }
     }, [stationList]);
 

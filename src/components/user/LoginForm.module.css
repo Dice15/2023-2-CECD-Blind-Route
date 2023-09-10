@@ -18,21 +18,19 @@
 }
 
 .login_form__button_field {
-    padding-left: calc(100% - 180px);
+    padding-left: calc(100% - 120px);
 }
 
 .login_form__button {
     cursor: pointer;
     color: var(--basic-white);
     background-color: var(--active-color);
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 8px;
+    font-weight: 400;
     border: 3px solid #cbd8e4;
     border-radius: 6px;
-    margin-top: 5px;
-    margin-left: 5px;
-    padding: 5px 5px;
-    width: 80px;
+    padding: 5px;
+    width: 55px;
 }
 
 .login_form__button:hover {
