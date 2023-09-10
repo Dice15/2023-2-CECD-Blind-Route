@@ -18,7 +18,7 @@
 }
 
 .login_form__button_field {
-    padding-left: 90%;
+    padding-left: calc(100% - 180px);
 }
 
 .login_form__button {

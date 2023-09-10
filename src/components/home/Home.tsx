@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Home.module.css"
-import HomeLeft from "./HomeLeft";
+import HomeMiddle from "./HomeMiddle";
 import HomeTop from "./HomeTop";
 import Station from "../../cores/types/Station";
 
@@ -25,8 +25,7 @@ export default function Home() {
                                 <HomeTop />
                             </div>
                             <div className={styles.home__middle}>
-                                <div className={styles.home__left}><HomeLeft /></div>
-                                <div className={styles.home__right}></div>
+                                <HomeMiddle />
                             </div>
                         </SetSelectedStationContext.Provider>
                     </SelectedStationContext.Provider>

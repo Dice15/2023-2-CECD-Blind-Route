@@ -1,4 +1,4 @@
-import style from "./HomeLeft.module.css"
+import style from "./HomeMiddle.module.css"
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { SelectedStationContext, SetSelectedStationContext, SetStationListContext, StationListContext } from "./Home";
 import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
@@ -6,7 +6,7 @@ import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
 import { IStationApi, getRoute, getStationList } from "../../cores/api/Blindroute";
 import Station from "../../cores/types/Station";
 
-export default function HomeLeft() {
+export default function HomeMiddle() {
     /** ref */
     const stationTable = useRef<HTMLDivElement>(null);
 
@@ -88,7 +88,7 @@ export default function HomeLeft() {
 
         if (selectedStation) {
             const result = await getRoute({ stId: selectedStation.stationId });
-            console.log(result);
+            alert(result ? `서버에 ${selectedStation}의 stationId 전송 성공` : `서버에 ${selectedStation}의 stationId 전송 실패`);
         }
     }, [stationList]);
 
