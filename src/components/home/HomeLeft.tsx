@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { SelectedStationContext, SetSelectedStationContext, SetStationListContext, StationListContext } from "./Home";
 import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
 import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
-import { IStationApi, getStationList } from "../../cores/api/Blindroute";
+import { IStationApi, getRoute, getStationList } from "../../cores/api/Blindroute";
 import Station from "../../cores/types/Station";
 
 export default function HomeLeft() {
@@ -12,7 +12,7 @@ export default function HomeLeft() {
 
     /** context */
     const [stationList, setStationList] = [useContext(StationListContext), useContext(SetStationListContext)];
-    const [selectedStation, setSelectedStation] = [useContext(SelectedStationContext), useContext(SetSelectedStationContext)];
+    // const [selectedStation, setSelectedStation] = [useContext(SelectedStationContext), useContext(SetSelectedStationContext)];
 
     /** state */
     const [stationListHeight, setStationListHeight] = useState<number>(0);
@@ -82,14 +82,13 @@ export default function HomeLeft() {
     };
 
     /** 정류장 선택 */
-    const selectStation = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const selectStation = useCallback(async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const selectedIndex = parseInt(e.currentTarget.parentElement?.parentElement?.id || "-1");
         const selectedStation = stationList[selectedIndex];
-        if (setSelectedStation) {
-            setSelectedStation(selectedStation);
-            console.log(selectedStation);
-        }
+        const result = await getRoute({ stId: selectedStation.stationId });
+        console.log(selectedStation, result);
     }, [stationList]);
+
 
 
 
