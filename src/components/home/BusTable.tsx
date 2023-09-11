@@ -58,12 +58,16 @@ export default function BusTable({ busList, onClose }: BusTableProps) {
 
     /** 도착지에 다른 버스 정류장 필터링 */
     const filterBus = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-
-        /*const newBusList = busList.filter((bus) => {
-       
-        });
-
-        setFilteredBusList();*/
+        if (destinationName.current) {
+            if (destinationName.current.value.length > 0) {
+                const newBusList = busList.filter((bus) => {
+                    return bus.busDestination.map((destination) => destination.stationName.includes(destinationName.current!.value));
+                });
+                setFilteredBusList(newBusList);
+            } else {
+                setFilteredBusList(busList);
+            }
+        }
     };
 
 
