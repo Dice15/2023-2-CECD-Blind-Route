@@ -59,9 +59,10 @@ export default function BusTable({ busList, onClose }: BusTableProps) {
     /** 도착지에 다른 버스 정류장 필터링 */
     const filterBus = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (destinationName.current) {
+            console.log(destinationName.current.value);
             if (destinationName.current.value.length > 0) {
                 const newBusList = busList.filter((bus) => {
-                    return bus.busDestination.map((destination) => destination.stationName.includes(destinationName.current!.value));
+                    return bus.busDestination.filter((destination) => destination.stationName.includes(destinationName.current!.value));
                 });
                 setFilteredBusList(newBusList);
             } else {
@@ -75,7 +76,7 @@ export default function BusTable({ busList, onClose }: BusTableProps) {
         <div className={style.BusTable}>
             <div className={style.busList}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <button className={style.busList__filter_closeButton} type="button" onClick={onClose}>X</button>
+                    <button className={style.busList__filter_closeButton} type="button" onClick={onClose}>닫기</button>
                 </div>
 
                 <div className={style.busList__filter}>
