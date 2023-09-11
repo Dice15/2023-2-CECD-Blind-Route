@@ -76,6 +76,7 @@ export async function getBusList(params: { arsId: string }) {
     catch (error) {
         console.error("Search request failed:", error);
     }
+    console.log(data);
     return data;
 }
 
