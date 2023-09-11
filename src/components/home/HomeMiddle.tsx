@@ -3,8 +3,9 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { SelectedStationContext, SetSelectedStationContext, SetStationListContext, StationListContext } from "./Home";
 import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
 import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
-import { IStationApi, getRoute, getStationList } from "../../cores/api/Blindroute";
+import { IBusApi, IStationApi, getBusList, getStationList } from "../../cores/api/Blindroute";
 import Station from "../../cores/types/Station";
+import Bus from "../../cores/types/Bus";
 
 export default function HomeMiddle() {
     /** ref */
@@ -17,6 +18,7 @@ export default function HomeMiddle() {
 
     /** state */
     const [stationListHeight, setStationListHeight] = useState<number>(0);
+    const [busList, setBusList] = useState<Bus[]>([]);
 
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [
@@ -72,7 +74,9 @@ export default function HomeMiddle() {
                     station.stNm
                 );
             });
+
             setStationList(stationInstances);
+
             if (stationInstances.length === 0) {
                 alert("검색된 정류장이 없음");
             }
@@ -85,8 +89,16 @@ export default function HomeMiddle() {
         const selectedStation = stationList[selectedIndex];
 
         if (selectedStation) {
-            const result = await getRoute({ stId: selectedStation.stationId });
-            alert(result ? `서버에 '${selectedStation.stationName}'의 stationId 전송 성공` : `서버에 '${selectedStation.stationName}'의 stationId 전송 실패`);
+            const apiData: IBusApi = await getBusList({ arsId: selectedStation.arsId });
+            const busInstances: Bus[] = apiData.busList.map((bus) => {
+                return new Bus(
+                    bus.busRouteNm,
+                    bus.busRouteAbrv,
+                );
+            });
+
+            console.log(busInstances);
+            setBusList(busInstances);
         }
     }, [stationList]);
 
