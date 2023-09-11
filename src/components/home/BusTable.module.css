@@ -50,6 +50,34 @@
     background-color: var(--active-hover-color);
 }
 
+.busList__filter_closeButton {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    color: var(--basic-white);
+    background-color: var(--active-color);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 400;
+    border: 2px solid #cbd8e4;
+    position: relative;
+    left: 5%;
+}
+
+.busList__filter_closeButton:hover {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    color: var(--basic-white);
+    background-color: var(--active-color);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 400;
+    border: 2px solid #cbd8e4;
+    position: relative;
+    left: 5%;
+}
+
 .busList__display {
     display: flex;
     flex-grow: 1;

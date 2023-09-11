@@ -90,16 +90,17 @@ export async function getBusList(params: { arsId: string }) {
  */
 
 /** API로 부터 받은 버스 데이터 인터페이스*/
-export interface IRouteApi {
-    busList: {
-        busRouteNm?: string;
-        busRouteAbrv?: string;
+export interface IDestinationApi {
+    destinations: {
+        stationNm: string;
+        direction: string;
     }[];
 }
 
+
 /** API로 부터 받은 버스 데이터를 Bus타입의 리스트 형태로 반환 */
 export async function getBusDestinationList(params: { busRouteId: string }) {
-    // let data: string = "undefined";
+    let data: IDestinationApi = { destinations: [] };
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
@@ -112,11 +113,11 @@ export async function getBusDestinationList(params: { busRouteId: string }) {
                 withCredentials: true
             }
         );
-        // data = response.data;
-        console.log(response.data);
+
+        data = response.data;
     }
     catch (error) {
         console.error("Search request failed:", error);
     }
-    //  return data;
+    return data;
 }

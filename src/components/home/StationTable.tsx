@@ -3,12 +3,13 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BusListContext, SetBusListContext, SetStationListContext, StationListContext } from "./Home";
 import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
 import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
-import { IBusApi, IStationApi, getBusDestinationList, getBusList, getStationList } from "../../cores/api/Blindroute";
+import { IBusApi, IDestinationApi, IStationApi, getBusDestinationList, getBusList, getStationList } from "../../cores/api/Blindroute";
 import Station from "../../cores/types/Station";
 import Bus from "../../cores/types/Bus";
 import { useModal } from "../modal/Modal";
 import { ModalAnimationType } from "../modal/ModalAnimations";
 import BusTable from "./BusTable";
+import IDestination from "../../cores/types/IDestination";
 
 
 /** 정류장 리스트 테이블 */
@@ -100,22 +101,25 @@ export default function StationTable() {
 
         if (setBusList && selectedStation) {
             const busApiData: IBusApi = await getBusList({ arsId: selectedStation.arsId });
-            const busInstances: Bus[] = await Promise.all(busApiData.busList.map(async (bus) => {
-
-                if (bus.busRouteId) {
-                    await getBusDestinationList({ busRouteId: bus.busRouteId });
-                }
+            const busInstances: Bus[] = await Promise.all(busApiData.busList.filter((bus) => bus.busRouteId !== undefined).map(async (bus) => {
+                const destinationApiData: IDestinationApi = await getBusDestinationList({ busRouteId: bus.busRouteId! });
+                const destinationInstances: IDestination[] = destinationApiData.destinations.map((destination) => {
+                    return {
+                        stationName: destination.stationNm,
+                        direction: destination.direction
+                    };
+                })
 
                 return new Bus(
                     bus.busRouteId,
                     bus.busRouteNm,
                     bus.busRouteAbrv,
+                    destinationInstances,
                 );
             }));
 
             console.log(busInstances)
             setBusList(busInstances);
-
             openBusTableModal();
         }
     }, [stationList, setBusList, openBusTableModal]);

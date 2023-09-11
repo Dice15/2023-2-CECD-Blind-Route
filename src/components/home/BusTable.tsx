@@ -71,8 +71,7 @@ export default function BusTable({ busList, onClose }: BusTableProps) {
         <div className={style.BusTable}>
             <div className={style.busList}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <p style={{ fontSize: "22.5px", fontWeight: "600", margin: '0 auto', paddingLeft: "65px" }}>강의 정보</p>
-                    <button className={style.busList__filter_button} type="button" onClick={onClose}>닫기</button>
+                    <button className={style.busList__filter_closeButton} type="button" onClick={onClose}>X</button>
                 </div>
 
                 <div className={style.busList__filter}>
