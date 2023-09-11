@@ -59,11 +59,9 @@ export default function BusTable({ busList, onClose }: BusTableProps) {
     /** 도착지에 다른 버스 정류장 필터링 */
     const filterBus = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 
-
         /*const newBusList = busList.filter((bus) => {
        
         });
-
 
         setFilteredBusList();*/
     };
@@ -71,39 +69,45 @@ export default function BusTable({ busList, onClose }: BusTableProps) {
 
     return (
         <div className={style.BusTable}>
+            <div className={style.busList}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <p style={{ fontSize: "22.5px", fontWeight: "600", margin: '0 auto', paddingLeft: "65px" }}>강의 정보</p>
+                    <button className={style.busList__filter_button} type="button" onClick={onClose}>닫기</button>
+                </div>
 
-            <div className={style.busList__filter}>
-                <input className={style.sbusList__filter_text} type="text" placeholder="도착 정류장 입력" ref={destinationName} />
-                <button className={style.busList__filter_button} type="button" onClick={filterBus}>검색</button>
-            </div>
+                <div className={style.busList__filter}>
+                    <input className={style.busList__filter_text} type="text" placeholder="도착 정류장 입력" ref={destinationName} />
+                    <button className={style.busList__filter_button} type="button" onClick={filterBus}>검색</button>
+                </div>
 
-            <div className={style.busList__display} ref={busTable} style={{ visibility: "hidden" }}>
-                <VirtualizedTable
-                    windowHeight={busListHeight}
+                <div className={style.busList__display} ref={busTable}>
+                    <VirtualizedTable
+                        windowHeight={busListHeight}
 
-                    numColumns={tableColumns.length}
-                    columnHeight={0}
-                    columnWidths={tableColumns.map((column) => column.style)}
-                    renderColumns={({ index, columnClassName, columnStyle }) => {
-                        return (
-                            <div key={index} className={columnClassName} style={columnStyle}>
-                                {tableColumns[index].name}
-                            </div>
-                        );
-                    }}
+                        numColumns={tableColumns.length}
+                        columnHeight={0}
+                        columnWidths={tableColumns.map((column) => column.style)}
+                        renderColumns={({ index, columnClassName, columnStyle }) => {
+                            return (
+                                <div key={index} className={columnClassName} style={columnStyle}>
+                                    {tableColumns[index].name}
+                                </div>
+                            );
+                        }}
 
-                    numRows={filteredBusList.length}
-                    rowHeight={30}
-                    renderRows={({ index, rowClassName, rowStyle, itemClassName, itemStyles }) => {
-                        const busInfo = filteredBusList[index].print();
-                        return (
-                            <div key={index} id={`${index}`} className={rowClassName} style={rowStyle} onClick={(e) => { }}>
-                                <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
-                                <div className={itemClassName} style={itemStyles[1]}>{busInfo.busRouteNumber}</div>
-                            </div>
-                        );
-                    }}
-                />
+                        numRows={filteredBusList.length}
+                        rowHeight={30}
+                        renderRows={({ index, rowClassName, rowStyle, itemClassName, itemStyles }) => {
+                            const busInfo = filteredBusList[index].print();
+                            return (
+                                <div key={index} id={`${index}`} className={rowClassName} style={rowStyle} onClick={(e) => { }}>
+                                    <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
+                                    <div className={itemClassName} style={itemStyles[1]}>{busInfo.busRouteNumber}</div>
+                                </div>
+                            );
+                        }}
+                    />
+                </div>
             </div>
         </div>
     );
