@@ -112,7 +112,7 @@ export default function StationTable() {
             setBusList(busInstances);
             openBusTableModal();
         }
-    }, [stationList]);
+    }, [stationList, setBusList, openBusTableModal]);
 
 
 
