@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BusListContext, SetBusListContext, SetStationListContext, StationListContext } from "./Home";
 import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
 import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
-import { IBusApi, IStationApi, getBusList, getStationList } from "../../cores/api/Blindroute";
+import { IBusApi, IStationApi, getBusDestinationList, getBusList, getStationList } from "../../cores/api/Blindroute";
 import Station from "../../cores/types/Station";
 import Bus from "../../cores/types/Bus";
 import { useModal } from "../modal/Modal";
@@ -99,17 +99,23 @@ export default function StationTable() {
         const selectedStation = stationList[selectedIndex];
 
         if (setBusList && selectedStation) {
-            const apiData: IBusApi = await getBusList({ arsId: selectedStation.arsId });
-            const busInstances: Bus[] = apiData.busList.map((bus) => {
+            const busApiData: IBusApi = await getBusList({ arsId: selectedStation.arsId });
+            const busInstances: Bus[] = await Promise.all(busApiData.busList.map(async (bus) => {
+
+                if (bus.busRouteId) {
+                    await getBusDestinationList({ busRouteId: bus.busRouteId });
+                }
+
                 return new Bus(
                     bus.busRouteId,
                     bus.busRouteNm,
                     bus.busRouteAbrv,
                 );
-            });
+            }));
 
             console.log(busInstances)
             setBusList(busInstances);
+
             openBusTableModal();
         }
     }, [stationList, setBusList, openBusTableModal]);
