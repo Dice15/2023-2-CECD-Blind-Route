@@ -61,7 +61,7 @@ export default function BusTable({ busList, onClose }: BusTableProps) {
         if (destinationName.current) {
             if (destinationName.current.value.length > 0) {
                 const newBusList = busList.filter((bus) => {
-                    return bus.busDestination.filter((destination) => destination.stationName.includes(destinationName.current!.value));
+                    return bus.busDestination.some((destination) => destination.stationName.includes(destinationName.current!.value));
                 });
                 console.log(newBusList);
                 setFilteredBusList(newBusList);
