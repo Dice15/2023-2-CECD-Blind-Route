@@ -51,6 +51,7 @@ export async function getStationList(params: { searchKeyword: string }) {
 /** API로 부터 받은 버스 데이터 인터페이스*/
 export interface IBusApi {
     busList: {
+        busRouteId?: string;
         busRouteNm?: string;
         busRouteAbrv?: string;
     }[];
@@ -97,12 +98,12 @@ export interface IRouteApi {
 }
 
 /** API로 부터 받은 버스 데이터를 Bus타입의 리스트 형태로 반환 */
-export async function getRoute(params: { busRouteNm: string }) {
-    let data: string = "undefined";
+export async function getBusDestinationList(params: { busRouteId: string }) {
+    // let data: string = "undefined";
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
-            "https://blindroute-springboot.koyeb.app/select/bus",
+            "https://blindroute-springboot.koyeb.app/search/destination",
             postData,
             {
                 headers: {
@@ -111,10 +112,11 @@ export async function getRoute(params: { busRouteNm: string }) {
                 withCredentials: true
             }
         );
-        data = response.data;
+        // data = response.data;
+        console.log(response.data);
     }
     catch (error) {
         console.error("Search request failed:", error);
     }
-    return data;
+    //  return data;
 }
