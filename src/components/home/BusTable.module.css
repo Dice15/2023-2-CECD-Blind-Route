@@ -51,7 +51,7 @@
 }
 
 .busList__filter_closeButton {
-    width: 95%;
+    width: 96%;
     height: 30px;
     cursor: pointer;
     color: var(--basic-white);
@@ -61,7 +61,8 @@
     font-weight: 400;
     border: 2px solid #cbd8e4;
     position: relative;
-    left: 2.5%;
+    margin-bottom: 5px;
+    left: 2%;
 }
 
 .busList__filter_closeButton:hover {
