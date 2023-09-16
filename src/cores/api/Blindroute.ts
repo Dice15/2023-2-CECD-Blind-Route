@@ -121,3 +121,43 @@ export async function getBusDestinationList(params: { busRouteId: string }) {
     }
     return data;
 }
+
+
+
+
+
+
+/**
+ * 이미지 테스트
+ */
+
+export interface IImageUploadApi {
+    success: boolean;
+    message: string;
+}
+
+export async function sendImageToAPI(params: { image: Blob }) {
+    let result: any;
+
+    const formData = new FormData();
+    formData.append('image', params.image, 'photo.jpg');
+
+    try {
+        const response = await axios.post(
+            "https://blindroute-springboot.koyeb.app/image/test/byte",
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                withCredentials: true
+            }
+        );
+
+        result = response.data;
+    } catch (error) {
+        console.error("Image upload failed:", error);
+    }
+
+    return result;
+}
