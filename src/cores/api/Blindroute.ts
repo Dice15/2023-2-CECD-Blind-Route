@@ -1,5 +1,29 @@
 import axios from "axios";
 import qs from 'qs';
+import { UserRole } from "../types/UserRole";
+
+
+
+/** 사용자 설정에 따른 Api Url 가져오기 */
+function getApiUrl(userRole: UserRole, path: string) {
+    let defaultUrl: string = "";
+
+    switch (userRole) {
+        case UserRole.USER: {
+            defaultUrl = `https://localhost:8081${path}`;
+            break;
+        }
+        case UserRole.DEVELOPER: {
+            defaultUrl = `https://blindroute-springboot.koyeb.app${path}`;
+            break;
+        }
+    }
+
+    console.log(defaultUrl);
+
+    return defaultUrl;
+}
+
 
 
 /**
@@ -18,12 +42,12 @@ export interface IStationApi {
 }
 
 /** API로 부터 받은 정류장 데이터를 Station타입의 리스트 형태로 반환 */
-export async function getStationList(params: { searchKeyword: string }) {
+export async function getStationList(userRole: UserRole, params: { searchKeyword: string }) {
     let data: IStationApi = { busStations: [] };
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
-            "https://blindroute-springboot.koyeb.app/search/station",
+            getApiUrl(userRole, "/search/station"),
             postData,
             {
                 headers: {
@@ -58,12 +82,12 @@ export interface IBusApi {
 }
 
 /** API로 부터 받은 버스 데이터를 Bus타입의 리스트 형태로 반환 */
-export async function getBusList(params: { arsId: string }) {
+export async function getBusList(userRole: UserRole, params: { arsId: string }) {
     let data: IBusApi = { busList: [] };
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
-            "https://blindroute-springboot.koyeb.app/select/route",
+            getApiUrl(userRole, "/select/route"),
             postData,
             {
                 headers: {
@@ -99,12 +123,12 @@ export interface IDestinationApi {
 
 
 /** API로 부터 받은 버스 데이터를 Bus타입의 리스트 형태로 반환 */
-export async function getBusDestinationList(params: { busRouteId: string }) {
+export async function getBusDestinationList(userRole: UserRole, params: { busRouteId: string }) {
     let data: IDestinationApi = { destinations: [] };
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
-            "https://blindroute-springboot.koyeb.app/search/destination",
+            getApiUrl(userRole, "/search/destination"),
             postData,
             {
                 headers: {
@@ -136,7 +160,7 @@ export interface IImageUploadApi {
     message: string;
 }
 
-export async function sendImageToAPI(params: { image: Blob }) {
+export async function sendImageToAPI(userRole: UserRole, params: { image: Blob }) {
     let result: any;
 
     const formData = new FormData();
@@ -144,7 +168,7 @@ export async function sendImageToAPI(params: { image: Blob }) {
 
     try {
         const response = await axios.post(
-            "https://blindroute-springboot.koyeb.app/image/test/byte",
+            getApiUrl(userRole, "/image/test/byte"),
             formData,
             {
                 headers: {

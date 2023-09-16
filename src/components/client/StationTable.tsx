@@ -1,6 +1,6 @@
 import style from "./StationTable.module.css"
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { BusListContext, SetBusListContext, SetStationListContext, StationListContext } from "./Home";
+import { BusListContext, SetBusListContext, SetStationListContext, StationListContext } from "./Client";
 import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
 import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
 import { IBusApi, IDestinationApi, IStationApi, getBusDestinationList, getBusList, getStationList, sendImageToAPI } from "../../cores/api/Blindroute";
@@ -10,10 +10,17 @@ import { useModal } from "../modal/Modal";
 import { ModalAnimationType } from "../modal/ModalAnimations";
 import BusTable from "./BusTable";
 import IDestination from "../../cores/types/IDestination";
+import { UserRole } from "../../cores/types/UserRole";
+
+
+export interface StationTableProps {
+    userRole: UserRole;
+}
+
 
 
 /** 정류장 리스트 테이블 */
-export default function StationTable() {
+export default function StationTable({ userRole }: StationTableProps) {
     /** ref */
     const stationTable = useRef<HTMLDivElement>(null);
     const stationName = useRef<HTMLInputElement>(null);
@@ -77,7 +84,7 @@ export default function StationTable() {
     /** 정류장 불러오기 */
     const loadStation = async () => {
         if (setStationList && stationName.current) {
-            const apiData: IStationApi = await getStationList({ searchKeyword: stationName.current.value });
+            const apiData: IStationApi = await getStationList(userRole, { searchKeyword: stationName.current.value });
             const stationInstances: Station[] = apiData.busStations.map((station) => {
                 return new Station(
                     station.arsId,
@@ -100,9 +107,9 @@ export default function StationTable() {
         const selectedStation = stationList[selectedIndex];
 
         if (setBusList && selectedStation) {
-            const busApiData: IBusApi = await getBusList({ arsId: selectedStation.arsId });
+            const busApiData: IBusApi = await getBusList(userRole, { arsId: selectedStation.arsId });
             const busInstances: Bus[] = await Promise.all(busApiData.busList.filter((bus) => bus.busRouteId !== undefined).map(async (bus) => {
-                const destinationApiData: IDestinationApi = await getBusDestinationList({ busRouteId: bus.busRouteId! });
+                const destinationApiData: IDestinationApi = await getBusDestinationList(userRole, { busRouteId: bus.busRouteId! });
                 const destinationInstances: IDestination[] = destinationApiData.destinations.map((destination) => {
                     return {
                         stationName: destination.stationNm,
@@ -161,7 +168,7 @@ export default function StationTable() {
 
             canvas.toBlob(async (blob) => {
                 if (blob) {
-                    const result = await sendImageToAPI({ image: blob });  // Wrapping blob in an object
+                    const result = await sendImageToAPI(userRole, { image: blob });  // Wrapping blob in an object
                     alert(result);
                     console.log(result);
                 }

@@ -2,7 +2,7 @@ import style from "./BusTable.module.css"
 import Bus from "../../cores/types/Bus";
 import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
 import { useContext, useEffect, useRef, useState } from "react";
-import { BusListContext, SetBusListContext } from "./Home";
+import { BusListContext, SetBusListContext } from "./Client";
 import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
 
 export interface BusTableProps {
