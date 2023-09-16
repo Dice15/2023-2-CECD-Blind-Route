@@ -20,9 +20,25 @@ function getApiUrl(userRole: UserRole, path: string) {
     }
 
     console.log(defaultUrl);
-
     return defaultUrl;
 }
+
+
+
+/** 
+ * 로그인
+ */
+export function onLogin(userRole: UserRole) {
+    window.location.href = getApiUrl(userRole, "/oauth2/authorization/google");
+};
+
+
+/** 
+ * 로그아웃
+ */
+export function onLogout(userRole: UserRole) {
+    window.location.href = getApiUrl(userRole, "/logout");
+};
 
 
 

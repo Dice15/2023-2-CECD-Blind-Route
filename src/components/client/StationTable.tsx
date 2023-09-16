@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BusListContext, SetBusListContext, SetStationListContext, StationListContext } from "./Client";
 import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
 import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
-import { IBusApi, IDestinationApi, IStationApi, getBusDestinationList, getBusList, getStationList, sendImageToAPI } from "../../cores/api/Blindroute";
+import { IBusApi, IDestinationApi, IStationApi, getBusDestinationList, getBusList, getStationList } from "../../cores/api/Blindroute";
 import Station from "../../cores/types/Station";
 import Bus from "../../cores/types/Bus";
 import { useModal } from "../modal/Modal";
@@ -133,61 +133,12 @@ export default function StationTable({ userRole }: StationTableProps) {
 
 
 
-    /** test */
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-    const startCamera = async () => {
-        if (videoRef.current) {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                if (videoRef.current) {
-                    videoRef.current.srcObject = stream;
-                }
-            } catch (error) {
-                console.error("Failed to start the camera:", error);
-            }
-        }
-    };
-
-    const captureAndSend = async () => {
-        if (canvasRef.current && videoRef.current && videoRef.current.srcObject) {
-            const canvas = canvasRef.current;
-            const video = videoRef.current;
-
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-                ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-            }
-
-            const srcObject = video.srcObject as MediaStream;  // Type casting to MediaStream
-            const tracks = srcObject.getTracks();
-            tracks.forEach((track: MediaStreamTrack) => track.stop());  // Specifying type for track
-
-            canvas.toBlob(async (blob) => {
-                if (blob) {
-                    const result = await sendImageToAPI(userRole, { image: blob });  // Wrapping blob in an object
-                    alert(result);
-                    console.log(result);
-                }
-            }, 'image/jpeg');
-        }
-
-    };
-
-
     return (
         <div className={style.StationTable}>
             <div className={style.stationList}>
                 <div className={style.stationList__loading}>
                     <input className={style.stationList__loading_text} type="text" placeholder="정류장 검색" ref={stationName} />
                     <button className={style.stationList__loading_button} type="button" onClick={loadStation}>검색</button>
-                    <button className={style.stationList__loading_button} type="button" onClick={startCamera}>카메라 시작</button>
-                    <button className={style.stationList__loading_button} type="button" onClick={captureAndSend}>사진 찍기 & 전송</button>
-                    <video ref={videoRef} autoPlay style={{ display: 'none' }}></video>
-                    <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
                 </div>
                 <div className={style.stationList__display} ref={stationTable} style={{ visibility: "hidden" }}>
                     <VirtualizedTable

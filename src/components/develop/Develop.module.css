@@ -1,20 +1,20 @@
-.Home {
-    height: calc(100vh - 5px - 10px);
+.Develop {
+    height: calc(100vh - 10px - 10px);
     width: calc(100vw - 10px - 10px);
     padding: 10px;
-    padding-top: 5px;
+    padding-top: 10px;
     display: flex;
     flex-direction: column;
 }
 
 
 /* Home's children elements */
-.home__header {
-    flex: 0 0 65px;
+.develop__header {
+    flex: 0 0 40px;
     margin-bottom: 10px;
 }
 
-.home__body {
+.develop__body {
     flex: 1 0 calc(100% - 65px - 10px);
     display: flex;
     flex-direction: column;
@@ -22,7 +22,7 @@
 
 
 /* home__header's children elements */
-.home__header__title {
+.develop__header__title {
     font-size: 28px;
     margin: 0px;
     text-align: center;
