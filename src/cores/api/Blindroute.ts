@@ -10,11 +10,11 @@ function getApiUrl(userRole: UserRole, path: string) {
 
     switch (userRole) {
         case UserRole.USER: {
-            defaultUrl = `https://localhost:8081${path}`;
+            defaultUrl = `https://blindroute-springboot.koyeb.app${path}`;
             break;
         }
         case UserRole.DEVELOPER: {
-            defaultUrl = `https://blindroute-springboot.koyeb.app${path}`;
+            defaultUrl = `https://localhost:8081${path}`;
             break;
         }
     }
