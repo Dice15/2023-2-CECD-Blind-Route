@@ -144,7 +144,7 @@ export async function sendImageToAPI(params: { image: Blob }) {
 
     try {
         const response = await axios.post(
-            "https://blindroute-springboot.koyeb.app/image/test/byte",
+            "https://blindroute-springboot.koyeb.app/image/test/string",
             formData,
             {
                 headers: {
