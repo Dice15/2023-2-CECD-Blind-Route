@@ -162,6 +162,7 @@ export default function StationTable() {
             canvas.toBlob(async (blob) => {
                 if (blob) {
                     const result = await sendImageToAPI({ image: blob });  // Wrapping blob in an object
+                    alert(result);
                     console.log(result);
                 }
             }, 'image/jpeg');
