@@ -1,0 +1,10 @@
+.PanelTop {
+    height: 100%;
+    width: 100%;
+}
+
+.panelTop__title {
+    font-size: 30px;
+    margin: 0px;
+    text-align: center;
+}

@@ -1,0 +1,25 @@
+.Panel {
+    height: calc(100vh - 20px);
+    width: calc(100vw - 30px);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    scroll-behavior: smooth;
+    padding: 10px 15px;
+    overflow: auto;
+}
+
+.panel__top {
+    flex-shrink: 0;
+    min-height: 40px;
+    max-height: 90px;
+    width: 100%;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.panel__middle {
+    display: flex;
+    flex-grow: 1;
+}

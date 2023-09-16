@@ -34,7 +34,7 @@ export default function Client({ userRole }: ClientProps) {
                             <SelectedStationContext.Provider value={selectedStation}>
                                 <SetSelectedStationContext.Provider value={setSelectedStation}>
                                     <div className={styles.home__top}>
-                                        <ClientTop />
+                                        <ClientTop userRole={userRole} />
                                     </div>
                                     <div className={styles.home__middle}>
                                         <ClientMiddle userRole={userRole} />

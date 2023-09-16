@@ -7,7 +7,6 @@ export interface ClientMiddleProps {
 }
 
 
-
 export default function ClientMiddle({ userRole }: ClientMiddleProps) {
     return (
         <div className={style.HomeMiddle}>
