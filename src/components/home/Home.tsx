@@ -12,7 +12,7 @@ export default function Home({ setUserRole }: HomeProps) {
 
     const moveClient = (userRole: UserRole) => {
         setUserRole(userRole);
-        history("/");
+        history("/client");
     }
 
     return (

@@ -129,7 +129,7 @@ export default function StationTable({ userRole }: StationTableProps) {
             setBusList(busInstances);
             openBusTableModal();
         }
-    }, [stationList, setBusList, openBusTableModal]);
+    }, [stationList, setBusList, openBusTableModal, userRole]);
 
 
 

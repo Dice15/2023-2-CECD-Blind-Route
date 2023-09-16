@@ -22,7 +22,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home setUserRole={setUserRole} />} />
-          <Route path="/" element={<Client userRole={userRole} />} />
+          <Route path="/client" element={<Client userRole={userRole} />} />
         </Routes>
       </BrowserRouter>
     </div>
