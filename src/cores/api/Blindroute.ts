@@ -194,16 +194,11 @@ export async function getBusNumberFromImage(userRole: UserRole, params: { image:
             }
         );
 
-        const contentDisposition = response.headers['content-disposition'];
-        if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
-            const contentType = response.headers['content-type'];
-            if (contentType.includes('image')) {
-                result.data = new Blob([response.data], { type: contentType });
-            } else {
-                console.error("Received data is not of image type:", contentType);
-            }
+        const contentType = response.headers['content-type'];
+        if (contentType.includes('image')) {
+            result.data = new Blob([response.data], { type: contentType });
         } else {
-            console.error("Received data is not an attachment:", response.data);
+            console.error("Received data is not of image type:", contentType);
         }
     } catch (error) {
         console.error("Image upload failed:", error);
