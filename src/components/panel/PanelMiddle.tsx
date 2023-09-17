@@ -9,6 +9,7 @@ export interface PanelMiddleProps {
 
 export default function PanelMiddle({ userRole }: PanelMiddleProps) {
     /** test */
+    const imageRef = useRef<HTMLImageElement | null>(null);
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -47,12 +48,8 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
 
                     if (result && result.data) {  // Check if result is not null and has data
                         const imageUrl = URL.createObjectURL(result.data);
-                        if (ctx) {
-                            const image = new Image();
-                            image.onload = function () {
-                                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-                            };
-                            image.src = imageUrl;
+                        if (imageRef.current) {
+                            imageRef.current.src = imageUrl;
                         }
                     } else {
                         alert("이미지 업로드 실패");
@@ -67,8 +64,10 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
         <div className={style.PanelMiddle}>
             <button className={style.stationList__loading_button} type="button" onClick={startCamera}>카메라 시작</button>
             <button className={style.stationList__loading_button} type="button" onClick={captureAndSend}>사진 찍기 & 전송</button>
-            <video ref={videoRef} autoPlay style={{ display: 'none' }}></video>
-            <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+            <video ref={videoRef} autoPlay></video>
+            <canvas ref={canvasRef}></canvas>
+            <img ref={imageRef} alt="Captured image" />
         </div>
-    )
+    );
+
 };
