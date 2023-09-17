@@ -179,7 +179,7 @@ export async function getBusNumberFromImage(userRole: UserRole, params: { image:
     let result: IBusNumberFromImage = { data: undefined };
 
     const formData = new FormData();
-    formData.append('image', params.image, 'photo.jpg');
+    formData.append('image', params.image, 'photo.jpeg');
 
     try {
         const response = await axios.post(
@@ -203,7 +203,7 @@ export async function getBusNumberFromImage(userRole: UserRole, params: { image:
                 console.error("Received data is not of image type:", contentType);
             }
         } else {
-            console.error("Received data is not an attachment");
+            console.error("Received data is not an attachment:", response.data);
         }
     } catch (error) {
         console.error("Image upload failed:", error);
