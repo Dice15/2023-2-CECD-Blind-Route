@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { UserRole } from "../../cores/types/UserRole";
 import style from "./PanelMiddle.module.css";
-import { sendImageToAPI } from "../../cores/api/Blindroute";
+import { getBusNumberFromImage } from "../../cores/api/Blindroute";
 
 export interface PanelMiddleProps {
     userRole: UserRole;
@@ -43,14 +43,25 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
 
             canvas.toBlob(async (blob) => {
                 if (blob) {
-                    const result = await sendImageToAPI(userRole, { image: blob });  // Wrapping blob in an object
-                    alert(result);
-                    console.log(result);
+                    const result = await getBusNumberFromImage(userRole, { image: blob });  // Wrapping blob in an object
+
+                    if (result && result.data) {  // Check if result is not null and has data
+                        const imageUrl = URL.createObjectURL(result.data);
+                        if (ctx) {
+                            const image = new Image();
+                            image.onload = function () {
+                                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                            };
+                            image.src = imageUrl;
+                        }
+                    } else {
+                        alert("이미지 업로드 실패");
+                    }
                 }
             }, 'image/jpeg');
         }
-
     };
+
 
     return (
         <div className={style.PanelMiddle}>
