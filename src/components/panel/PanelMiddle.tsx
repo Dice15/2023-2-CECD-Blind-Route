@@ -66,7 +66,7 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
             <button className={style.stationList__loading_button} type="button" onClick={captureAndSend}>사진 찍기 & 전송</button>
             <video ref={videoRef} autoPlay></video>
             <canvas ref={canvasRef}></canvas>
-            <img ref={imageRef} alt="Captured image" />
+            <img ref={imageRef} alt="Captured content" />
         </div>
     );
 
