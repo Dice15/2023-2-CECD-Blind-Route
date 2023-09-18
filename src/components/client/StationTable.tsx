@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BusListContext, SetBusListContext, SetStationListContext, StationListContext } from "./Client";
 import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
 import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
-import { IBusApi, IDestinationApi, IStationApi, getBusDestinationList, getBusList, getStationList } from "../../cores/api/Blindroute";
+import { IBusApi, IDestinationApi, IStationApi, getBusDestinationList, getBusList, getStationList } from "../../cores/api/blindrouteClient";
 import Station from "../../cores/types/Station";
 import Bus from "../../cores/types/Bus";
 import { useModal } from "../modal/Modal";

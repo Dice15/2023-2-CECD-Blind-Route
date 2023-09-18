@@ -19,7 +19,10 @@ function getApiUrl(userRole: UserRole, path: string) {
         }
     }
 
-    console.log(defaultUrl);
+    const now = new Date();
+    const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}:${now.getMilliseconds().toString().padStart(3, '0')}`;
+    console.log(`[${formattedTime}] request: ${defaultUrl}`);
+
     return defaultUrl;
 }
 
@@ -160,49 +163,4 @@ export async function getBusDestinationList(userRole: UserRole, params: { busRou
         console.error("Search request failed:", error);
     }
     return data;
-}
-
-
-
-
-
-
-/**
- * 이미지 테스트
- */
-
-export interface IBusNumberFromImage {
-    data?: Blob;
-}
-
-export async function getBusNumberFromImage(userRole: UserRole, params: { image: Blob }) {
-    let result: IBusNumberFromImage = { data: undefined };
-
-    const formData = new FormData();
-    formData.append('image', params.image, 'photo.jpeg');
-
-    try {
-        const response = await axios.post(
-            getApiUrl(userRole, "/image/test/byte"),
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-                withCredentials: true,
-                responseType: 'blob' // Important: to receive blob data
-            }
-        );
-
-        const contentType = response.headers['content-type'];
-        if (contentType.includes('image')) {
-            result.data = new Blob([response.data], { type: contentType });
-        } else {
-            console.error("Received data is not of image type:", contentType);
-        }
-    } catch (error) {
-        console.error("Image upload failed:", error);
-    }
-
-    return result;
 }

@@ -1,4 +1,4 @@
-import { onLogin, onLogout } from "../../../cores/api/Blindroute";
+import { onLogin, onLogout } from "../../../cores/api/blindrouteClient";
 import { UserRole } from "../../../cores/types/UserRole";
 import styles from "./LoginForm.module.css"
 

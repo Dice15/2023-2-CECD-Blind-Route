@@ -1,0 +1,51 @@
+.PanelMiddle {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/* PanelMiddle's children elements */
+.panel_middle__header {
+    flex: 0 0 40px;
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.panel_middle__body {
+    flex: 1 0 calc(100% - 10px - 40px);
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/* panel_middle__header's children elements */
+.camera_control__button {
+    flex: 1 0 calc(50%);
+}
+
+
+
+/* panel_middle__body's children elements */
+.display_camera {
+    flex: 1 0 calc(50% - 10px);
+    padding: 5px;
+}
+
+.camera {
+    width: 100%;
+    height: 100%;
+}
+
+.display_recieved_image {
+    flex: 1 0 calc(50% - 10px);
+    padding: 5px;
+}
+
+.recieved_image {
+    width: 100%;
+    height: 100%;
+}
