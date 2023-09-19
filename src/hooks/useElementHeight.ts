@@ -16,6 +16,7 @@ export default function useElementHeight<T extends HTMLElement>(htmlElement: Rea
     const getHeight = heightType === "Default" ? getDefaultHeight : getPureHeight;
 
     useEffect(() => {
+        const currentElement = htmlElement.current;
         let frameId: number | null = null;
 
         const observerCallback = () => {
@@ -29,13 +30,13 @@ export default function useElementHeight<T extends HTMLElement>(htmlElement: Rea
 
         const observer = new ResizeObserver(observerCallback);
 
-        if (htmlElement.current) {
-            observer.observe(htmlElement.current);
+        if (currentElement) {
+            observer.observe(currentElement);
         }
 
         return () => {
-            if (htmlElement.current) {
-                observer.unobserve(htmlElement.current);
+            if (currentElement) {
+                observer.unobserve(currentElement);
             }
             if (frameId) {
                 cancelAnimationFrame(frameId);
