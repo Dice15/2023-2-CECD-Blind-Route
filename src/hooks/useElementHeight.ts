@@ -42,7 +42,7 @@ export default function useElementHeight<T extends HTMLElement>(htmlElement: Rea
                 cancelAnimationFrame(frameId);
             }
         };
-    }, [htmlElementHeight]);
+    }, [htmlElementHeight, getHeight, htmlElement]);
 
     return htmlElementHeight;
 }
