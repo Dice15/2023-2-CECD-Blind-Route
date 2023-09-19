@@ -1,6 +1,14 @@
 import IStation from "./IStation";
 
-export default class Course implements IStation {
+
+
+/**
+ * 정류장 클래스
+ * arsId: 정류장 고유 식별자
+ * stationId: 정류장 고유 아이디
+ * stationName: 정류장 이름
+ */
+export default class Station implements IStation {
     arsId: string;
     stationId: string;
     stationName: string;

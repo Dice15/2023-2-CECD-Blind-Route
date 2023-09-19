@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { UserRole } from "../../cores/types/UserRole";
 import style from "./PanelTop.module.css";
+import { UserRole } from "../../../cores/types/UserRole";
 
 export interface PanelTopProps {
     userRole: UserRole;

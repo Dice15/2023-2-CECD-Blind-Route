@@ -1,77 +1,46 @@
 import style from "./StationTable.module.css"
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { BusListContext, SetBusListContext, SetStationListContext, StationListContext } from "./Client";
-import { getPureHeight } from "../../cores/utilities/htmlElementUtil";
-import VirtualizedTable from "../virtualizedTable/VirtualizedTable";
-import { IBusApi, IDestinationApi, IStationApi, getBusDestinationList, getBusList, getStationList } from "../../cores/api/blindrouteClient";
-import Station from "../../cores/types/Station";
-import Bus from "../../cores/types/Bus";
-import { useModal } from "../modal/Modal";
-import { ModalAnimationType } from "../modal/ModalAnimations";
-import BusTable from "./BusTable";
-import IDestination from "../../cores/types/IDestination";
-import { UserRole } from "../../cores/types/UserRole";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { getBusDestinationList, getBusList, getStationList } from "../../../../cores/api/blindrouteClient";
+import Bus from "../../../../cores/types/Bus";
+import Station from "../../../../cores/types/Station";
+import { UserRole } from "../../../../cores/types/UserRole";
+import useElementHeight from "../../../../hooks/useElementHeight";
+import { useModal } from "../../../modules/modal/Modal";
+import { ModalAnimationType } from "../../../modules/modal/ModalAnimations";
+import VirtualizedTable from "../../../modules/virtualizedTable/VirtualizedTable";
+import BusTable from "../bustable/BusTable";
 
 
+
+/** 정류장 테이블 프로퍼티 */
 export interface StationTableProps {
     userRole: UserRole;
 }
 
 
 
-/** 정류장 리스트 테이블 */
+/** 정류장 테이블 */
 export default function StationTable({ userRole }: StationTableProps) {
     /** ref */
     const stationTable = useRef<HTMLDivElement>(null);
     const stationName = useRef<HTMLInputElement>(null);
 
-    /** context */
-    const [stationList, setStationList] = [useContext(StationListContext), useContext(SetStationListContext)];
-    const [busList, setBusList] = [useContext(BusListContext), useContext(SetBusListContext)];
-
     /** state */
-    const [stationListHeight, setStationListHeight] = useState<number>(0);
+    const [stationList, setStationList] = useState<Station[]>([]);
+    const [busList, setBusList] = useState<Bus[]>([]);
+    const [arsId, setArsId] = useState<string>("");
 
     /** modal */
     const [BusTableModal, openBusTableModal, closeBusTableModal] = useModal(ModalAnimationType.ZOOM);
 
+    /** custom hook */
+    const stationListHeight = useElementHeight<HTMLDivElement>(stationTable, "Pure");
+
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [
-        { name: "", style: { width: "50px", minWidth: "50px", maxWidth: "50px" } },
-        { name: "", style: { width: "calc(100% - 50px)" } },
+        { name: "", style: { minWidth: "50px" } },
+        { name: "", style: { minWidth: "calc(100% - 50px)" } },
     ];
-
-
-    /** 브라우저의 확대/축소에 따른 가상테이블 높이 재설정 */
-    useEffect(() => {
-        const currentStationTable = stationTable.current;
-        let frameId: number | null = null;
-
-        const observerCallback = () => {
-            const newStationTableHeight: number = getPureHeight(stationTable) || 0;
-
-            if (stationListHeight !== newStationTableHeight) {
-                if (frameId) { cancelAnimationFrame(frameId); }
-                frameId = requestAnimationFrame(() => { setStationListHeight(newStationTableHeight); });
-            }
-        };
-
-        const observer = new ResizeObserver(observerCallback);
-
-        if (currentStationTable) {
-            observer.observe(currentStationTable);
-        }
-
-        return () => {
-            if (currentStationTable) {
-                observer.unobserve(currentStationTable);
-            }
-            if (frameId) {
-                cancelAnimationFrame(frameId);
-            }
-        };
-    }, [stationListHeight]);
-
 
     /** 정류장이 비어있다면, 테이블을 보이지 않게 함 */
     useEffect(() => {
@@ -83,8 +52,8 @@ export default function StationTable({ userRole }: StationTableProps) {
 
     /** 정류장 불러오기 */
     const loadStation = async () => {
-        if (setStationList && stationName.current) {
-            const apiData: IStationApi = await getStationList(userRole, { searchKeyword: stationName.current.value });
+        if (stationName.current) {
+            const apiData = await getStationList(userRole, { searchKeyword: stationName.current.value });
             const stationInstances: Station[] = apiData.busStations.map((station) => {
                 return new Station(
                     station.arsId,
@@ -101,16 +70,17 @@ export default function StationTable({ userRole }: StationTableProps) {
         }
     };
 
+
     /** 정류장 선택 */
     const selectStation = useCallback(async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const selectedIndex = parseInt(e.currentTarget.id || "-1");
         const selectedStation = stationList[selectedIndex];
 
-        if (setBusList && selectedStation) {
-            const busApiData: IBusApi = await getBusList(userRole, { arsId: selectedStation.arsId });
+        if (selectedStation) {
+            const busApiData = await getBusList(userRole, { arsId: selectedStation.arsId });
             const busInstances: Bus[] = await Promise.all(busApiData.busList.filter((bus) => bus.busRouteId !== undefined).map(async (bus) => {
-                const destinationApiData: IDestinationApi = await getBusDestinationList(userRole, { busRouteId: bus.busRouteId! });
-                const destinationInstances: IDestination[] = destinationApiData.destinations.map((destination) => {
+                const destinationApiData = await getBusDestinationList(userRole, { busRouteId: bus.busRouteId! });
+                const destinationInstances = destinationApiData.destinations.map((destination) => {
                     return {
                         stationName: destination.stationNm,
                         direction: destination.direction
@@ -125,7 +95,9 @@ export default function StationTable({ userRole }: StationTableProps) {
                 );
             }));
 
+            console.log(selectedStation.arsId)
             console.log(busInstances)
+            setArsId(selectedStation.arsId);
             setBusList(busInstances);
             openBusTableModal();
         }
@@ -174,16 +146,18 @@ export default function StationTable({ userRole }: StationTableProps) {
 
             {busList.length > 0 &&
                 <BusTableModal>
-                    <BusTable busList={busList} onClose={() => {
-                        if (setBusList) {
-                            setBusList([]);
-                            closeBusTableModal();
-                        }
-                    }} />
+                    <BusTable
+                        userRole={userRole}
+                        arsId={arsId}
+                        busList={busList}
+                        onClose={() => {
+                            if (setBusList) {
+                                setBusList([]);
+                                closeBusTableModal();
+                            }
+                        }} />
                 </BusTableModal>
             }
         </div>
     );
 }
-
-//    <CourseDetails course={displayedCourse} onClose={closeBusListModal} />

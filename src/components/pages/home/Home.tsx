@@ -1,8 +1,7 @@
 import style from "./Home.module.css";
 import { useNavigate } from "react-router-dom";
-import { UserRole } from "../../cores/types/UserRole";
 import LoginForm from "../common/loginform/LoginForm";
-import { useEffect } from "react";
+import { UserRole } from "../../../cores/types/UserRole";
 
 
 export interface HomeProps {
@@ -24,12 +23,16 @@ export default function Home({ userRole }: HomeProps) {
     return (
         <div className={style.Home}>
             <div className={style.home__header}>
-                <LoginForm userRole={userRole} />
                 <h1 className={style.home__header__title}>{`Blind Route (${userRole})`}</h1>
             </div>
             <div className={style.home__body}>
-                <button className={style.mode_select_button} type="button" onClick={() => { moveToClient(); }} >Client</button>
-                <button className={style.mode_select_button} type="button" onClick={() => { moveToPanel(); }} >Panel</button>
+                <div className={style.home__body__login}>
+                    <LoginForm userRole={userRole} />
+                </div>
+                <div className={style.home__body__device}>
+                    <button className={style.mode_select_button} type="button" onClick={() => { moveToClient(); }} >Client</button>
+                    <button className={style.mode_select_button} type="button" onClick={() => { moveToPanel(); }} >Panel</button>
+                </div>
             </div>
         </div>
     );

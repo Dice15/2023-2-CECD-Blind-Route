@@ -1,9 +1,9 @@
-.homeTop {
+.ClientTop {
     height: 100%;
     width: 100%;
 }
 
-.homeTop__title {
+.client_top__title {
     font-size: 30px;
     margin: 0px;
     text-align: center;

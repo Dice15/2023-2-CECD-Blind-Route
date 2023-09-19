@@ -1,0 +1,21 @@
+.Client {
+    height: calc(100vh - 10px - 10px);
+    width: calc(100vw - 15px - 15px);
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/* client's children elements */
+.client__top {
+    flex: 0 0 40px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--dividerline-color);
+    margin-bottom: 15px;
+}
+
+.client__middle {
+    flex: 1 0 calc(100% - 40px - 1px - 14px - 15px);
+}

@@ -164,3 +164,44 @@ export async function getBusDestinationList(userRole: UserRole, params: { busRou
     }
     return data;
 }
+
+
+
+/**
+ * API로 부터 버스 정류장 리스트를 받아오는 작업
+ * IBusApi
+ * getBusList
+ */
+
+/** API로 부터 받은 버스 데이터 인터페이스*/
+export interface IRegisterBus {
+    destinations: {
+        stationNm: string;
+        direction: string;
+    }[];
+}
+
+
+/** API로 부터 받은 버스 데이터를 Bus타입의 리스트 형태로 반환 */
+export async function registerBus(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }) {
+    let data: any = null;
+    try {
+        const postData = qs.stringify(params);
+        const response = await axios.post(
+            getApiUrl(userRole, "/select/bus"),
+            postData,
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                withCredentials: true
+            }
+        );
+
+        data = response.data;
+    }
+    catch (error) {
+        console.error("Search request failed:", error);
+    }
+    return data;
+}

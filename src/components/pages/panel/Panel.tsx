@@ -1,7 +1,7 @@
 import style from "./Panel.module.css";
-import { UserRole } from "../../cores/types/UserRole";
 import PanelTop from "./PanelTop";
 import PanelMiddle from "./PanelMiddle";
+import { UserRole } from "../../../cores/types/UserRole";
 
 export interface PanelProps {
     userRole: UserRole;

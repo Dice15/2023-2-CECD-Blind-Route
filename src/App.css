@@ -1,17 +1,44 @@
 :root {
-  --basic-white: #fff;
-  --body-bg-color: #e5ecef;
-  --theme-bg-color: #fafafb;
-  --body-font: "", sans-serif;
-  --body-color: #2f2f33;
-  --alert-bg-color: #e9f3ff;
-  --subtitle-color: #83838e;
+  /* main */
+  --main-background-color: #ffffff;
+  --main-font-color: #000000;
 
-  --active-color: #2260ff;
-  --active-hover-color: #80a3fc;
-  --active-positive-color: #08b66d;
-  --active-positive-hover-color: #7be6b9;
-  --active-negative-color: #e06060;
-  --active-negative-hover-color: #d19a9a;
-  --disable-color: #525252;
+  /* component */
+  --component-background-color: #ffffff;
+  --component-font-color: #000000;
+
+
+  /* line */
+  --dividerline-color: rgba(0, 0, 0, 0.2);
+
+
+  /* button */
+  --button-color: #2260ff;
+  --button-hover-color: #80a3fc;
+  --button-border-color: #cbd8e4;
+  --button-text-color: #ffffff;
+
+  --button-positive-color: #08b66d;
+  --button-positive-hover-color: #7be6b9;
+
+  --button-negative-color: #e06060;
+  --button-negative-hover-color: #d19a9a;
+
+  --button-disable-color: #525252;
+  --button-disable--hover-color: #9b9b9b;
+}
+
+.theme_dark {
+  /* main */
+  --main-background-color: #161616;
+  --main-font-color: #ffffff;
+
+
+  /* component */
+  --component-background-color: #161616;
+  --component-font-color: #ffffff;
+
+
+  /* line */
+  --dividerline-color: rgba(255, 255, 255, 0.2);
 }

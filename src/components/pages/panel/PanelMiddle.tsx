@@ -1,7 +1,8 @@
 import { useRef } from "react";
-import { UserRole } from "../../cores/types/UserRole";
 import style from "./PanelMiddle.module.css";
-import { getBusNumberFromImage } from "../../cores/api/blindroutePanel";
+import { UserRole } from "../../../cores/types/UserRole";
+import { getBusNumberFromImage } from "../../../cores/api/blindroutePanel";
+
 
 export interface PanelMiddleProps {
     userRole: UserRole;
