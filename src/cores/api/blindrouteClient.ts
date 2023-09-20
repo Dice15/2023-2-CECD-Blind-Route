@@ -174,17 +174,12 @@ export async function getBusDestinationList(userRole: UserRole, params: { busRou
  */
 
 /** API로 부터 받은 버스 데이터 인터페이스*/
-export interface IRegisterBus {
-    destinations: {
-        stationNm: string;
-        direction: string;
-    }[];
-}
+export type IRegisterBus = "success" | "fail";
 
 
 /** API로 부터 받은 버스 데이터를 Bus타입의 리스트 형태로 반환 */
 export async function registerBus(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }) {
-    let data: any = null;
+    let data: IRegisterBus = "fail";
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(

@@ -1,7 +1,10 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import style from "./PanelMiddle.module.css";
 import { UserRole } from "../../../cores/types/UserRole";
 import { getBusNumberFromImage } from "../../../cores/api/blindroutePanel";
+import CameraCapture from "./camera/CameraCapture";
+import DetectingBus from "./system/DetectingBus";
+import StationWishTable from "./system/StationWishTable";
 
 
 export interface PanelMiddleProps {
@@ -10,107 +13,116 @@ export interface PanelMiddleProps {
 
 export default function PanelMiddle({ userRole }: PanelMiddleProps) {
     /** test */
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const imageRef = useRef<HTMLImageElement | null>(null);
+    const controlButton = useRef<HTMLButtonElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const imageRef = useRef<HTMLImageElement>(null);
 
-    /**  */
-    let captureInterval: NodeJS.Timeout | null = null;
+    /** state */
+    const [panelSystem, setPanelSystem] = useState<"processing" | "paused">("paused");
+    const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
+    const [receivedImage, setReceivedImage] = useState<Blob | null>(null);
 
 
+    /** */
+    useEffect(() => {
+        const ctrlButton = controlButton.current;
+        if (ctrlButton) {
+            if (panelSystem === "processing") {
+                ctrlButton.textContent = "시스템 종료";
+                ctrlButton.className = [style.sysyem_control__button, style.stop_button].join(" ");
+            } else {
+                ctrlButton.textContent = "시스템 시작";
+                ctrlButton.className = [style.sysyem_control__button, style.start_button].join(" ");
+            }
+        }
+    }, [controlButton, panelSystem]);
 
-    const startCamera = async () => {
-        if (videoRef.current) {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                if (videoRef.current) {
-                    videoRef.current.srcObject = stream;
+
+    /** 캡쳐된 이미지가 갱신될떄 마다 Api에 이미지를 전송하여 버스 번호를 인식함 */
+    useEffect(() => {
+        (async () => {
+            if (capturedImage) {
+                const busData = await getBusNumberFromImage(userRole, { image: capturedImage });
+                if (busData.data) {
+                    setReceivedImage(busData.data);
                 }
-            } catch (error) {
-                console.error("Failed to start the camera:", error);
             }
-        }
-    };
+        })();
+    }, [capturedImage])
 
-    const stopCamera = async () => {
-        if (videoRef.current) {
-            try {
-                const srcObject = videoRef.current.srcObject as MediaStream;
-                const tracks = srcObject.getTracks();
-                tracks.forEach((track: MediaStreamTrack) => track.stop());
-            } catch (error) {
-                console.error("Failed to end the camera:", error);
-            }
-        }
-    }
-
-    const captureAndSend = async () => {
-        if (canvasRef.current && videoRef.current && videoRef.current.srcObject) {
-            const canvas = canvasRef.current;
-            const video = videoRef.current;
-
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const canvasContext2D = canvas.getContext('2d');
-            if (canvasContext2D) {
-                canvasContext2D.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-            }
-
-            canvas.toBlob(async (blob) => {
-                if (blob) {
-                    const result = await getBusNumberFromImage(userRole, { image: blob });  // Wrapping blob in an object
-
-                    if (result && result.data) {  // Check if result is not null and has data
-                        const imageUrl = URL.createObjectURL(result.data);
-                        if (imageRef.current) {
-                            imageRef.current.src = imageUrl;
+    /*
+        const captureAndSend = async () => {
+            if (canvasRef.current && videoRef.current && videoRef.current.srcObject) {
+                const canvas = canvasRef.current;
+                const video = videoRef.current;
+    
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const canvasContext2D = canvas.getContext('2d');
+                if (canvasContext2D) {
+                    canvasContext2D.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                }
+    
+                canvas.toBlob(async (blob) => {
+                    if (blob) {
+                        const result = await getBusNumberFromImage(userRole, { image: blob });  // Wrapping blob in an object
+    
+                        if (result && result.data) {  // Check if result is not null and has data
+                            const imageUrl = URL.createObjectURL(result.data);
+                            if (imageRef.current) {
+                                imageRef.current.src = imageUrl;
+                            }
+                        } else {
+                            alert("이미지 업로드 실패");
                         }
-                    } else {
-                        alert("이미지 업로드 실패");
                     }
-                }
-            }, 'image/jpeg');
-        }
+                }, 'image/jpeg');
+            }
+        };
+    
+        const startCaptureAndSend = () => {
+            if (captureInterval) return;  // 이미 실행중이면 무시
+            captureAndSend();  // 처음 호출
+            captureInterval = setInterval(captureAndSend, 100);  // 100ms마다 반복
+        };
+    
+        const stopCaptureAndSend = () => {
+            if (captureInterval) {
+                clearInterval(captureInterval);  // Interval 중지
+                captureInterval = null;
+            }
+        };*/
+
+    const onClickControlButton = async () => {
+        setPanelSystem(panelSystem === "processing" ? "paused" : "processing");
     };
 
-    const startCaptureAndSend = () => {
-        if (captureInterval) return;  // 이미 실행중이면 무시
-        captureAndSend();  // 처음 호출
-        captureInterval = setInterval(captureAndSend, 100);  // 100ms마다 반복
-    };
 
-    const stopCaptureAndSend = () => {
-        if (captureInterval) {
-            clearInterval(captureInterval);  // Interval 중지
-            captureInterval = null;
-        }
-    };
-
-    const startCameraAndCapture = async () => {
-        await startCamera(); // 카메라를 먼저 시작
-        startCaptureAndSend(); // 그 후 촬영 시작
-    }
-
-    const stopCameraAndCapture = async () => {
-        stopCaptureAndSend();  // 먼저 촬영을 중지
-        await stopCamera();   // 그 후 카메라를 종료
-    }
 
     return (
         <div className={style.PanelMiddle}>
             <div className={style.panel_middle__header}>
-                <button className={style.camera_control__button} type="button" onClick={startCameraAndCapture}>촬영 & 전송 시작</button>
-                <button className={style.camera_control__button} type="button" onClick={stopCameraAndCapture}>촬영 & 전송 종료</button>
+                <button className={style.sysyem_control__button} type="button" onClick={onClickControlButton} ref={controlButton}></button>
             </div>
 
             <div className={style.panel_middle__body}>
-                <div className={style.display_camera}>
-                    <video className={style.camera} ref={videoRef} autoPlay></video>
+                <CameraCapture
+                    setCaptureImage={setCapturedImage}
+                    captureInterval={50}
+                    cameraState={panelSystem === "processing" ? "capturing" : "stopped"}
+                    visibility={"hidden"}
+                />
+                <div className={style.display_wishtable}>
+                    <StationWishTable
+
+                    />
                 </div>
-                <div className={style.display_recieved_image}>
-                    <img className={style.recieved_image} ref={imageRef} alt="Captured content" />
+                <div className={style.display_detectedbus}>
+                    <DetectingBus
+                        capturedImage={receivedImage}
+                    />
                 </div>
-                <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
             </div>
         </div>
     );

@@ -69,3 +69,42 @@ export async function getBusNumberFromImage(userRole: UserRole, params: { image:
 
     return result;
 }
+
+
+
+/**
+ * 버스 사진을 인식하여 버스 번호를 반환하는 API
+ * IBusNumberFromImage
+ * getBusNumberFromImage
+ */
+
+export interface IBusWishApi {
+    busList: {
+        busRouteId?: string;
+        busRouteNm?: string;
+        busRouteAbrv?: string;
+    }[];
+}
+
+export async function getBusWishList(userRole: UserRole, params: { arsId: string }) {
+    let data: any;
+    try {
+        const postData = qs.stringify(params);
+        const response = await axios.post(
+            getApiUrl(userRole, "/select/wishroute"),
+            postData,
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                withCredentials: true
+            }
+        );
+
+        data = response.data;
+    }
+    catch (error) {
+        console.error("Search request failed:", error);
+    }
+    return data;
+}

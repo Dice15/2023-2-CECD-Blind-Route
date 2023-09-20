@@ -4,11 +4,11 @@ import { getBusDestinationList, getBusList, getStationList } from "../../../../c
 import Bus from "../../../../cores/types/Bus";
 import Station from "../../../../cores/types/Station";
 import { UserRole } from "../../../../cores/types/UserRole";
-import useElementHeight from "../../../../hooks/useElementHeight";
 import { useModal } from "../../../modules/modal/Modal";
 import { ModalAnimationType } from "../../../modules/modal/ModalAnimations";
 import VirtualizedTable from "../../../modules/virtualizedTable/VirtualizedTable";
 import BusTable from "../bustable/BusTable";
+import useElementDimensions from "../../../../hooks/useElementDimensions";
 
 
 
@@ -34,7 +34,7 @@ export default function StationTable({ userRole }: StationTableProps) {
     const [BusTableModal, openBusTableModal, closeBusTableModal] = useModal(ModalAnimationType.ZOOM);
 
     /** custom hook */
-    const stationListHeight = useElementHeight<HTMLDivElement>(stationTable, "Pure");
+    const [stationListWidth, stationListHeight] = useElementDimensions<HTMLDivElement>(stationTable, "Pure");
 
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [

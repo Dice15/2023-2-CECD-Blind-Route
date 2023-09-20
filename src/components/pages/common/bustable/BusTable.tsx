@@ -1,7 +1,7 @@
 import { registerBus } from "../../../../cores/api/blindrouteClient";
 import Bus from "../../../../cores/types/Bus";
 import { UserRole } from "../../../../cores/types/UserRole";
-import useElementHeight from "../../../../hooks/useElementHeight";
+import useElementDimensions from "../../../../hooks/useElementDimensions";
 import VirtualizedTable from "../../../modules/virtualizedTable/VirtualizedTable";
 import style from "./BusTable.module.css"
 import { useRef, useState } from "react";
@@ -28,7 +28,7 @@ export default function BusTable({ userRole, arsId, busList, onClose }: BusTable
     const [filteredBusList, setFilteredBusList] = useState<Bus[]>(busList);
 
     /** custom hook */
-    const busListHeight = useElementHeight<HTMLDivElement>(busTable, "Pure");
+    const [busListWidth, busListHeight] = useElementDimensions<HTMLDivElement>(busTable, "Pure");
 
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [
@@ -66,7 +66,11 @@ export default function BusTable({ userRole, arsId, busList, onClose }: BusTable
                 busRouteAbrv: selectedBus.busRouteAbbreviation,
             });
 
-            console.log(busApiData);
+            if (busApiData === "success") {
+                alert("버스 등록 완료");
+            } else {
+                alert("버스 등록 실패");
+            }
         }
     };
 
