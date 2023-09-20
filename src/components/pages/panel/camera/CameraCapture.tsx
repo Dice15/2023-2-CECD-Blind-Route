@@ -32,7 +32,8 @@ export default function CameraCapture({ setCaptureImage, captureInterval, camera
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     width: { ideal: videoWidth },
-                    height: { ideal: videoHeight }
+                    height: { ideal: videoHeight },
+                    facingMode: "environment"  // 후면 카메라를 우선적으로 사용
                 }
             });
             video.srcObject = stream;
@@ -41,6 +42,7 @@ export default function CameraCapture({ setCaptureImage, captureInterval, camera
             console.error("Failed to start the camera:", error);
         }
     }, [videoWidth, videoHeight]);
+
 
 
     /** 카메라 종류 함수 */
@@ -97,6 +99,7 @@ export default function CameraCapture({ setCaptureImage, captureInterval, camera
                 clearInterval(task.current);
                 task.current = null;
                 await stopCamera(video);
+                setCaptureImage(null);
             }
         };
 
