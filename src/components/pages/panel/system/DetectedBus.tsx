@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import style from "./DetectingBus.module.css";
+import style from "./DetectedBus.module.css";
 
 
 
@@ -18,6 +18,8 @@ export default function DetectingBus({ capturedImage }: DetectingBusProps) {
     if (imageRef.current && capturedImage) {
         imageRef.current.src = URL.createObjectURL(capturedImage);
     }
+
+    
 
     return (
         <div className={style.DetectingBus}>
