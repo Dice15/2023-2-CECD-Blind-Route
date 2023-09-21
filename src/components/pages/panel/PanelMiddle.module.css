@@ -51,11 +51,12 @@
 
 /* panel_middle__body's children elements */
 .display_reserved_table {
-    flex: 1 0 calc(50% - 5px - 5px);
+    flex: 1 0 calc(50% - 5px - 5px - 1px);
     padding: 5px;
+    border-right: 1px dashed var(--dividerline-color);
 }
 
 .display_detectedbus {
-    flex: 1 0 calc(50% - 5px - 5px);
+    flex: 1 0 calc(50% - 5px - 5px - 1px);
     padding: 5px;
 }

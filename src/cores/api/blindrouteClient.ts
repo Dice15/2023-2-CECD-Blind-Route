@@ -178,7 +178,7 @@ export type IRegisterBus = "success" | "fail";
 
 
 /** API로 부터 받은 버스 데이터를 Bus타입의 리스트 형태로 반환 */
-export async function registerBus(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }) {
+export async function reserveBus(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }) {
     let data: IRegisterBus = "fail";
     try {
         const postData = qs.stringify(params);

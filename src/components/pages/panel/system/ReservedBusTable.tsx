@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useModal } from "../../../modules/modal/Modal";
 import { ModalAnimationType } from "../../../modules/modal/ModalAnimations";
 import style from "./ReservedBusTable.module.css";
@@ -6,7 +6,7 @@ import Station from "../../../../cores/types/Station";
 import { UserRole } from "../../../../cores/types/UserRole";
 import SelectingStation from "./SelectingStation";
 import Bus from "../../../../cores/types/Bus";
-import { getReservedBusList } from "../../../../cores/api/blindroutePanel";
+import { getReservedBusList, unreserveBus } from "../../../../cores/api/blindroutePanel";
 import VirtualizedTable from "../../../modules/virtualizedTable/VirtualizedTable";
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 
@@ -49,6 +49,27 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
     };
 
 
+    /** Temp Function: YOLO 인식 구현이 되기전, 자동으로 예약된 버스를 전부 제거해줌 */
+    const taskClear = useCallback(async () => {
+        if (refreshTaskRef.current) {
+            clearInterval(refreshTaskRef.current);
+            reservedBusList.forEach(async (bus) => {
+                if (station) {
+                    const apiData = await unreserveBus(userRole, {
+                        arsId: station.arsId,
+                        busRouteId: bus.busRouteId,
+                        busRouteNm: bus.busRouteNumber,
+                        busRouteAbrv: bus.busRouteAbbreviation
+                    });
+                    console.log(apiData);
+                }
+            });
+            setStation(null);
+            setReservedBusList([]);
+        }
+    }, [userRole, station, reservedBusList]);
+
+
     /** 정류장에 예약된 버스 리스트를 주기적으로 갱신함 */
     useEffect(() => {
         if (taskState === "running" && station) {
@@ -67,19 +88,13 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
                 setReservedBusList(busListInstances);
             }, 2000);
         } else {
-            if (refreshTaskRef.current) {
-                setStation(null);
-                clearInterval(refreshTaskRef.current);
-            }
+            taskClear();
         }
 
         return () => {
-            if (refreshTaskRef.current) {
-                setStation(null);
-                clearInterval(refreshTaskRef.current);
-            }
+            taskClear();
         };
-    }, [taskState, userRole, station]);
+    }, [taskState, userRole, station, taskClear]);
 
 
 
