@@ -63,16 +63,19 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
                 });
 
                 console.log(apiData);
+                console.log(busListInstances);
                 setReservedBusList(busListInstances);
             }, 2000);
         } else {
             if (refreshTaskRef.current) {
+                setStation(null);
                 clearInterval(refreshTaskRef.current);
             }
         }
 
         return () => {
             if (refreshTaskRef.current) {
+                setStation(null);
                 clearInterval(refreshTaskRef.current);
             }
         };
