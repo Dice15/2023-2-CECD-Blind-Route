@@ -50,7 +50,7 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
 
 
     /** Temp Function: YOLO 인식 구현이 되기전, 자동으로 예약된 버스를 전부 제거해줌 */
-    const taskClear = useCallback(async () => {
+    const taskClear = async () => {
         if (refreshTaskRef.current) {
             clearInterval(refreshTaskRef.current);
 
@@ -71,7 +71,7 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
 
             setStation(null);
         }
-    }, [taskState, userRole, station, reservedBusList]);
+    };
 
 
     /** 정류장에 예약된 버스 리스트를 주기적으로 갱신함 */
