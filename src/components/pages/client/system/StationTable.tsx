@@ -7,7 +7,7 @@ import { UserRole } from "../../../../cores/types/UserRole";
 import { useModal } from "../../../modules/modal/Modal";
 import { ModalAnimationType } from "../../../modules/modal/ModalAnimations";
 import VirtualizedTable from "../../../modules/virtualizedTable/VirtualizedTable";
-import BusTable from "../bustable/BusTable";
+import BusTable from "../../client/system/BusTable";
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 
 

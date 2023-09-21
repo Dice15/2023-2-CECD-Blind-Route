@@ -49,23 +49,6 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
     };
 
 
-    /** Temp Function: YOLO 인식 구현이 되기전, 자동으로 예약된 버스를 전부 제거해줌 */
-    const taskClear = useCallback(async (arsId: string) => {
-        if (taskState === "stopped") {
-            reservedBusList.forEach(async (bus) => {
-                const apiData = await unreserveBus(userRole, {
-                    arsId: arsId,
-                    busRouteId: bus.busRouteId,
-                    busRouteNm: bus.busRouteNumber,
-                    busRouteAbrv: bus.busRouteAbbreviation
-                });
-                console.log(apiData);
-            });
-            // setReservedBusList([]);
-        }
-    }, [taskState, userRole, reservedBusList]);
-
-
     /** 정류장에 예약된 버스 리스트를 주기적으로 갱신함 */
     useEffect(() => {
         if (taskState === "running" && station) {
@@ -86,9 +69,6 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
         } else {
             if (refreshTaskRef.current) {
                 clearInterval(refreshTaskRef.current);
-                if (station) {
-                    taskClear(station.arsId);
-                }
                 setStation(null);
             }
         }
@@ -96,13 +76,10 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
         return () => {
             if (refreshTaskRef.current) {
                 clearInterval(refreshTaskRef.current);
-                if (station) {
-                    taskClear(station.arsId);
-                }
                 setStation(null);
             }
         };
-    }, [taskState, userRole, station, taskClear]);
+    }, [taskState, userRole, station]);
 
 
 

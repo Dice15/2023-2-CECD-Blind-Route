@@ -1,6 +1,6 @@
 import { UserRole } from "../../../cores/types/UserRole";
-import StationTable from "../common/stationtable/StationTable";
 import style from "./ClientMiddle.module.css"
+import StationTable from "./system/StationTable";
 
 
 
