@@ -1,17 +1,22 @@
-.StationWishTable {
+.ReservedBusTable {
     width: 100%;
     height: 100%;
 }
 
 
 
-/* StationWishTable's children elements */
+/* ReservedBusTable's children elements */
 .select_station {
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.reserved_bus_table {
+    width: 100%;
+    height: 100%;
 }
 
 .select_station_modal__wrapper {
@@ -35,4 +40,12 @@
 
 .select_station__button:hover {
     background-color: var(--button-hover-color);
+}
+
+
+
+/* reserved_bus_table's children elements */
+.reserved_bus_table__empty {
+    width: 100%;
+    height: 100%;
 }

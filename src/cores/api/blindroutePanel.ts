@@ -78,8 +78,9 @@ export async function getBusNumberFromImage(userRole: UserRole, params: { image:
  * getBusNumberFromImage
  */
 
-export interface IBusWishApi {
-    busList: {
+export interface IReservedBusApi {
+    busInfo: {
+        arsId?: string;
         busRouteId?: string;
         busRouteNm?: string;
         busRouteAbrv?: string;
@@ -87,7 +88,7 @@ export interface IBusWishApi {
 }
 
 export async function getReservedBusList(userRole: UserRole, params: { arsId: string }) {
-    let data: any;
+    let data: IReservedBusApi = { busInfo: [] };
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
@@ -100,7 +101,6 @@ export async function getReservedBusList(userRole: UserRole, params: { arsId: st
                 withCredentials: true
             }
         );
-
         data = response.data;
     }
     catch (error) {
