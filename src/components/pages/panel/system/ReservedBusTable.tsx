@@ -39,7 +39,7 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [
         { name: "", style: { width: "50px", minWidth: "50px", maxWidth: "50px" } },
-        { name: "", style: { width: "calc(100% - 50px)" } },
+        { name: "예약된 버스", style: { width: "calc(100% - 50px)" } },
     ];
 
 
@@ -84,18 +84,18 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
 
 
     return (
-        <div className={style.ReservedBusTable}>
+        <div className={style.ReservedBusTable} ref={reservedBusTableRef}>
             {taskState === "running" && (!station
                 ? <div className={style.select_station}>
                     <button className={style.select_station__button} type="button" onClick={onSelectingStation}>정류장 선택</button>
                 </div>
-                : <div className={style.reserved_bus_table} ref={reservedBusTableRef}>
+                : <div className={style.reserved_bus_table}>
                     {reservedBusList.length > 0
                         ? <VirtualizedTable
                             windowHeight={reservedBusTableHeight}
 
                             numColumns={tableColumns.length}
-                            columnHeight={0}
+                            columnHeight={30}
                             columnWidths={tableColumns.map((column) => column.style)}
                             renderColumns={({ index, columnClassName, columnStyle }) => {
                                 return (
