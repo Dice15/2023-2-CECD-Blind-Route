@@ -62,21 +62,28 @@ export default function useElementDimensions<T extends HTMLElement>(htmlElement:
     return [dimensions.width, dimensions.height];
 }
 
+
+
 /** 요소의 dimensions를 가져옴 */
 function getDefaultDimensions(htmlElement: React.RefObject<HTMLElement>): HtmlElementDimensions {
-    return {
-        width: htmlElement.current?.getBoundingClientRect().width || 0,
-        height: htmlElement.current?.getBoundingClientRect().height || 0,
-    };
+    if (htmlElement.current) {
+        return {
+            width: htmlElement.current.getBoundingClientRect().width || 0,
+            height: htmlElement.current.getBoundingClientRect().height || 0,
+        };
+    }
+    return { width: 0, height: 0 };
 }
+
+
 
 /** 요소의 순수 dimensions만을 가져옴 */
 function getPureDimensions(htmlElement: React.RefObject<HTMLElement>): HtmlElementDimensions {
     if (htmlElement.current) {
         const styles = window.getComputedStyle(htmlElement.current);
 
-        const width = htmlElement.current?.getBoundingClientRect().width || 0;
-        const height = htmlElement.current?.getBoundingClientRect().height || 0;
+        const width = htmlElement.current.getBoundingClientRect().width || 0;
+        const height = htmlElement.current.getBoundingClientRect().height || 0;
 
         const paddingX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
         const paddingY = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
@@ -89,6 +96,5 @@ function getPureDimensions(htmlElement: React.RefObject<HTMLElement>): HtmlEleme
             height: height - (paddingY + borderY),
         };
     }
-
     return { width: 0, height: 0 };
 }

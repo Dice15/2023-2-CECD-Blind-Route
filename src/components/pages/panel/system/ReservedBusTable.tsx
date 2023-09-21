@@ -84,12 +84,12 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
 
 
     return (
-        <div className={style.ReservedBusTable} ref={reservedBusTableRef}>
+        <div className={style.ReservedBusTable}>
             {taskState === "running" && (!station
                 ? <div className={style.select_station}>
                     <button className={style.select_station__button} type="button" onClick={onSelectingStation}>정류장 선택</button>
                 </div>
-                : <div className={style.reserved_bus_table}>
+                : <div className={style.reserved_bus_table} ref={reservedBusTableRef}>
                     {reservedBusList.length > 0
                         ? <VirtualizedTable
                             windowHeight={reservedBusTableHeight}
