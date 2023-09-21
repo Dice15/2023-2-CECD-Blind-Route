@@ -6,16 +6,16 @@ import useElementDimensions from "../../../../hooks/useElementDimensions";
 
 /** 카메라 컴포넌트 프로퍼티 */
 export interface CameraCaptureProps {
+    taskState: "running" | "stopped";
     setCaptureImage: React.Dispatch<React.SetStateAction<Blob | null>>;
     captureInterval: number;
-    cameraState: "capturing" | "stopped";
     visibility: "visible" | "hidden";
 }
 
 
 
 /** 카메라 컴포넌트 */
-export default function CameraCapture({ setCaptureImage, captureInterval, cameraState, visibility }: CameraCaptureProps) {
+export default function CameraCapture({ setCaptureImage, captureInterval, taskState: cameraState, visibility }: CameraCaptureProps) {
     /** ref */
     const displayCameraRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -104,7 +104,7 @@ export default function CameraCapture({ setCaptureImage, captureInterval, camera
         };
 
         if (videoElement && canvasElement) {
-            if (state === "capturing") {
+            if (state === "running") {
                 if (!captureTaskRef.current) {
                     startCapture(videoElement, canvasElement, taskRef);
                 }

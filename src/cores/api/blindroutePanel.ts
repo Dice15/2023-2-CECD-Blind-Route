@@ -86,7 +86,7 @@ export interface IBusWishApi {
     }[];
 }
 
-export async function getBusWishList(userRole: UserRole, params: { arsId: string }) {
+export async function getReservedBusList(userRole: UserRole, params: { arsId: string }) {
     let data: any;
     try {
         const postData = qs.stringify(params);

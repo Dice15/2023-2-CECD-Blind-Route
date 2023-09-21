@@ -1,17 +1,20 @@
 import { useEffect, useRef } from "react";
 import style from "./DetectedBus.module.css";
+import { UserRole } from "../../../../cores/types/UserRole";
 
 
 
 /** 버스 탐지기 컴포넌트 프로퍼티 */
 export interface DetectingBusProps {
+    taskState: "running" | "stopped";
+    userRole: UserRole;
     detectedImage: Blob | null;
 }
 
 
 
 /** 버스 탐지기 컴포넌트 */
-export default function DetectingBus({ detectedImage }: DetectingBusProps) {
+export default function DetectingBus({ taskState, userRole, detectedImage }: DetectingBusProps) {
     /** ref */
     const imageRef = useRef<HTMLImageElement>(null);
 
@@ -30,7 +33,10 @@ export default function DetectingBus({ detectedImage }: DetectingBusProps) {
 
     return (
         <div className={style.DetectingBus}>
-            <img className={style.recieved_image} alt="Captured content" style={{ display: "none" }} ref={imageRef} />
+            {taskState === "running"
+                ? <img className={style.recieved_image} alt="Captured content" style={{ display: "none" }} ref={imageRef} />
+                : <></>
+            }
         </div>
     );
 }
