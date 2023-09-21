@@ -61,9 +61,6 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
                         bus.busRouteAbrv,
                     );
                 });
-
-                console.log(apiData);
-                console.log(busListInstances);
                 setReservedBusList(busListInstances);
             }, 2000);
         } else {

@@ -120,7 +120,6 @@ export async function getBusList(userRole: UserRole, params: { arsId: string }) 
     catch (error) {
         console.error("Search request failed:", error);
     }
-    console.log(data);
     return data;
 }
 
@@ -192,7 +191,6 @@ export async function reserveBus(userRole: UserRole, params: { arsId: string, bu
                 withCredentials: true
             }
         );
-
         data = response.data;
     }
     catch (error) {

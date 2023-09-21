@@ -34,10 +34,12 @@ function getApiUrl(userRole: UserRole, path: string) {
  * getBusNumberFromImage
  */
 
+/** 이미지에서 버스 번호를 추출하는 API의 반환 형태*/
 export interface IBusNumberFromImage {
     data?: Blob;
 }
 
+/** 이미지에서 버스 번호를 추출 */
 export async function getBusNumberFromImage(userRole: UserRole, params: { image: Blob }) {
     let result: IBusNumberFromImage = { data: undefined };
 
@@ -78,6 +80,7 @@ export async function getBusNumberFromImage(userRole: UserRole, params: { image:
  * getReservedBusList
  */
 
+/** API로 부터 받은 예약된 버스 데이터 인터페이스*/
 export interface IReservedBusApi {
     busInfo: {
         arsId?: string;
@@ -87,6 +90,7 @@ export interface IReservedBusApi {
     }[];
 }
 
+/** 해당 정류장에 예약된 버스리스트를 받아옴 */
 export async function getReservedBusList(userRole: UserRole, params: { arsId: string }) {
     let data: IReservedBusApi = { busInfo: [] };
     try {
@@ -112,22 +116,17 @@ export async function getReservedBusList(userRole: UserRole, params: { arsId: st
 
 
 /**
- * 해당 정류장에 예약된 버스 리스트를 받아오는 API
- * IReservedBusApi
- * getReservedBusList
+ * 해당 정류장에 버스 예약을 취소하는 API
+ * IUnreserveBusApi
+ * unreserveBus
  */
 
-export interface IUnreserveBusApi {
-    busInfo: {
-        arsId?: string;
-        busRouteId?: string;
-        busRouteNm?: string;
-        busRouteAbrv?: string;
-    }[];
-}
+/** 예약을 취소하는 Api 반환 타입*/
+export type IUnreserveBusApi = "success" | "fail";
 
+/** 해당 정류장에 버스 예약을 취소 */
 export async function unreserveBus(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }) {
-    let data: any;
+    let data: IUnreserveBusApi = "fail";
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
@@ -140,7 +139,6 @@ export async function unreserveBus(userRole: UserRole, params: { arsId: string, 
                 withCredentials: true
             }
         );
-
         data = response.data;
     }
     catch (error) {
