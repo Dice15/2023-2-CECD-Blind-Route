@@ -22,6 +22,9 @@
 .select_station_modal__wrapper {
     width: 70vw;
     height: 70vh;
+    border: 3px solid var(--component-border-color);
+    border-radius: 10px;
+    padding: 15px;
     background-color: var(--component-background-color);
 }
 
@@ -30,10 +33,12 @@
 /* select_station's children elements */
 .select_station__button {
     width: 60%;
-    height: 25%;
+    height: 15%;
     border: 3px solid var(--button-border-color);
     border-radius: 6px;
+    margin-bottom: 20%;
     cursor: pointer;
+    font-size: 18px;
     font-weight: 400;
     background-color: var(--button-color);
     color: var(--button-text-color);
@@ -49,4 +54,11 @@
 .reserved_bus_table__empty {
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reserved_bus_table__empty h2 {
+    margin-bottom: 20%;
 }

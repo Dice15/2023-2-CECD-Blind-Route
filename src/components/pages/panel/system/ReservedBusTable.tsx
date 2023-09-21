@@ -82,7 +82,7 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
 
     return (
         <div className={style.ReservedBusTable}>
-            {taskState === "running" && !station
+            {taskState === "running" && (!station
                 ? <div className={style.select_station}>
                     <button className={style.select_station__button} type="button" onClick={onSelectingStation}>정류장 선택</button>
                 </div>
@@ -115,12 +115,11 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
                             }}
                         />
                         : <div className={style.reserved_bus_table__empty}>
-                            <h1>예약된 버스가 없습니다.</h1>
+                            <h2>예약된 버스가 없습니다.</h2>
                         </div>
                     }
-
                 </div>
-            }
+            )}
 
             <SelectStationModal>
                 <div className={style.select_station_modal__wrapper}>
