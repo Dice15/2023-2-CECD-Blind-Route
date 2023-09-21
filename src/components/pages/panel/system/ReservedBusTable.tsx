@@ -68,15 +68,15 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
             }, 2000);
         } else {
             if (refreshTaskRef.current) {
-                clearInterval(refreshTaskRef.current);
                 setStation(null);
+                clearInterval(refreshTaskRef.current);
             }
         }
 
         return () => {
             if (refreshTaskRef.current) {
-                clearInterval(refreshTaskRef.current);
                 setStation(null);
+                clearInterval(refreshTaskRef.current);
             }
         };
     }, [taskState, userRole, station]);
