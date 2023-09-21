@@ -22,6 +22,7 @@
 .select_station_modal__wrapper {
     width: 70vw;
     height: 70vh;
+    background-color: var(--component-background-color);
 }
 
 
