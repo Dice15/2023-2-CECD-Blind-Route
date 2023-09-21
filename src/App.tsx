@@ -15,6 +15,15 @@ function App() {
   /** 모달 추가 */
   useModalCreater();
 
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.ts').then(() => {
+      console.log("Service Worker Registered!");
+    }).catch(error => {
+      console.log("Service Worker Registration Failed:", error);
+    });
+  }
+
+
   return (
     <div className="App">
       <BrowserRouter>
