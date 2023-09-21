@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import style from "./PanelMiddle.module.css";
 import { UserRole } from "../../../cores/types/UserRole";
-import { getBusNumberFromImage } from "../../../cores/api/blindroutePanel";
-import CameraCapture from "./camera/CameraCapture";
-import DetectingBus from "./system/DetectedBus";
+import DetectingBus from "./system/DetectingBus";
 import ReservedBusTable from "./system/ReservedBusTable";
 
 
@@ -22,8 +20,6 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
 
     /** state */
     const [panelSystemState, setPanelSystemState] = useState<"running" | "stopped">("stopped");
-    const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
-    const [receivedImage, setReceivedImage] = useState<Blob | null>(null);
 
 
     /** 버튼 클릭에 따른 시스템 변경 이벤트 */
@@ -32,10 +28,6 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
     };
 
 
-    /** 캡쳐된 이미지에서 버스 번호를 인식하는 Api호출 */
-    const detectingBusNumber = useCallback(async (image: Blob) => {
-        return await getBusNumberFromImage(userRole, { image: image });
-    }, [userRole]);
 
 
     /** 시스템 상태에 따른 버튼 변경 */
@@ -53,17 +45,7 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
     }, [controlButton, panelSystemState]);
 
 
-    /** 캡쳐된 이미지가 갱신될떄 마다 Api에 이미지를 전송하여 버스 번호를 인식함 */
-    useEffect(() => {
-        (async () => {
-            if (capturedImage) {
-                const busData = await detectingBusNumber(capturedImage);
-                if (busData.data) {
-                    setReceivedImage(busData.data);
-                }
-            }
-        })();
-    }, [capturedImage, detectingBusNumber])
+
 
 
     return (
@@ -73,8 +55,7 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
             </div>
 
             <div className={style.panel_middle__body}>
-
-                <div className={style.display_wishtable}>
+                <div className={style.display_reserved_table}>
                     <ReservedBusTable
                         taskState={panelSystemState}
                         userRole={userRole}
@@ -84,7 +65,6 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
                     <DetectingBus
                         taskState={panelSystemState}
                         userRole={userRole}
-                        detectedImage={receivedImage}
                     />
                 </div>
             </div>
@@ -93,10 +73,5 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
 };
 
 /*
-                <CameraCapture
-                    taskState={panelSystemState}
-                    setCaptureImage={setCapturedImage}
-                    captureInterval={100}
-                    visibility={"hidden"}
-                />
+
 */
