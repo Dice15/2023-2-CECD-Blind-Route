@@ -53,6 +53,7 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
     const taskClear = useCallback(async () => {
         if (refreshTaskRef.current) {
             clearInterval(refreshTaskRef.current);
+
             if (taskState === "stopped") {
                 reservedBusList.forEach(async (bus) => {
                     if (station) {
@@ -65,9 +66,10 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
                         console.log(apiData);
                     }
                 });
+                setReservedBusList([]);
             }
+
             setStation(null);
-            setReservedBusList([]);
         }
     }, [taskState, userRole, station, reservedBusList]);
 
