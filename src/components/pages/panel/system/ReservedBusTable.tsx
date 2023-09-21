@@ -53,21 +53,23 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
     const taskClear = useCallback(async () => {
         if (refreshTaskRef.current) {
             clearInterval(refreshTaskRef.current);
-            reservedBusList.forEach(async (bus) => {
-                if (station) {
-                    const apiData = await unreserveBus(userRole, {
-                        arsId: station.arsId,
-                        busRouteId: bus.busRouteId,
-                        busRouteNm: bus.busRouteNumber,
-                        busRouteAbrv: bus.busRouteAbbreviation
-                    });
-                    console.log(apiData);
-                }
-            });
+            if (taskState === "stopped") {
+                reservedBusList.forEach(async (bus) => {
+                    if (station) {
+                        const apiData = await unreserveBus(userRole, {
+                            arsId: station.arsId,
+                            busRouteId: bus.busRouteId,
+                            busRouteNm: bus.busRouteNumber,
+                            busRouteAbrv: bus.busRouteAbbreviation
+                        });
+                        console.log(apiData);
+                    }
+                });
+            }
             setStation(null);
             setReservedBusList([]);
         }
-    }, [userRole, station, reservedBusList]);
+    }, [taskState, userRole, station, reservedBusList]);
 
 
     /** 정류장에 예약된 버스 리스트를 주기적으로 갱신함 */
