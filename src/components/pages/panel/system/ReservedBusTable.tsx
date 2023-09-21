@@ -84,12 +84,12 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
 
 
     return (
-        <div className={style.ReservedBusTable}>
+        <div className={style.ReservedBusTable} ref={reservedBusTableRef}>
             {taskState === "running" && (!station
                 ? <div className={style.select_station}>
                     <button className={style.select_station__button} type="button" onClick={onSelectingStation}>정류장 선택</button>
                 </div>
-                : <div className={style.reserved_bus_table} ref={reservedBusTableRef}>
+                : <div className={style.reserved_bus_table}>
                     {reservedBusList.length > 0
                         ? <VirtualizedTable
                             windowHeight={reservedBusTableHeight}
@@ -124,15 +124,18 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
                 </div>
             )}
 
-            <SelectStationModal>
-                <div className={style.select_station_modal__wrapper}>
-                    <SelectingStation
-                        userRole={userRole}
-                        setStation={setStation}
-                        onClose={closeSelectStationModal}
-                    />
-                </div>
-            </SelectStationModal>
+            {taskState === "running" && (
+                <SelectStationModal>
+                    <div className={style.select_station_modal__wrapper}>
+                        <SelectingStation
+                            userRole={userRole}
+                            setStation={setStation}
+                            onClose={closeSelectStationModal}
+                        />
+                    </div>
+                </SelectStationModal>
+            )}
+
         </div >
     );
 }
