@@ -34,6 +34,12 @@ export default function VirtualizedTable({
     const startIndex = Math.floor(scrollTop / rowHeight);
     const endIndex = Math.min(numRows - 1, Math.floor((scrollTop + bodyHeight) / rowHeight));
 
+    console.log({
+        windowHeight,
+        numColumns, columnHeight, columnWidths, renderColumns,
+        numRows, rowHeight, renderRows,
+    });
+
     const columns = [];
     for (let i = 0; i < numColumns; i++) {
         columns.push(
