@@ -66,7 +66,7 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
                         console.log(apiData);
                     }
                 });
-                setReservedBusList([]);
+                // setReservedBusList([]);
             }
 
             setStation(null);
