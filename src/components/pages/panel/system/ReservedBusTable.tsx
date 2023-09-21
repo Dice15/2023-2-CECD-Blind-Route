@@ -50,28 +50,20 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
 
 
     /** Temp Function: YOLO 인식 구현이 되기전, 자동으로 예약된 버스를 전부 제거해줌 */
-    const taskClear = async () => {
-        if (refreshTaskRef.current) {
-
-
-            if (taskState === "stopped") {
-                reservedBusList.forEach(async (bus) => {
-                    if (station) {
-                        const apiData = await unreserveBus(userRole, {
-                            arsId: station.arsId,
-                            busRouteId: bus.busRouteId,
-                            busRouteNm: bus.busRouteNumber,
-                            busRouteAbrv: bus.busRouteAbbreviation
-                        });
-                        console.log(apiData);
-                    }
+    const taskClear = useCallback(async (arsId: string) => {
+        if (taskState === "stopped") {
+            reservedBusList.forEach(async (bus) => {
+                const apiData = await unreserveBus(userRole, {
+                    arsId: arsId,
+                    busRouteId: bus.busRouteId,
+                    busRouteNm: bus.busRouteNumber,
+                    busRouteAbrv: bus.busRouteAbbreviation
                 });
-                // setReservedBusList([]);
-            }
-
-
+                console.log(apiData);
+            });
+            // setReservedBusList([]);
         }
-    };
+    }, [taskState, userRole, reservedBusList]);
 
 
     /** 정류장에 예약된 버스 리스트를 주기적으로 갱신함 */
@@ -93,20 +85,24 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
             }, 2000);
         } else {
             if (refreshTaskRef.current) {
-                //taskClear();
                 clearInterval(refreshTaskRef.current);
+                if (station) {
+                    taskClear(station.arsId);
+                }
                 setStation(null);
             }
         }
 
         return () => {
             if (refreshTaskRef.current) {
-                //taskClear();
                 clearInterval(refreshTaskRef.current);
+                if (station) {
+                    taskClear(station.arsId);
+                }
                 setStation(null);
             }
         };
-    }, [taskState, userRole, station]);
+    }, [taskState, userRole, station, taskClear]);
 
 
 
