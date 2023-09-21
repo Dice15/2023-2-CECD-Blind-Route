@@ -2,7 +2,7 @@ import { reserveBus } from "../../../../cores/api/blindrouteClient";
 import Bus from "../../../../cores/types/Bus";
 import { UserRole } from "../../../../cores/types/UserRole";
 import useElementDimensions from "../../../../hooks/useElementDimensions";
-import VirtualizedTable from "../../../modules/virtualizedTable/VirtualizedTable";
+import VirtualizedTable from "../../../../modules/virtualizedTable/VirtualizedTable";
 import style from "./BusTable.module.css"
 import { useRef, useState } from "react";
 

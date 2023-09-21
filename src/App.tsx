@@ -1,12 +1,12 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import useModalCreater from './components/modules/modal/Modal';
 import { useState } from 'react';
 import { UserRole } from './cores/types/UserRole';
 import Home from './components/pages/home/Home';
 import Client from './components/pages/client/Client';
 import Panel from './components/pages/panel/Panel';
 import Develop from './components/pages/develop/Develop';
+import useModalCreater from './modules/modal/Modal';
 
 function App() {
   /** state */
