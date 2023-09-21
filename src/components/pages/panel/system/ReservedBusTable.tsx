@@ -70,6 +70,7 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
             if (refreshTaskRef.current) {
                 setStation(null);
                 clearInterval(refreshTaskRef.current);
+                setReservedBusList([]);
             }
         }
 
@@ -77,6 +78,7 @@ export default function ReservedBusTable({ taskState, userRole }: ReservedBusTab
             if (refreshTaskRef.current) {
                 setStation(null);
                 clearInterval(refreshTaskRef.current);
+                setReservedBusList([]);
             }
         };
     }, [taskState, userRole, station]);
