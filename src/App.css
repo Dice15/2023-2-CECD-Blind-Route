@@ -14,10 +14,9 @@
 
 
   /* button */
-  --button-color: #2260ff;
-  --button-hover-color: #80a3fc;
-  --button-border-color: #cbd8e4;
-  --button-text-color: #ffffff;
+  --button-color: #ffffff;
+  --button-border--color: #000000;
+  --button-text-color: #000000;
 
   --button-positive-color: #08b66d;
   --button-positive-hover-color: #7be6b9;

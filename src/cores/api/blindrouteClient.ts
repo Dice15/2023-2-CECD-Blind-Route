@@ -31,7 +31,7 @@ function getApiUrl(userRole: UserRole, path: string) {
 /** 
  * 로그인
  */
-export function onLogin(userRole: UserRole) {
+export function redirectToAccountLogin(userRole: UserRole) {
     window.location.href = getApiUrl(userRole, "/oauth2/authorization/google");
 };
 
@@ -39,7 +39,7 @@ export function onLogin(userRole: UserRole) {
 /** 
  * 로그아웃
  */
-export function onLogout(userRole: UserRole) {
+export function redirectToLogout(userRole: UserRole) {
     window.location.href = getApiUrl(userRole, "/logout");
 };
 
