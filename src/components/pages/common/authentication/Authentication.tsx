@@ -1,7 +1,7 @@
 import styles from "./Authentication.module.css"
 import { redirectToAccountLogin, redirectToLogout } from "../../../../cores/api/blindrouteClient";
 import { UserRole } from "../../../../cores/types/UserRole";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
@@ -46,8 +46,6 @@ export function updateAuthentication(
 
 
 
-
-
 /** 로그인 인증 페이지 */
 export default function Authentication({ userRole, authentication }: AuthenticationProps) {
     /* const */
@@ -55,50 +53,41 @@ export default function Authentication({ userRole, authentication }: Authenticat
 
 
     /** state */
-    const [pageState, setPageState] = useState<"init" | "authenticating" | "redirected">("init");
+    type PageState = "requestAuthenticate";
 
 
     /** 인증 시도 */
     const onAuthenticate = () => {
-        sessionStorage.setItem("pageState", "redirected");
+        const pageState: PageState = "requestAuthenticate";
+        sessionStorage.setItem("pageState", pageState);
         redirectToAccountLogin(userRole);
     };
 
 
-    /** 리다이렉트가 되었는지 확인 */
-    useEffect(() => {
-        const savedState = sessionStorage.getItem("pageState") as ("init" | "authenticating" | "redirected");
-        if (savedState) {
-            setPageState(savedState);
-            sessionStorage.removeItem("pageState");  // optional: clear after use
-        }
-    }, []);
-
-
     /** 인증을 시도한 뒤에만 인증이 되었는지 확인 */
     useEffect(() => {
-        if (pageState === "redirected") {
+        const savedState: PageState = sessionStorage.getItem("pageState") as PageState;
+        if (savedState === "requestAuthenticate") {
             updateAuthentication(authentication, {
                 succeededAuthentication: () => {
                     history("/home");
+                    sessionStorage.removeItem("pageState");
                 },
                 failedAuthentication: () => {
                     alert("로그인에 실패했습니다.");
                     history("/home");
+                    sessionStorage.removeItem("pageState");
                 }
             });
+        } else {
+            onAuthenticate();
         }
-    }, [pageState, authentication, history]);
+    }, [history, onAuthenticate]);
 
 
     return (
-        <form className={styles.LoginForm} action="">
-            <div className={styles.login_form}>
-                <div className={styles.login_form__button_field}>
-                    <button className={styles.login_form__button} type="button" onClick={onAuthenticate} style={{ marginRight: "4px" }}>로그인</button>
-                    <button className={styles.login_form__button} type="button" onClick={() => { redirectToLogout(userRole) }}>회원가입</button>
-                </div>
-            </div>
-        </form>
+        <div>
+
+        </div>
     )
 }

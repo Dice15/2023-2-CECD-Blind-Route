@@ -34,24 +34,6 @@ export default function Home({ userRole, appType }: HomeProps) {
     const [authenticationState, setAuthenticationState] = useState<AuthenticationState>("Unauthenticated");
 
 
-    /** 인증 상태에 따른 이벤트 */
-    /* useEffect(() => {
-         switch (authenticationState) {
-             case "success": {
-                 history(`/${appType}`);
-                 break;
-             }
-             case "fail": {
-                 alert("로그인을 실패하였습니다");
-                 break;
-             }
-             default: {
-                 break;
-             }
-         }
-     }, [appType, history, authenticationState]);*/
-
-
     /** 인증 페이지로 이동 */
     const moveToAuthenticationPage = () => {
         history("/authentication");
@@ -67,7 +49,7 @@ export default function Home({ userRole, appType }: HomeProps) {
             <div className={style.body}>
                 <div className={style.authentication}>
                     <button className={style.login_button} type="button" onClick={moveToAuthenticationPage}>로그인</button>
-                    <button className={style.signin_button} type="button" onClick={() => { }}>회원가입</button>
+                    <button className={style.signin_button} type="button" onClick={() => { }}>로그아웃</button>
                 </div>
             </div>
         </div>
