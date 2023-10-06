@@ -59,23 +59,20 @@ export default function Authentication({ userRole, authentication }: Authenticat
 
 
     /** 인증 시도 */
-    const onAuthenticate = async () => {
+    const onAuthenticate = () => {
+        sessionStorage.setItem("pageState", "redirected");
         redirectToAccountLogin(userRole);
-        setPageState("authenticating");
     };
 
 
-    /** 페이지 로딩 시 리디렉션 여부 확인 */
+    /** 리다이렉트가 되었는지 확인 */
     useEffect(() => {
-        console.log("Checking for redirected hash...");
-        if (window.location.hash.includes("#redirected")) {
-            console.log("Redirected hash found!");
-            setPageState("redirected");
-        } else {
-            console.log("Redirected hash not found!");
+        const savedState = sessionStorage.getItem("pageState") as ("init" | "authenticating" | "redirected");
+        if (savedState) {
+            setPageState(savedState);
+            sessionStorage.removeItem("pageState");  // optional: clear after use
         }
     }, []);
-
 
 
     /** 인증을 시도한 뒤에만 인증이 되었는지 확인 */
