@@ -67,10 +67,15 @@ export default function Authentication({ userRole, authentication }: Authenticat
 
     /** 페이지 로딩 시 리디렉션 여부 확인 */
     useEffect(() => {
+        console.log("Checking for redirected hash...");
         if (window.location.hash.includes("#redirected")) {
+            console.log("Redirected hash found!");
             setPageState("redirected");
+        } else {
+            console.log("Redirected hash not found!");
         }
     }, []);
+
 
 
     /** 인증을 시도한 뒤에만 인증이 되었는지 확인 */
