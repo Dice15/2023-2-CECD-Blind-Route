@@ -53,6 +53,10 @@ export default function Authentication({ userRole, authentication }: Authenticat
 
 
     /** state */
+    const [loadingText, setLoadingText] = useState("로그인중");
+
+
+    /** 타입 */
     type PageState = "requestAuthenticate";
 
 
@@ -86,9 +90,36 @@ export default function Authentication({ userRole, authentication }: Authenticat
     }, [authentication, history, onAuthenticate]);
 
 
-    return (
-        <div>
+    /** 로그인 중 이벤트 */
+    useEffect(() => {
+        const interval = setInterval(() => {
+            switch (loadingText) {
+                case "로그인중":
+                    setLoadingText("로그인중.");
+                    break;
+                case "로그인중.":
+                    setLoadingText("로그인중..");
+                    break;
+                case "로그인중..":
+                    setLoadingText("로그인중...");
+                    break;
+                case "로그인중...":
+                    setLoadingText("로그인중");
+                    break;
+                default:
+                    setLoadingText("로그인중");
+            }
+        }, 500);
 
+        return () => clearInterval(interval);  // 컴포넌트가 언마운트되거나 re-render될 때 타이머를 정리합니다.
+    }, [loadingText]);
+
+
+
+    return (
+        <div className={styles.container}>
+            <span className={styles.loadingText}>{loadingText}</span>
         </div>
-    )
+    );
+
 }

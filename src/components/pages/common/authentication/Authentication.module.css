@@ -1,34 +1,13 @@
-.LoginForm {
-    height: 100%;
-    width: 100%;
-}
-
-.login_form {
-    height: calc(100% - 5px - 5px);
-    width: calc(100% - 5px - 5px);
-    padding: 5px;
-    background-color: var(--component-background-color);
-}
-
-
-
-/* login_form's children elements */
-.login_form__button_field {
-    height: 100%;
-    width: 100%;
+/* Authentication.module.css */
+.container {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
-.login_form__button {
-    flex: 1 0 calc(50% - 10px - 10px - 3px - 3px);
-    border: 3px solid var(--button-border-color);
-    border-radius: 6px;
-    cursor: pointer;
-    background-color: var(--button-color);
-    font-weight: 400;
-    color: var(--button-text-color);
-}
-
-.login_form__button:hover {
-    background-color: var(--button-hover-color);
+.loadingText {
+    font-size: 24px;
+    color: white;
 }
