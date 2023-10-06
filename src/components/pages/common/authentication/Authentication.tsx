@@ -57,11 +57,12 @@ export default function Authentication({ userRole, authentication }: Authenticat
 
 
     /** 인증 시도 */
-    const onAuthenticate = () => {
+    const onAuthenticate = useCallback(() => {
         const pageState: PageState = "requestAuthenticate";
         sessionStorage.setItem("pageState", pageState);
         redirectToAccountLogin(userRole);
-    };
+    }, [userRole]);
+
 
 
     /** 인증을 시도한 뒤에만 인증이 되었는지 확인 */
@@ -82,7 +83,7 @@ export default function Authentication({ userRole, authentication }: Authenticat
         } else {
             onAuthenticate();
         }
-    }, [history, onAuthenticate]);
+    }, [authentication, history, onAuthenticate]);
 
 
     return (
