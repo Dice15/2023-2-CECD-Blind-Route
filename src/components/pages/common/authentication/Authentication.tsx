@@ -86,7 +86,7 @@ export default function Authentication({ userRole, authentication }: Authenticat
                 }
             });
         }
-    }, [pageState, authentication]);
+    }, [pageState, authentication, history]);
 
 
     return (
