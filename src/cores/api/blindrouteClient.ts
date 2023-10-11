@@ -39,7 +39,7 @@ export function redirectToAccountLogin(userRole: UserRole) {
 /** 
  * 로그아웃
  */
-export function redirectToLogout(userRole: UserRole) {
+export function redirectToAccountLogout(userRole: UserRole) {
     window.location.href = getApiUrl(userRole, "/logout");
 };
 

@@ -1,5 +1,5 @@
 import styles from "./Authentication.module.css"
-import { redirectToAccountLogin, redirectToLogout } from "../../../../cores/api/blindrouteClient";
+import { redirectToAccountLogin, redirectToAccountLogout } from "../../../../cores/api/blindrouteClient";
 import { UserRole } from "../../../../cores/types/UserRole";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -34,37 +34,52 @@ export type AuthenticationActionType = "login" | "logout";
 
 /** 인증 상태 검증하는 함수 */
 export function updateAuthentication(
+    actionType: AuthenticationActionType,
     authentication: { state: AuthenticationState; setState: React.Dispatch<React.SetStateAction<AuthenticationState>> },
-    callback: { succeededAuthentication: () => void, failedAuthentication: () => void }
+    callback: () => void
 ) {
-    let elapsedTime = 0;
+    /*let elapsedTime = 0;
+     const interval = setInterval(() => {
+         // JSESSIONID 쿠키가 존재하는지로 인증 유무 확인
+         if (document.cookie.includes('JSESSIONID')) {
+             authentication.setState("Authenticated");
+             clearInterval(interval);
+ 
+             callback.succeededAuthentication();
+         } else {
+             elapsedTime += 500;
+             if (elapsedTime >= 3000) {
+                 authentication.setState("Unauthenticated");
+                 clearInterval(interval);
+ 
+                 callback.failedAuthentication();
+             }
+         }
+ 
+         elapsedTime += 500;
+         if (elapsedTime >= 3000) {
+             authentication.setState("Authenticated");
+             clearInterval(interval);
+             callback.succeededAuthentication();
+         }
+    }, 500);8*/
 
-    const interval = setInterval(() => {
-        /* JSESSIONID 쿠키가 존재하는지로 인증 유무 확인 */
 
-        /*if (document.cookie.includes('JSESSIONID')) {
+    // TODO: 인증 체크
+    // const checkAuthenticationState:boolean = "";
+
+    switch (actionType) {
+        case "login": {
             authentication.setState("Authenticated");
-            clearInterval(interval);
-
-            callback.succeededAuthentication();
-        } else {
-            elapsedTime += 500;
-            if (elapsedTime >= 3000) {
-                authentication.setState("Unauthenticated");
-                clearInterval(interval);
-
-                callback.failedAuthentication();
-            }
-        }*/
-
-        elapsedTime += 500;
-        if (elapsedTime >= 3000) {
-            authentication.setState("Authenticated");
-            clearInterval(interval);
-            callback.succeededAuthentication();
+            break;
         }
+        case "logout": {
+            authentication.setState("Unauthenticated");
+            break;
+        }
+    }
 
-    }, 500);
+    callback();
 }
 
 
@@ -79,20 +94,35 @@ export default function Authentication({ userRole, actionType, authentication }:
     const [loadingText, setLoadingText] = useState("로그인중");
 
 
-    /** 타입 */
-    type PageState = "requestAuthenticate";
-
-
-    /** 인증 시도 */
-    const onAuthenticate = useCallback(() => {
-        const pageState: PageState = "requestAuthenticate";
-        sessionStorage.setItem("pageState", pageState);
+    /** 로그인 시도 */
+    const onLogin = (userRole: UserRole, actionType: AuthenticationActionType) => {
+        sessionStorage.setItem("pageState", actionType);
         redirectToAccountLogin(userRole);
-    }, [userRole]);
+    };
+
+    /** 로그아웃 시도 */
+    const onLogout = (userRole: UserRole, actionType: AuthenticationActionType) => {
+        sessionStorage.setItem("pageState", actionType);
+        redirectToAccountLogout(userRole);
+    };
 
 
 
     /** 인증을 시도한 뒤에만 인증이 되었는지 확인 */
+    useEffect(() => {
+        const pageState = sessionStorage.getItem("pageState");
+        if (pageState === actionType) {
+            updateAuthentication(actionType, authentication, () => {
+                history("/home");
+                sessionStorage.removeItem("pageState");
+            });
+        } else {
+            actionType === "login"
+                ? onLogin(userRole, actionType)
+                : onLogout(userRole, actionType);
+        }
+    }, [userRole, actionType, authentication, history, onLogin]);
+
     /* useEffect(() => {
          const savedState: PageState = sessionStorage.getItem("pageState") as PageState;
          if (savedState === "requestAuthenticate") {
