@@ -38,33 +38,6 @@ export function updateAuthentication(
     authentication: { state: AuthenticationState; setState: React.Dispatch<React.SetStateAction<AuthenticationState>> },
     callback: () => void
 ) {
-    /*let elapsedTime = 0;
-     const interval = setInterval(() => {
-         // JSESSIONID 쿠키가 존재하는지로 인증 유무 확인
-         if (document.cookie.includes('JSESSIONID')) {
-             authentication.setState("Authenticated");
-             clearInterval(interval);
- 
-             callback.succeededAuthentication();
-         } else {
-             elapsedTime += 500;
-             if (elapsedTime >= 3000) {
-                 authentication.setState("Unauthenticated");
-                 clearInterval(interval);
- 
-                 callback.failedAuthentication();
-             }
-         }
- 
-         elapsedTime += 500;
-         if (elapsedTime >= 3000) {
-             authentication.setState("Authenticated");
-             clearInterval(interval);
-             callback.succeededAuthentication();
-         }
-    }, 500);8*/
-
-
     // TODO: 인증 체크
     // const checkAuthenticationState:boolean = "";
 
@@ -111,17 +84,19 @@ export default function Authentication({ userRole, actionType, authentication }:
     /** 인증을 시도한 뒤에만 인증이 되었는지 확인 */
     useEffect(() => {
         const pageState = sessionStorage.getItem("pageState");
+
         if (pageState === actionType) {
             updateAuthentication(actionType, authentication, () => {
-                history("/home");
                 sessionStorage.removeItem("pageState");
+                history("/home");
             });
         } else {
             actionType === "login"
                 ? onLogin(userRole, actionType)
                 : onLogout(userRole, actionType);
         }
-    }, [userRole, actionType, authentication, history, onLogin]);
+
+    }, [userRole, actionType, authentication, history]);
 
     /* useEffect(() => {
          const savedState: PageState = sessionStorage.getItem("pageState") as PageState;
