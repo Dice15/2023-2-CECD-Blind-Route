@@ -87,7 +87,7 @@ export default function Authentication({ userRole, actionType, authentication }:
         if (pageState === actionType) {
             updateAuthentication(actionType, authentication, () => {
                 sessionStorage.removeItem("pageState");
-                history("/home");
+                //history("/home");
             });
         } else {
             actionType === "login"
