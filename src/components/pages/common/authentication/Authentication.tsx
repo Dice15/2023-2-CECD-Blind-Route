@@ -93,24 +93,24 @@ export default function Authentication({ userRole, actionType, authentication }:
 
 
     /** 인증을 시도한 뒤에만 인증이 되었는지 확인 */
-    useEffect(() => {
-        const savedState: PageState = sessionStorage.getItem("pageState") as PageState;
-        if (savedState === "requestAuthenticate") {
-            updateAuthentication(authentication, {
-                succeededAuthentication: () => {
-                    history("/home");
-                    sessionStorage.removeItem("pageState");
-                },
-                failedAuthentication: () => {
-                    alert("로그인에 실패했습니다.");
-                    history("/home");
-                    sessionStorage.removeItem("pageState");
-                }
-            });
-        } else {
-            onAuthenticate();
-        }
-    }, [authentication, history, onAuthenticate]);
+    /* useEffect(() => {
+         const savedState: PageState = sessionStorage.getItem("pageState") as PageState;
+         if (savedState === "requestAuthenticate") {
+             updateAuthentication(authentication, {
+                 succeededAuthentication: () => {
+                     history("/home");
+                     sessionStorage.removeItem("pageState");
+                 },
+                 failedAuthentication: () => {
+                     alert("로그인에 실패했습니다.");
+                     history("/home");
+                     sessionStorage.removeItem("pageState");
+                 }
+             });
+         } else {
+             onAuthenticate();
+         }
+     }, [authentication, history, onAuthenticate]);*/
 
 
     /** 로그인 중 이벤트 */
@@ -134,7 +134,7 @@ export default function Authentication({ userRole, actionType, authentication }:
             }
         }, 500);
 
-        return () => clearInterval(interval);  // 컴포넌트가 언마운트되거나 re-render될 때 타이머를 정리합니다.
+        return () => clearInterval(interval);
     }, [loadingText]);
 
 

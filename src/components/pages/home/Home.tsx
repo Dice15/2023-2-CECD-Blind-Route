@@ -32,6 +32,11 @@ export default function Home({ userRole, appType, authentication }: HomeProps) {
     };
 
 
+    /** 앱 페이지로 이동 */
+    const moveToApp = (appType: AppType) => {
+        history(`/${appType}`);
+    }
+
     return (
         <>
             <Routes>
@@ -48,8 +53,18 @@ export default function Home({ userRole, appType, authentication }: HomeProps) {
                 </div>
                 <div className={style.body}>
                     <div className={style.authentication}>
-                        <button className={style.login_button} type="button" onClick={() => { moveToAuthentication("login"); }}>로그인</button>
-                        <button className={style.signin_button} type="button" onClick={() => { moveToAuthentication("logout"); }}>로그아웃</button>
+                        {authentication.state === "Unauthenticated"
+                            ? (<>
+                                <button className={style.login_button} type="button" onClick={() => { moveToAuthentication("login"); }}>로그인</button>
+                                <button className={style.login_button} type="button" onClick={() => { }}>회원가입</button>
+                            </>
+                            )
+                            : (<>
+                                <button className={style.login_button} type="button" onClick={() => { moveToApp(appType); }}>시작하기</button>
+                                <button className={style.signin_button} type="button" onClick={() => { moveToAuthentication("logout"); }}>로그아웃</button>
+                            </>
+                            )
+                        }
                     </div>
                 </div>
             </div>
