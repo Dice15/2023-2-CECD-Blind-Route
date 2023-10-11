@@ -39,7 +39,6 @@ export function updateAuthentication(
     callback: () => void
 ) {
     // TODO: 인증 체크
-    // const checkAuthenticationState:boolean = "";
 
     switch (actionType) {
         case "login": {
