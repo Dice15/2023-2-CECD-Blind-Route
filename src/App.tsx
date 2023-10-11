@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { UserRole } from './cores/types/UserRole';
 import Home from './components/pages/home/Home';
 import Client from './components/pages/client/Client';
@@ -8,12 +8,15 @@ import Panel from './components/pages/panel/Panel';
 import Develop from './components/pages/develop/Develop';
 import useModalCreater from './modules/modal/Modal';
 import Authentication, { AuthenticationState } from './components/pages/common/authentication/Authentication';
+import { AppType } from './cores/types/AppType';
 
 
 
+/** App */
 function App() {
   /** state */
-  const [userRole, setUserRole] = useState<UserRole>(UserRole.USER);
+  const [userRole, setUserRole] = useState<UserRole>("user");
+  const [appType, setAppType] = useState<AppType>("client");
   const [authenticationState, setAuthenticationState] = useState<AuthenticationState>("Unauthenticated");
 
 
@@ -36,26 +39,22 @@ function App() {
         <Routes>
 
           <Route path="/" element={<Develop
+            setAppType={setAppType}
             setUserRole={setUserRole}
           />} />
 
-          <Route path="/home" element={<Home
+          <Route path="/home/*" element={<Home
+            appType={appType}
             userRole={userRole}
-            authentication={{ state: authenticationState, setState: setAuthenticationState }}
-            appType={"client"} />}
+            authentication={{ state: authenticationState, setState: setAuthenticationState }} />}
           />
 
-          <Route path="/authentication" element={<Authentication
+          <Route path="/client/*" element={<Client
             userRole={userRole}
             authentication={{ state: authenticationState, setState: setAuthenticationState }}
           />} />
 
-          <Route path="/client" element={<Client
-            userRole={userRole}
-            authentication={{ state: authenticationState, setState: setAuthenticationState }}
-          />} />
-
-          <Route path="/panel" element={<Panel
+          <Route path="/panel/*" element={<Panel
             userRole={userRole}
             authentication={{ state: authenticationState, setState: setAuthenticationState }}
           />} />

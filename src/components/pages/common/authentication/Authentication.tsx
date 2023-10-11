@@ -5,9 +5,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
+
 /** 로그인 폼 프로퍼티 */
 export interface AuthenticationProps {
     userRole: UserRole;
+    actionType: AuthenticationActionType;
     authentication: { state: AuthenticationState, setState: React.Dispatch<React.SetStateAction<AuthenticationState>> };
 }
 
@@ -15,6 +17,18 @@ export interface AuthenticationProps {
 
 /** 인증 상태를 나타내는 타입 */
 export type AuthenticationState = "Authenticated" | "Unauthenticated";
+
+
+
+/** 인증 동작 유형을 나타내는 타입
+ * 
+ * login: 로그인 동작
+ * 
+ * logout: 로그아웃 동작
+ * 
+ */
+export type AuthenticationActionType = "login" | "logout";
+
 
 
 
@@ -27,7 +41,8 @@ export function updateAuthentication(
 
     const interval = setInterval(() => {
         /* JSESSIONID 쿠키가 존재하는지로 인증 유무 확인 */
-        if (document.cookie.includes('JSESSIONID')) {
+
+        /*if (document.cookie.includes('JSESSIONID')) {
             authentication.setState("Authenticated");
             clearInterval(interval);
 
@@ -40,14 +55,22 @@ export function updateAuthentication(
 
                 callback.failedAuthentication();
             }
+        }*/
+
+        elapsedTime += 500;
+        if (elapsedTime >= 3000) {
+            authentication.setState("Authenticated");
+            clearInterval(interval);
+            callback.succeededAuthentication();
         }
+
     }, 500);
 }
 
 
 
 /** 로그인 인증 페이지 */
-export default function Authentication({ userRole, authentication }: AuthenticationProps) {
+export default function Authentication({ userRole, actionType, authentication }: AuthenticationProps) {
     /* const */
     const history = useNavigate();
 

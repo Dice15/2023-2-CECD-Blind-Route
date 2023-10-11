@@ -29,9 +29,27 @@
 }
 
 
-/* home__body's children elements */
-.mode_select_button {
-    flex: 1 0 calc(50% - 10px - 10px);
-    margin: 10px;
-    font-size: 20px;
+/**/
+.appconfig {
+    flex: 1 0 calc(100% - 15%);
+    padding-bottom: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* appconfig's children elements */
+.appconfig__combobox,
+.appconfig__button {
+    width: 80%;
+    height: 10%;
+    margin-bottom: 5%;
+    border-radius: 8px;
+    border: 1px solid var(--button-border--color);
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    font-size: 1.2rem;
+    font-weight: 550;
 }
