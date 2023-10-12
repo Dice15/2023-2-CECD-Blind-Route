@@ -59,7 +59,7 @@ export type AuthSessionApi = "true" | "false";
 
 /** API로 부터 받은 로그인 세션 확인 결과를 boolean 형태로 반환 */
 export async function checkAuthSession(userRole: UserRole): Promise<AuthSessionApi> {
-    let data: AuthSessionApi = "false";
+    /*let data: AuthSessionApi = "false";
     try {
         const response = await axios.get(
             getApiUrl(userRole, "/authentication"),
@@ -74,7 +74,7 @@ export async function checkAuthSession(userRole: UserRole): Promise<AuthSessionA
         data = response.data;
     } catch (error) {
         console.error("Failed to check login session:", error);
-    }
+    }*/
 
     const res = sessionStorage.getItem("pageState");
     return res ? res as AuthSessionApi : "false"; // test code
