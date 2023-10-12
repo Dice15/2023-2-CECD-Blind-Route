@@ -10,13 +10,12 @@ import { useNavigate } from "react-router-dom";
 export interface AuthenticationProps {
     userRole: UserRole;
     actionType: AuthenticationActionType;
-    authentication: { state: AuthenticationState, setState: React.Dispatch<React.SetStateAction<AuthenticationState>> };
 }
 
 
 
 /** 인증 상태를 나타내는 타입 */
-export type AuthenticationState = "Authenticated" | "Unauthenticated";
+export type AuthenticationState = "authenticated" | "unauthenticated" | "idle";
 
 
 
@@ -31,82 +30,56 @@ export type AuthenticationActionType = "login" | "logout";
 
 
 
-
-/** 인증 상태 검증하는 함수 */
-export function updateAuthentication(
-    actionType: AuthenticationActionType,
-    authentication: { state: AuthenticationState; setState: React.Dispatch<React.SetStateAction<AuthenticationState>> },
-    callback: () => void
-) {
-    // TODO: 인증 체크
-
-    switch (actionType) {
-        case "login": {
-            authentication.setState("Authenticated");
-            break;
-        }
-        case "logout": {
-            authentication.setState("Unauthenticated");
-            break;
-        }
-    }
-
-    callback();
-}
-
-
-
 /** 로그인 인증 페이지 */
-export default function Authentication({ userRole, actionType, authentication }: AuthenticationProps) {
+export default function Authentication({ userRole, actionType }: AuthenticationProps) {
     /* const */
     const history = useNavigate();
 
 
     /** state */
-    const [loadingText, setLoadingText] = useState("로그인중");
+    const [loadingText, setLoadingText] = useState<string>("");
+
 
 
     /** 로그인 시도 */
-    const onLogin = (userRole: UserRole, actionType: AuthenticationActionType) => {
-        sessionStorage.setItem("pageState", actionType);
-        redirectToAccountLogin(userRole);
-    };
+    const onLogin = useCallback(async (role: UserRole) => {
+        const isAuthenticated = await checkAuthSession(role);
+
+        if (isAuthenticated === "true") {
+            history("/home");
+        } else {
+            redirectToAccountLogin(role);
+        }
+    }, [history]);
+
+
 
     /** 로그아웃 시도 */
-    const onLogout = (userRole: UserRole, actionType: AuthenticationActionType) => {
-        sessionStorage.setItem("pageState", actionType);
-        redirectToAccountLogout(userRole);
-    };
+    const onLogout = useCallback(async (role: UserRole) => {
+        const isAuthenticated = await checkAuthSession(role);
 
-
-
-    /** 인증을 시도한 뒤에만 인증이 되었는지 확인 */
-    /*useEffect(() => {
-        const pageState = sessionStorage.getItem("pageState");
-
-        if (pageState === actionType) {
-            updateAuthentication(actionType, authentication, () => {
-                sessionStorage.removeItem("pageState");
-                //history("/home");
-            });
+        if (isAuthenticated === "false") {
+            history("/home");
         } else {
-            actionType === "login"
-                ? onLogin(userRole, actionType)
-                : onLogout(userRole, actionType);
+            redirectToAccountLogout(role);
         }
+    }, [history]);
 
-    }, [userRole, actionType, authentication, history]);*/
 
 
+    /** actionType에 따른 인증 절차 수행 */
     useEffect(() => {
-        const checkAuth = async () => {
-
-            console.log(await checkAuthSession(userRole));
+        switch (actionType) {
+            case "login": {
+                onLogin(userRole);
+                break;
+            }
+            case "logout": {
+                onLogout(userRole);
+                break;
+            }
         }
-        checkAuth();
-
-    }, [userRole]);
-
+    }, [userRole, actionType, onLogin, onLogout]);
 
 
 
@@ -114,20 +87,20 @@ export default function Authentication({ userRole, actionType, authentication }:
     useEffect(() => {
         const interval = setInterval(() => {
             switch (loadingText) {
-                case "로그인중":
-                    setLoadingText("로그인중.");
+                case "":
+                    setLoadingText(".");
                     break;
-                case "로그인중.":
-                    setLoadingText("로그인중..");
+                case ".":
+                    setLoadingText("..");
                     break;
-                case "로그인중..":
-                    setLoadingText("로그인중...");
+                case "..":
+                    setLoadingText("...");
                     break;
-                case "로그인중...":
-                    setLoadingText("로그인중");
+                case "...":
+                    setLoadingText("");
                     break;
                 default:
-                    setLoadingText("로그인중");
+                    setLoadingText("");
             }
         }, 500);
 
@@ -138,7 +111,7 @@ export default function Authentication({ userRole, actionType, authentication }:
 
     return (
         <div className={styles.container}>
-            <span className={styles.loadingText}>{loadingText}</span>
+            <span className={styles.loadingText}>{`${actionType === "login" ? "로그인중" : "로그아웃중"}${loadingText}`}</span>
         </div>
     );
 

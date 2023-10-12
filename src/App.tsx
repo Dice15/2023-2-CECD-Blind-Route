@@ -17,7 +17,7 @@ function App() {
   /** state */
   const [userRole, setUserRole] = useState<UserRole>("user");
   const [appType, setAppType] = useState<AppType>("client");
-  const [authenticationState, setAuthenticationState] = useState<AuthenticationState>("Unauthenticated");
+  const [authenticationState, setAuthenticationState] = useState<AuthenticationState>("unauthenticated");
   const [authenticationActionType, setAuthenticationActionType] = useState<AuthenticationActionType>("login");
 
 
@@ -47,7 +47,6 @@ function App() {
           <Route path="/authentication" element={<Authentication
             userRole={userRole}
             actionType={authenticationActionType}
-            authentication={{ state: authenticationState, setState: setAuthenticationState }}
           />} />
 
           <Route path="/home" element={<Home

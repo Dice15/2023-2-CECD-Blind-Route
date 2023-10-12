@@ -47,10 +47,10 @@ export default function Develop({ setAppType, setUserRole }: DevelopProps) {
             <div className={style.develop__body}>
                 <div className={style.appconfig}>
                     <select className={style.appconfig__combobox} ref={appTypeCombobox}>
-                        {appTypeList.map((appType) => (<option>{appType}</option>))}
+                        {appTypeList.map((appType, index) => (<option key={index}>{appType}</option>))}
                     </select>
                     <select className={style.appconfig__combobox} ref={userRoleCombobox}>
-                        {userRoleList.map((userRole) => (<option>{userRole}</option>))}
+                        {userRoleList.map((userRole, index) => (<option key={index}>{userRole}</option>))}
                     </select>
                     <button className={style.appconfig__button} type="button" onClick={() => {
                         if (appTypeCombobox.current && userRoleCombobox.current) {
