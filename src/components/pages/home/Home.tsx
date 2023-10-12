@@ -1,8 +1,8 @@
 import style from "./Home.module.css";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserRole } from "../../../cores/types/UserRole";
-import Authentication, { AuthenticationActionType, AuthenticationState } from "../common/authentication/Authentication";
-import React, { useState } from "react";
+import { AuthenticationActionType } from "../common/authentication/Authentication";
+import React from "react";
 import { AppType } from "../../../cores/types/AppType";
 
 
@@ -11,13 +11,12 @@ export interface HomeProps {
     appType: AppType;
     userRole: UserRole;
     setAuthenticationActionType: React.Dispatch<React.SetStateAction<AuthenticationActionType>>;
-    authentication: { state: AuthenticationState, setState: React.Dispatch<React.SetStateAction<AuthenticationState>> };
 }
 
 
 
 /** 홈 페이지 */
-export default function Home({ userRole, appType, setAuthenticationActionType, authentication }: HomeProps) {
+export default function Home({ userRole, appType, setAuthenticationActionType }: HomeProps) {
     /* const */
     const history = useNavigate();
 
@@ -41,7 +40,7 @@ export default function Home({ userRole, appType, setAuthenticationActionType, a
             </div>
             <div className={style.body}>
                 <div className={style.authentication}>
-                    {authentication.state === "unauthenticated"
+                    {true
                         ? (<>
                             <button className={style.login_button} type="button" onClick={() => { moveToAuthentication("login"); }}>로그인</button>
                             <button className={style.login_button} type="button" onClick={() => { }}>회원가입</button>

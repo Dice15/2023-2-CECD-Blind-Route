@@ -14,11 +14,6 @@ export interface AuthenticationProps {
 
 
 
-/** 인증 상태를 나타내는 타입 */
-export type AuthenticationState = "authenticated" | "unauthenticated" | "idle";
-
-
-
 /** 인증 동작 유형을 나타내는 타입
  * 
  * login: 로그인 동작
@@ -43,11 +38,13 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
 
     /** 로그인 시도 */
     const onLogin = useCallback(async (role: UserRole) => {
-        const isAuthenticated = await checkAuthSession(role);
+        //const isAuthenticated = await checkAuthSession(role);
+        const isAuthenticated = sessionStorage.getItem("pageState"); // test code
 
         if (isAuthenticated === "true") {
             history("/home");
         } else {
+            sessionStorage.setItem("pageState", "true"); // test code
             redirectToAccountLogin(role);
         }
     }, [history]);
@@ -56,11 +53,13 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
 
     /** 로그아웃 시도 */
     const onLogout = useCallback(async (role: UserRole) => {
-        const isAuthenticated = await checkAuthSession(role);
+        // const isAuthenticated = await checkAuthSession(role);
+        const isAuthenticated = sessionStorage.getItem("pageState");// test code
 
         if (isAuthenticated === "false") {
             history("/home");
         } else {
+            sessionStorage.setItem("pageState", "false"); // test code
             redirectToAccountLogout(role);
         }
     }, [history]);

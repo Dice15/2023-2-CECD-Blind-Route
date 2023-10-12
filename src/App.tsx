@@ -7,7 +7,7 @@ import Client from './components/pages/client/Client';
 import Panel from './components/pages/panel/Panel';
 import Develop from './components/pages/develop/Develop';
 import useModalCreater from './modules/modal/Modal';
-import Authentication, { AuthenticationActionType, AuthenticationState } from './components/pages/common/authentication/Authentication';
+import Authentication, { AuthenticationActionType } from './components/pages/common/authentication/Authentication';
 import { AppType } from './cores/types/AppType';
 
 
@@ -17,7 +17,6 @@ function App() {
   /** state */
   const [userRole, setUserRole] = useState<UserRole>("user");
   const [appType, setAppType] = useState<AppType>("client");
-  const [authenticationState, setAuthenticationState] = useState<AuthenticationState>("unauthenticated");
   const [authenticationActionType, setAuthenticationActionType] = useState<AuthenticationActionType>("login");
 
 
@@ -53,17 +52,14 @@ function App() {
             appType={appType}
             userRole={userRole}
             setAuthenticationActionType={setAuthenticationActionType}
-            authentication={{ state: authenticationState, setState: setAuthenticationState }} />}
-          />
+          />} />
 
           <Route path="/client" element={<Client
             userRole={userRole}
-            authentication={{ state: authenticationState, setState: setAuthenticationState }}
           />} />
 
           <Route path="/panel" element={<Panel
             userRole={userRole}
-            authentication={{ state: authenticationState, setState: setAuthenticationState }}
           />} />
 
         </Routes>
