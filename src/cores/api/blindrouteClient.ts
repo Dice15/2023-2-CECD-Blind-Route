@@ -45,6 +45,40 @@ export function redirectToAccountLogout(userRole: UserRole) {
 
 
 
+/** 
+ * API로 로그인 세션이 유지되고 있는지 확인하는 작업
+ * IAuthenticationApi
+ * checkLoginSession
+ */
+
+/** API로 부터 받은 로그인 세션 확인 데이터 인터페이스 */
+export interface IAuthenticationApi {
+    sessionActive: boolean;
+}
+
+/** API로 부터 받은 로그인 세션 확인 결과를 boolean 형태로 반환 */
+export async function checkAuthSession(userRole: UserRole): Promise<boolean> {
+    let data: any = null;//IAuthenticationApi = { sessionActive: false };
+    try {
+        const response = await axios.get(
+            getApiUrl(userRole, "/authentication"),
+            {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                withCredentials: true
+            }
+        );
+        data = response.data;
+    } catch (error) {
+        console.error("Failed to check login session:", error);
+    }
+    return data;
+}
+
+
+
 /**
  * API로 부터 정류장 리스트를 받아오는 작업
  * IStationApi

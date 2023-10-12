@@ -1,5 +1,5 @@
 import styles from "./Authentication.module.css"
-import { redirectToAccountLogin, redirectToAccountLogout } from "../../../../cores/api/blindrouteClient";
+import { checkAuthSession, redirectToAccountLogin, redirectToAccountLogout } from "../../../../cores/api/blindrouteClient";
 import { UserRole } from "../../../../cores/types/UserRole";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -81,7 +81,7 @@ export default function Authentication({ userRole, actionType, authentication }:
 
 
     /** 인증을 시도한 뒤에만 인증이 되었는지 확인 */
-    useEffect(() => {
+    /*useEffect(() => {
         const pageState = sessionStorage.getItem("pageState");
 
         if (pageState === actionType) {
@@ -95,26 +95,19 @@ export default function Authentication({ userRole, actionType, authentication }:
                 : onLogout(userRole, actionType);
         }
 
-    }, [userRole, actionType, authentication, history]);
+    }, [userRole, actionType, authentication, history]);*/
 
-    /* useEffect(() => {
-         const savedState: PageState = sessionStorage.getItem("pageState") as PageState;
-         if (savedState === "requestAuthenticate") {
-             updateAuthentication(authentication, {
-                 succeededAuthentication: () => {
-                     history("/home");
-                     sessionStorage.removeItem("pageState");
-                 },
-                 failedAuthentication: () => {
-                     alert("로그인에 실패했습니다.");
-                     history("/home");
-                     sessionStorage.removeItem("pageState");
-                 }
-             });
-         } else {
-             onAuthenticate();
-         }
-     }, [authentication, history, onAuthenticate]);*/
+
+    useEffect(() => {
+        const checkAuth = async () => {
+
+            console.log(await checkAuthSession(userRole));
+        }
+        checkAuth();
+
+    }, [userRole]);
+
+
 
 
     /** 로그인 중 이벤트 */
