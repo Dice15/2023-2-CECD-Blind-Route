@@ -37,30 +37,26 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
 
 
     /** 로그인 시도 */
-    const onLogin = useCallback(async (role: UserRole) => {
-        //const isAuthenticated = await checkAuthSession(role);
-        const isAuthenticated = sessionStorage.getItem("pageState"); // test code
+    const onLogin = useCallback(async (userRole: UserRole) => {
+        const isAuthenticated = await checkAuthSession(userRole);
 
         if (isAuthenticated === "true") {
             history("/home");
         } else {
-            sessionStorage.setItem("pageState", "true"); // test code
-            redirectToAccountLogin(role);
+            redirectToAccountLogin(userRole);
         }
     }, [history]);
 
 
 
     /** 로그아웃 시도 */
-    const onLogout = useCallback(async (role: UserRole) => {
-        // const isAuthenticated = await checkAuthSession(role);
-        const isAuthenticated = sessionStorage.getItem("pageState");// test code
+    const onLogout = useCallback(async (userRole: UserRole) => {
+        const isAuthenticated = await checkAuthSession(userRole);
 
         if (isAuthenticated === "false") {
             history("/home");
         } else {
-            sessionStorage.setItem("pageState", "false"); // test code
-            redirectToAccountLogout(role);
+            redirectToAccountLogout(userRole);
         }
     }, [history]);
 
