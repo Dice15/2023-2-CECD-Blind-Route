@@ -41,11 +41,11 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
         const isAuthenticated = (await checkAuthSession(userRole)).sessionActive;
 
         if (isAuthenticated === true) {
-            //history("/home");
+            history("/home");
         } else {
             redirectToAccountLogin(userRole);
         }
-    }, []);
+    }, [history]);
 
 
 
@@ -54,11 +54,11 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
         const isAuthenticated = (await checkAuthSession(userRole)).sessionActive;
 
         if (isAuthenticated === false) {
-            //history("/home");
+            history("/home");
         } else {
             redirectToAccountLogout(userRole);
         }
-    }, []);
+    }, [history]);
 
 
 
