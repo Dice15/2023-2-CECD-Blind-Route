@@ -1,35 +1,37 @@
 .Develop {
-    height: calc(100vh - 10px - 10px);
+    height: calc(100vh - 5px - 10px);
     width: calc(100vw - 10px - 10px);
     padding: 10px;
-    padding-top: 10px;
+    padding-top: 5px;
     display: flex;
     flex-direction: column;
 }
 
 
-/* Home's children elements */
-.develop__header {
+/* Develop's children elements */
+.header {
     flex: 0 0 40px;
-    margin-bottom: 10px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--dividerline-color);
+    margin-bottom: 15px;
 }
 
-.develop__body {
-    flex: 1 0 calc(100% - 65px - 10px);
+.body {
+    flex: 1 0 calc(100% - 40px - 1px - 14px - 15px);
     display: flex;
     flex-direction: column;
 }
 
 
-/* home__header's children elements */
-.develop__header__title {
+/* header's children elements */
+.header__title {
     font-size: 28px;
     margin: 0px;
     text-align: center;
 }
 
 
-/**/
+/* body's children elements */
 .appconfig {
     flex: 1 0 calc(100% - 15%);
     padding-bottom: 15%;

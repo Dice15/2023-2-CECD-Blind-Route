@@ -41,10 +41,11 @@ export default function Develop({ setAppType, setUserRole }: DevelopProps) {
 
     return (
         <div className={style.Develop}>
-            <div className={style.develop__header}>
-                <h1 className={style.develop__header__title}>{`Blind Route`}</h1>
+            <div className={style.header}>
+                <h1 className={style.header__title}>{`Blind Route`}</h1>
             </div>
-            <div className={style.develop__body}>
+
+            <div className={style.body}>
                 <div className={style.appconfig}>
                     <select className={style.appconfig__combobox} ref={appTypeCombobox}>
                         {appTypeList.map((appType, index) => (<option key={index}>{appType}</option>))}

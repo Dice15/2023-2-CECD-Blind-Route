@@ -55,12 +55,8 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
     }, [history]);
 
 
-
-
-
     /** actionType에 따른 인증 절차 수행 */
     useEffect(() => {
-        console.log(actionType);
         switch (actionType) {
             case "login": {
                 onLogin(userRole);
@@ -75,13 +71,13 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
                 break;
             }
         }
-    });
+    }, [userRole, actionType, history, onLogin, onLogout]);
 
 
 
     return (
         <div className={styles.container}>
+            <div className="loader"></div>
         </div>
     );
-
 }
