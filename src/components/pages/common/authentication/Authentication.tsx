@@ -1,7 +1,7 @@
 import styles from "./Authentication.module.css"
 import { checkAuthSession, redirectToAccountLogin, redirectToAccountLogout } from "../../../../cores/api/blindrouteClient";
 import { UserRole } from "../../../../cores/types/UserRole";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
@@ -79,34 +79,34 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
 
 
     /** 로그인 중 이벤트 */
-    useEffect(() => {
-        const interval = setInterval(() => {
-            switch (loadingText) {
-                case "":
-                    setLoadingText(".");
-                    break;
-                case ".":
-                    setLoadingText("..");
-                    break;
-                case "..":
-                    setLoadingText("...");
-                    break;
-                case "...":
-                    setLoadingText("");
-                    break;
-                default:
-                    setLoadingText("");
-            }
-        }, 500);
-
-        return () => clearInterval(interval);
-    }, [loadingText]);
+    /* useEffect(() => {
+          const interval = setInterval(() => {
+              switch (loadingText) {
+                  case "":
+                      setLoadingText(".");
+                      break;
+                  case ".":
+                      setLoadingText("..");
+                      break;
+                  case "..":
+                      setLoadingText("...");
+                      break;
+                  case "...":
+                      setLoadingText("");
+                      break;
+                  default:
+                      setLoadingText("");
+              }
+          }, 500);
+  
+          return () => clearInterval(interval);
+      }, [loadingText]);*/
 
 
 
     return (
         <div className={styles.container}>
-            <span className={styles.loadingText}>{`${actionType === "login" ? "로그인중" : "로그아웃중"}${loadingText}`}</span>
+
         </div>
     );
 
