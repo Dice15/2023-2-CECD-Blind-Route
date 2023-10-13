@@ -52,12 +52,14 @@ export function redirectToAccountLogout(userRole: UserRole) {
  */
 
 /** API로 부터 받은 로그인 세션 확인 데이터 타입 */
-export type AuthSessionApi = "true" | "false";
+export interface AuthSessionApi {
+    sessionActive: boolean;
+};
 
 
 /** API로 부터 받은 로그인 세션 확인 결과를 boolean 형태로 반환 */
 export async function checkAuthSession(userRole: UserRole): Promise<AuthSessionApi> {
-    let data: AuthSessionApi = "false";
+    let data: boolean = false;
     try {
         const response = await axios.get(
             getApiUrl(userRole, "/authentication"),
@@ -74,9 +76,9 @@ export async function checkAuthSession(userRole: UserRole): Promise<AuthSessionA
         console.error("Failed to check login session:", error);
     }
 
-    console.log(data);
+    console.log(data, typeof data);
 
-    return data;
+    return { sessionActive: data };
 }
 
 

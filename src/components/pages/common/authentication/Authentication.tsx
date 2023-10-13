@@ -38,9 +38,9 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
 
     /** 로그인 시도 */
     const onLogin = useCallback(async (userRole: UserRole) => {
-        const isAuthenticated = await checkAuthSession(userRole);
+        const isAuthenticated = (await checkAuthSession(userRole)).sessionActive;
 
-        if (isAuthenticated === "true") {
+        if (isAuthenticated === true) {
             history("/home");
         } else {
             redirectToAccountLogin(userRole);
@@ -51,9 +51,9 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
 
     /** 로그아웃 시도 */
     const onLogout = useCallback(async (userRole: UserRole) => {
-        const isAuthenticated = await checkAuthSession(userRole);
+        const isAuthenticated = (await checkAuthSession(userRole)).sessionActive;
 
-        if (isAuthenticated === "false") {
+        if (isAuthenticated === false) {
             history("/home");
         } else {
             redirectToAccountLogout(userRole);

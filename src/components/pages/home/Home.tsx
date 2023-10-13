@@ -23,7 +23,7 @@ export default function Home({ userRole, appType, setAuthenticationActionType }:
 
 
     // state
-    const [authenticationState, setAuthenticationState] = useState<AuthSessionApi>("false");
+    const [authenticationState, setAuthenticationState] = useState<boolean>(false);
 
 
     /** 로그인 인증 페이지로 이동 */
@@ -42,7 +42,7 @@ export default function Home({ userRole, appType, setAuthenticationActionType }:
     /**  */
     useEffect(() => {
         const checkAuth = async () => {
-            setAuthenticationState(await checkAuthSession(userRole));
+            setAuthenticationState((await checkAuthSession(userRole)).sessionActive);
         };
         checkAuth();
     }, [userRole]);
@@ -56,7 +56,7 @@ export default function Home({ userRole, appType, setAuthenticationActionType }:
             </div>
             <div className={style.body}>
                 <div className={style.authentication}>
-                    {authenticationState === "false"
+                    {authenticationState === false
                         ? (<>
                             <button className={style.login_button} type="button" onClick={() => { moveToAuthentication("login"); }}>로그인</button>
                             <button className={style.login_button} type="button" onClick={() => { }}>회원가입</button>
