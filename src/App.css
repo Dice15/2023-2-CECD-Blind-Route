@@ -26,6 +26,11 @@
 
   --button-disable-color: #525252;
   --button-disable--hover-color: #9b9b9b;
+
+
+  /* loading */
+  --loading-default-color: #f3f3f3;
+  --loading-gaged-color: #2b2b2b;
 }
 
 .theme_dark {
