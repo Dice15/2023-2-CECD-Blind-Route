@@ -4,33 +4,27 @@ import { UserRole } from "../../../cores/types/UserRole";
 import { AuthenticationActionType } from "../common/authentication/Authentication";
 import React, { useEffect, useState } from "react";
 import { AppType } from "../../../cores/types/AppType";
-import { AuthSessionApi, checkAuthSession } from "../../../cores/api/blindrouteClient";
+import { checkAuthSession } from "../../../cores/api/blindrouteClient";
 
 
 /** 홈 페이지 프로퍼티 */
 export interface HomeProps {
     appType: AppType;
     userRole: UserRole;
+    authenticationActionType: AuthenticationActionType;
     setAuthenticationActionType: React.Dispatch<React.SetStateAction<AuthenticationActionType>>;
 }
 
 
 
 /** 홈 페이지 */
-export default function Home({ userRole, appType, setAuthenticationActionType }: HomeProps) {
+export default function Home({ userRole, appType, authenticationActionType, setAuthenticationActionType }: HomeProps) {
     /* const */
     const history = useNavigate();
 
 
     // state
     const [authenticationState, setAuthenticationState] = useState<boolean>(false);
-
-
-    /** 로그인 인증 페이지로 이동 */
-    const moveToAuthentication = (actionType: AuthenticationActionType) => {
-        setAuthenticationActionType(actionType);
-        history("/authentication");
-    };
 
 
     /** 앱 페이지로 이동 */
@@ -41,11 +35,31 @@ export default function Home({ userRole, appType, setAuthenticationActionType }:
 
     /**  */
     useEffect(() => {
+        setAuthenticationActionType("idle");
+    }, [setAuthenticationActionType]);
+
+
+    /**  */
+    useEffect(() => {
         const checkAuth = async () => {
             setAuthenticationState((await checkAuthSession(userRole)).sessionActive);
         };
         checkAuth();
     }, [userRole]);
+
+
+    /** */
+    const onAuthentication = (actionType: AuthenticationActionType) => {
+        setAuthenticationActionType(actionType);
+    };
+
+
+    /** 인증 페이지로 이동 */
+    useEffect(() => {
+        if (authenticationActionType !== "idle") {
+            history("/authentication");
+        }
+    }, [authenticationActionType, setAuthenticationActionType, history]);
 
 
 
@@ -58,13 +72,13 @@ export default function Home({ userRole, appType, setAuthenticationActionType }:
                 <div className={style.authentication}>
                     {authenticationState === false
                         ? (<>
-                            <button className={style.login_button} type="button" onClick={() => { moveToAuthentication("login"); }}>로그인</button>
+                            <button className={style.login_button} type="button" onClick={() => { onAuthentication("login"); }}>로그인</button>
                             <button className={style.login_button} type="button" onClick={() => { }}>회원가입</button>
                         </>
                         )
                         : (<>
                             <button className={style.login_button} type="button" onClick={() => { moveToApp(appType); }}>시작하기</button>
-                            <button className={style.signin_button} type="button" onClick={() => { moveToAuthentication("logout"); }}>로그아웃</button>
+                            <button className={style.signin_button} type="button" onClick={() => { onAuthentication("logout"); }}>로그아웃</button>
                         </>
                         )
                     }

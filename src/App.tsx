@@ -17,7 +17,7 @@ function App() {
   /** state */
   const [userRole, setUserRole] = useState<UserRole>("user");
   const [appType, setAppType] = useState<AppType>("client");
-  const [authenticationActionType, setAuthenticationActionType] = useState<AuthenticationActionType>("login");
+  const [authenticationActionType, setAuthenticationActionType] = useState<AuthenticationActionType>("idle");
 
 
   /** 모달 추가 */
@@ -51,6 +51,7 @@ function App() {
           <Route path="/home" element={<Home
             appType={appType}
             userRole={userRole}
+            authenticationActionType={authenticationActionType}
             setAuthenticationActionType={setAuthenticationActionType}
           />} />
 

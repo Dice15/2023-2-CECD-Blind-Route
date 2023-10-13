@@ -21,7 +21,7 @@ export interface AuthenticationProps {
  * logout: 로그아웃 동작
  * 
  */
-export type AuthenticationActionType = "login" | "logout";
+export type AuthenticationActionType = "idle" | "login" | "logout";
 
 
 
