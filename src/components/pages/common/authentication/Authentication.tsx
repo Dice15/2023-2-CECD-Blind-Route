@@ -1,7 +1,7 @@
 import styles from "./Authentication.module.css"
 import { checkAuthSession, redirectToAccountLogin, redirectToAccountLogout } from "../../../../cores/api/blindrouteClient";
 import { UserRole } from "../../../../cores/types/UserRole";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 
@@ -31,10 +31,6 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
     const history = useNavigate();
 
 
-    /** state */
-    const [loadingText, setLoadingText] = useState<string>("");
-
-
     /** 로그인 시도 */
     const onLogin = useCallback(async (userRole: UserRole) => {
         const isAuthenticated = (await checkAuthSession(userRole)).sessionActive;
@@ -45,7 +41,6 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
             redirectToAccountLogin(userRole);
         }
     }, [history]);
-
 
 
     /** 로그아웃 시도 */
@@ -61,6 +56,8 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
 
 
 
+
+
     /** actionType에 따른 인증 절차 수행 */
     useEffect(() => {
         console.log(actionType);
@@ -73,40 +70,17 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
                 onLogout(userRole);
                 break;
             }
+            case "idle": {
+                history("/home");
+                break;
+            }
         }
     });
 
 
 
-    /** 로그인 중 이벤트 */
-    /* useEffect(() => {
-          const interval = setInterval(() => {
-              switch (loadingText) {
-                  case "":
-                      setLoadingText(".");
-                      break;
-                  case ".":
-                      setLoadingText("..");
-                      break;
-                  case "..":
-                      setLoadingText("...");
-                      break;
-                  case "...":
-                      setLoadingText("");
-                      break;
-                  default:
-                      setLoadingText("");
-              }
-          }, 500);
-  
-          return () => clearInterval(interval);
-      }, [loadingText]);*/
-
-
-
     return (
         <div className={styles.container}>
-
         </div>
     );
 
