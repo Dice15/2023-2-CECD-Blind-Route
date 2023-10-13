@@ -33,13 +33,13 @@ export default function Home({ userRole, appType, authenticationActionType, setA
     }
 
 
-    /**  */
+    /** 페이지 로딩 시 인증 액션 상태 "idle" */
     useEffect(() => {
         setAuthenticationActionType("idle");
     }, [setAuthenticationActionType]);
 
 
-    /**  */
+    /** 페이지 로딩 시 인증 상태 확인 */
     useEffect(() => {
         const checkAuth = async () => {
             setAuthenticationState((await checkAuthSession(userRole)).sessionActive);
@@ -48,7 +48,7 @@ export default function Home({ userRole, appType, authenticationActionType, setA
     }, [userRole]);
 
 
-    /** */
+    /** 인증 요청 시 인증 액션타입 설정 */
     const onAuthentication = (actionType: AuthenticationActionType) => {
         setAuthenticationActionType(actionType);
     };

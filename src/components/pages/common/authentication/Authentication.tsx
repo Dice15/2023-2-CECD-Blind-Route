@@ -1,4 +1,4 @@
-import styles from "./Authentication.module.css"
+import style from "./Authentication.module.css"
 import { checkAuthSession, redirectToAccountLogin, redirectToAccountLogout } from "../../../../cores/api/blindrouteClient";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { useCallback, useEffect } from "react";
@@ -43,6 +43,7 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
     }, [history]);
 
 
+
     /** 로그아웃 시도 */
     const onLogout = useCallback(async (userRole: UserRole) => {
         const isAuthenticated = (await checkAuthSession(userRole)).sessionActive;
@@ -53,6 +54,7 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
             redirectToAccountLogout(userRole);
         }
     }, [history]);
+
 
 
     /** actionType에 따른 인증 절차 수행 */
@@ -68,6 +70,7 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
             }
             case "idle": {
                 history("/home");
+                alert("잘못된 접근입니다.");
                 break;
             }
         }
@@ -76,8 +79,8 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
 
 
     return (
-        <div className={styles.container}>
-            <div className="loader"></div>
+        <div className={style.container}>
+            <div className={style.loader}></div>
         </div>
     );
 }
