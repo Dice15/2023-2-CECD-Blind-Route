@@ -35,7 +35,6 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
     const [loadingText, setLoadingText] = useState<string>("");
 
 
-
     /** 로그인 시도 */
     const onLogin = useCallback(async (userRole: UserRole) => {
         const isAuthenticated = (await checkAuthSession(userRole)).sessionActive;
@@ -75,7 +74,7 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
                 break;
             }
         }
-    }, [userRole, actionType, onLogin, onLogout]);
+    });
 
 
 
