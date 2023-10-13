@@ -14,8 +14,6 @@ export interface ClientProps {
 
 /** 클라이언트 페이지 메인 컴포넌트 */
 export default function Client({ userRole }: ClientProps) {
-
-
     return (
         <div className={style.Client}>
             <div className={style.client__top}>

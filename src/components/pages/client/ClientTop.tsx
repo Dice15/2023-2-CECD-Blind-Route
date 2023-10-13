@@ -21,7 +21,7 @@ export default function ClientTop({ userRole }: ClientTopProps) {
 
     return (
         <div className={style.ClientTop}>
-            <h1 className={style.client_top__title} onClick={() => { moveToHome(); }} >{`Blind Route (${userRole})`}</h1>
+            <h1 className={style.client_top__title} onClick={() => { moveToHome(); }} >{`Blind Route`}</h1>
         </div>
     )
 }

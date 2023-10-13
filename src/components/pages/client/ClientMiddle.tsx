@@ -13,6 +13,8 @@ export interface ClientMiddleProps {
 
 /** ClientMiddle 컴포넌트 */
 export default function ClientMiddle({ userRole }: ClientMiddleProps) {
+    // 
+
     return (
         <div className={style.ClientMiddle}>
             <StationTable userRole={userRole} />
