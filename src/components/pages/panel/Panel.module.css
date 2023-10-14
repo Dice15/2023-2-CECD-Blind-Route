@@ -1,5 +1,5 @@
 .Panel {
-    height: calc(100vh - 10px - 10px);
+    height: calc(calc(var(--vh, 1vh) * 100) - 10px - 10px);
     width: calc(100vw - 15px - 15px);
     padding: 10px 15px;
     display: flex;

@@ -24,11 +24,25 @@ function App() {
   useModalCreater();
 
 
-  /** 모바일 주소창을 고려한 vh크기*/
+  /** 모바일 주소창을 고려한 vh크기 */
   useEffect(() => {
+    // https://velog.io/@eunddodi/React-%EB%AA%A8%EB%B0%94%EC%9D%BC-%EC%9B%B9-%EC%95%B1-100vh-%EC%8B%A4%EC%A0%9C-%ED%99%94%EB%A9%B4-%ED%81%AC%EA%B8%B0%EB%A1%9C-%EB%A7%9E%EC%B6%94%EA%B8%B0
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty("--vh", `${vh}px`);
   });
+
+
+  /** 당겨서 새로고침 막기 */
+  const preventClose = (e: BeforeUnloadEvent) => {
+    e.preventDefault();
+    e.returnValue = "deprecated";
+  };
+
+  useEffect(() => {
+    (() => { window.addEventListener("beforeunload", preventClose); })();
+    return () => { window.removeEventListener("beforeunload", preventClose); };
+  }, []);
+
 
 
   if ('serviceWorker' in navigator) {
