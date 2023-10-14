@@ -51,7 +51,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 );
             });
             //setBusList([new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")]);
-            console.log(setBusList);
+            console.log(busListInstances);
             setBusList(busListInstances);
         }, 2000);
 

@@ -1,9 +1,9 @@
 import style from "./ClientWaitingBus.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientMiddleState } from "../ClientMiddle";
 import Bus from "../../../../cores/types/Bus";
-import { unreserveBus } from "../../../../cores/api/blindrouteClient";
+import { checkBusArrival, unreserveBus } from "../../../../cores/api/blindrouteClient";
 
 
 
@@ -18,6 +18,10 @@ export interface ClientWaitingBusProps {
 
 /** ClientSelectingStation 컴포넌트 */
 export default function ClientWaitingBus({ userRole, setPageState, wishBus }: ClientWaitingBusProps) {
+    // ref
+    const refreshTaskRef = useRef<NodeJS.Timeout | null>(null);
+
+
     // state
     const [waitingMessage, setWaitingMessage] = useState("대기중");
 
@@ -37,6 +41,30 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus }: Cl
         // 컴포넌트가 언마운트될 때 인터벌을 클리어합니다.
         return () => clearInterval(intervalId);
     }, []);
+
+
+
+    /** 예약한 버스가 도착했는데 2초마다 확인함 */
+    useEffect(() => {
+        refreshTaskRef.current = setInterval(async () => {
+            const apiData = await checkBusArrival(userRole, {
+                arsId: wishBus.stationArsId,
+                busRouteId: wishBus.busRouteId,
+                busRouteNm: wishBus.busRouteNumber,
+                busRouteAbrv: wishBus.busRouteAbbreviation
+            });
+
+            if (apiData) {
+                setPageState("arrivedBus");
+            }
+        }, 2000);
+
+        return () => {
+            if (refreshTaskRef.current) {
+                clearInterval(refreshTaskRef.current);
+            }
+        };
+    }, [userRole, setPageState, wishBus]);
 
 
 

@@ -18,7 +18,7 @@ export interface ClientMiddleProps {
 
 
 /** 컨트롤러 상태 */
-export type ClientMiddleState = "searchingStation" | "selectingStation" | "selectingBus" | "waitingBus";
+export type ClientMiddleState = "searchingStation" | "selectingStation" | "selectingBus" | "waitingBus" | "arrivedBus";
 
 
 

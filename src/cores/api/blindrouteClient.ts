@@ -270,3 +270,38 @@ export async function unreserveBus(userRole: UserRole, params: { arsId: string, 
     }
     return data;
 }
+
+
+
+/**
+ * 사용자가 예약한 버스가 도착했는지 확인하는 API
+ * ICheckBusArrivalApi
+ * checkBusArrival
+ */
+
+/** 예약을 취소하는 Api 반환 타입*/
+export type ICheckBusArrivalApi = boolean;
+
+/** 해당 정류장에 버스 예약을 취소 */
+export async function checkBusArrival(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }) {
+    let data: ICheckBusArrivalApi = false;
+    try {
+        const postData = qs.stringify(params);
+        const response = await axios.post(
+            getApiUrl(userRole, "/select/arrivalCheck"),
+            postData,
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                withCredentials: true
+            }
+        );
+        data = response.data;
+    }
+    catch (error) {
+        console.error("Search request failed:", error);
+    }
+    console.log(data);
+    return data;
+}
