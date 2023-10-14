@@ -115,34 +115,3 @@ export async function getReservedBusList(userRole: UserRole, params: { arsId: st
 
 
 
-/**
- * 해당 정류장에 버스 예약을 취소하는 API
- * IUnreserveBusApi
- * unreserveBus
- */
-
-/** 예약을 취소하는 Api 반환 타입*/
-export type IUnreserveBusApi = "success" | "fail";
-
-/** 해당 정류장에 버스 예약을 취소 */
-export async function unreserveBus(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }) {
-    let data: IUnreserveBusApi = "fail";
-    try {
-        const postData = qs.stringify(params);
-        const response = await axios.post(
-            getApiUrl(userRole, "/delete/bus"),
-            postData,
-            {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                withCredentials: true
-            }
-        );
-        data = response.data;
-    }
-    catch (error) {
-        console.error("Search request failed:", error);
-    }
-    return data;
-}

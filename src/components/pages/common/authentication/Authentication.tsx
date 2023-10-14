@@ -70,7 +70,6 @@ export default function Authentication({ userRole, actionType }: AuthenticationP
             }
             case "idle": {
                 history("/home");
-                alert("잘못된 접근입니다.");
                 break;
             }
         }

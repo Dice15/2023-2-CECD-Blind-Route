@@ -1,4 +1,4 @@
-import { reserveBus } from "../../../../cores/api/blindrouteClient";
+import { registerBus } from "../../../../cores/api/blindrouteClient";
 import Bus from "../../../../cores/types/Bus";
 import { UserRole } from "../../../../cores/types/UserRole";
 import useElementDimensions from "../../../../hooks/useElementDimensions";
@@ -59,7 +59,7 @@ export default function BusTable({ userRole, arsId, busList, onClose }: BusTable
         const selectedBus = filteredBusList[selectedIndex];
 
         if (selectedBus) {
-            const busApiData = await reserveBus(userRole, {
+            const busApiData = await registerBus(userRole, {
                 arsId: arsId,
                 busRouteId: selectedBus.busRouteId,
                 busRouteNm: selectedBus.busRouteNumber,

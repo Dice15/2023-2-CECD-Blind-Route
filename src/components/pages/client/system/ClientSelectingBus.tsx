@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientMiddleState } from "../ClientMiddle";
 import Bus from "../../../../cores/types/Bus";
-import { reserveBus } from "../../../../cores/api/blindrouteClient";
+import { registerBus } from "../../../../cores/api/blindrouteClient";
 
 
 
@@ -66,7 +66,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
 
     /** 다음 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onNextStep = async () => {
-        const reservingApiData = await reserveBus(userRole, {
+        const reservingApiData = await registerBus(userRole, {
             arsId: busList[busListIndex].stationArsId,
             busRouteId: busList[busListIndex].busRouteId,
             busRouteNm: busList[busListIndex].busRouteNumber,

@@ -47,7 +47,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus }: Cl
 
 
     return (
-        <div className={style.ClientSelectingBus}>
+        <div className={style.ClientWaitingBus}>
             <button className={style.button_movePrev} type="button" onClick={() => { onPrevStep(); }}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20,15 L10,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
@@ -55,7 +55,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus }: Cl
                 </svg>
             </button>
 
-            <div className={style.busInfo}>
+            <div className={style.wishBusInfo}>
                 <h1>{wishBus.busRouteAbbreviation}</h1>
                 <h3>{waitingMessage}</h3>
             </div>
