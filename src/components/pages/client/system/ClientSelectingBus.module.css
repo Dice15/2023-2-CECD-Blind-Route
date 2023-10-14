@@ -7,14 +7,17 @@
 }
 
 /* ClientSearchStation's children elements */
-.busInfo {
-    width: 70%;
+.busInfoContainer {
     height: 70%;
+    width: 70%;
     margin-bottom: 10%;
     border-radius: 8px;
     border: 1px solid var(--button-border--color);
     background-color: var(--button-color);
     color: var(--button-text-color);
+}
+
+.busInfo {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -40,4 +43,14 @@
 
 .button_moveNext {
     margin-left: 3.5%;
+}
+
+
+/* busInfo's children elements */
+.busInfo h1 {
+    font-weight: 550;
+}
+
+.busInfo h3 {
+    font-weight: 400;
 }

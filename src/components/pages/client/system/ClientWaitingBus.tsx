@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientMiddleState } from "../ClientMiddle";
 import Bus from "../../../../cores/types/Bus";
+import { unreserveBus } from "../../../../cores/api/blindrouteClient";
 
 
 
@@ -40,8 +41,19 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus }: Cl
 
 
     /** 이전 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
-    const onPrevStep = () => {
-        setPageState("selectingBus");
+    const onPrevStep = async () => {
+        const unreserveApiData = await unreserveBus(userRole, {
+            arsId: wishBus.stationArsId,
+            busRouteId: wishBus.busRouteId,
+            busRouteNm: wishBus.busRouteNumber,
+            busRouteAbrv: wishBus.busRouteAbbreviation,
+        });
+
+        if (unreserveApiData === "success") {
+            setPageState("selectingBus");
+        } else {
+            alert(`${wishBus.busRouteAbbreviation} 버스를 취소하는데 실패했습니다`);
+        }
     };
 
 

@@ -1,9 +1,15 @@
 import style from "./ClientSelectingBus.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientMiddleState } from "../ClientMiddle";
 import Bus from "../../../../cores/types/Bus";
-import { registerBus } from "../../../../cores/api/blindrouteClient";
+import { reserveBus } from "../../../../cores/api/blindrouteClient";
+
+
+// module
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import useElementDimensions from "../../../../hooks/useElementDimensions";
 
 
 
@@ -19,61 +25,37 @@ export interface ClientSelectingBusProps {
 
 /** ClientSelectingStation 컴포넌트 */
 export default function ClientSelectingBus({ userRole, setPageState, busList, setWishBus }: ClientSelectingBusProps) {
+    // ref
+    const busInfoContainer = useRef<HTMLDivElement>(null);
+
+
     // state
     const [busListIndex, setBusListIndex] = useState<number>(0);
-    const [touchStartY, setTouchStartY] = useState<number | null>(null);
 
 
-
-    /** 정류장을 보여주는 div의 터치 이벤트 시작 */
-    const handleTouchStart = (e: React.TouchEvent) => {
-        setTouchStartY(e.touches[0].clientY);
-    }
-
-
-
-    /** 버스를 보여주는 div의 터치 이벤트 끝 */
-    const handleTouchEnd = (e: React.TouchEvent) => {
-        if (touchStartY === null) return;
-
-        const deltaY = touchStartY - e.changedTouches[0].clientY;
-        setTouchStartY(null); // Reset touch start position
-
-        if (deltaY > 30) { // 위로 스와이프
-            if (busListIndex < busList.length - 1) {
-                setBusListIndex(prev => prev + 1);
-            } else {
-                setBusListIndex(0);
-            }
-        } else if (deltaY < -30) { // 아래로 스와이프
-            if (busListIndex > 0) {
-                setBusListIndex(prev => prev - 1);
-            } else {
-                setBusListIndex(busList.length - 1);
-            }
-        }
-    }
+    // custom module
+    const [busInfoContainerWidth, busInfoContainerHeight] = useElementDimensions<HTMLDivElement>(busInfoContainer, "Pure");
 
 
 
     /** 이전 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onPrevStep = () => {
         setWishBus(null);
-        setPageState("searchingStation");
+        setPageState("selectingStation");
     };
 
 
 
     /** 다음 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onNextStep = async () => {
-        const reservingApiData = await registerBus(userRole, {
+        const reserveApiData = await reserveBus(userRole, {
             arsId: busList[busListIndex].stationArsId,
             busRouteId: busList[busListIndex].busRouteId,
             busRouteNm: busList[busListIndex].busRouteNumber,
             busRouteAbrv: busList[busListIndex].busRouteAbbreviation,
         });
 
-        if (reservingApiData === "success") {
+        if (reserveApiData === "success") {
             setWishBus(busList[busListIndex]);
             setPageState("waitingBus");
         } else {
@@ -99,9 +81,22 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
                 </svg>
             </button>
 
-            <div className={style.busInfo} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-                <h1>{busList[busListIndex].busRouteAbbreviation}</h1>
-                <h3>{busList[busListIndex].busRouteId}</h3>
+            <div className={style.busInfoContainer} ref={busInfoContainer}>
+                <Swiper
+                    slidesPerView={1}
+                    spaceBetween={50}
+                    onSlideChange={(swiper: any) => { setBusListIndex(swiper.realIndex); }}
+                    loop={true}
+                >
+                    {busList.map((bus, index) => (
+                        <SwiperSlide key={index}>
+                            <div className={style.busInfo} style={{ height: `${busInfoContainerHeight}px` }}>
+                                <h1>{bus.busRouteAbbreviation}</h1>
+                                <h3>{`id: ${bus.busRouteId}`}</h3>
+                            </div>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             </div>
 
             <button className={style.button_moveNext} type="button" onClick={() => { onNextStep(); }}>

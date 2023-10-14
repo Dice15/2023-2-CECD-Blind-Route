@@ -205,18 +205,18 @@ export async function getBusDestinationList(userRole: UserRole, params: { busRou
 
 
 /**
- * 버스를 예약하는 API
- * IRegisterBus
+ * 해당 정류장의 버스를 예약하는 API
+ * IReserveBusApi
  * reserveBus
  */
 
 /** API로 부터 받은 버스 데이터 인터페이스*/
-export type IRegisterBus = "success" | "fail";
+export type IReserveBusApi = "success" | "fail";
 
 
 /** API로 부터 받은 버스 등록 성공 여부를 반환 받음 */
-export async function registerBus(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }) {
-    let data: IRegisterBus = "fail";
+export async function reserveBus(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }) {
+    let data: IReserveBusApi = "fail";
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
@@ -240,7 +240,7 @@ export async function registerBus(userRole: UserRole, params: { arsId: string, b
 
 
 /**
- * 해당 정류장에 버스 예약을 취소하는 API
+ * 해당 정류장의 버스 예약을 취소하는 API
  * IUnreserveBusApi
  * unreserveBus
  */

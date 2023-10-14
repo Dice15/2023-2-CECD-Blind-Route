@@ -1,5 +1,5 @@
 .Client {
-    height: calc(100vh - 5px - 10px);
+    height: calc(calc(var(--vh, 1vh) * 100) - 5px - 10px);
     width: calc(100vw - 10px - 10px);
     padding: 10px;
     padding-top: 5px;

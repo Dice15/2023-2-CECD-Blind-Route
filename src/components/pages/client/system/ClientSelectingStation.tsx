@@ -1,11 +1,15 @@
 import style from "./ClientSelectingStation.module.css";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientMiddleState } from "../ClientMiddle";
 import Station from "../../../../cores/types/Station";
 import Bus from "../../../../cores/types/Bus";
 import { getBusDestinationList, getBusList } from "../../../../cores/api/blindrouteClient";
 
+// module
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import useElementDimensions from "../../../../hooks/useElementDimensions";
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -20,40 +24,16 @@ export interface ClientSelectingStationProps {
 
 /** ClientSelectingStation 컴포넌트 */
 export default function ClientSelectingStation({ userRole, setPageState, stationList, setBusList }: ClientSelectingStationProps) {
+    // ref
+    const stationInfoContainer = useRef<HTMLDivElement>(null);
+
+
     // state
     const [stationListIndex, setStationListIndex] = useState<number>(0);
-    const [touchStartY, setTouchStartY] = useState<number | null>(null);
 
 
-
-    /** 정류장을 보여주는 div의 터치 이벤트 시작 */
-    const handleTouchStart = (e: React.TouchEvent) => {
-        setTouchStartY(e.touches[0].clientY);
-    }
-
-
-
-    /** 정류장을 보여주는 div의 터치 이벤트 끝 */
-    const handleTouchEnd = (e: React.TouchEvent) => {
-        if (touchStartY === null) return;
-
-        const deltaY = touchStartY - e.changedTouches[0].clientY;
-        setTouchStartY(null); // Reset touch start position
-
-        if (deltaY > 30) { // 위로 스와이프
-            if (stationListIndex < stationList.length - 1) {
-                setStationListIndex(prev => prev + 1);
-            } else {
-                setStationListIndex(0);
-            }
-        } else if (deltaY < -30) { // 아래로 스와이프
-            if (stationListIndex > 0) {
-                setStationListIndex(prev => prev - 1);
-            } else {
-                setStationListIndex(stationList.length - 1);
-            }
-        }
-    }
+    // custom module
+    const [stationInfoContainerWidth, stationInfoContainerHeight] = useElementDimensions<HTMLDivElement>(stationInfoContainer, "Pure");
 
 
 
@@ -87,7 +67,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
         }));
 
         if (busInstances.length > 0) {
-            //setBusList([new Bus("111111", "111111", "1119", "1119"),new Bus("111111", "222222", "1128", "1128")]);
+            //setBusList([new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")]);
             setBusList(busInstances);
             setPageState("selectingBus");
         } else {
@@ -113,9 +93,22 @@ export default function ClientSelectingStation({ userRole, setPageState, station
                 </svg>
             </button>
 
-            <div className={style.stationInfo} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-                <h1>{stationList[stationListIndex].stationName}</h1>
-                <h3>{stationList[stationListIndex].stationId}</h3>
+            <div className={style.stationInfoContainer} ref={stationInfoContainer}>
+                <Swiper
+                    slidesPerView={1}
+                    spaceBetween={50}
+                    onSlideChange={(swiper: any) => { setStationListIndex(swiper.realIndex); }}
+                    loop={true}
+                >
+                    {stationList.map((station, index) => (
+                        <SwiperSlide key={index}>
+                            <div className={style.stationInfo} style={{ height: `${stationInfoContainerHeight}px` }}>
+                                <h1>{station.stationName}</h1>
+                                <h3>{`id: ${station.stationId}`}</h3>
+                            </div>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             </div>
 
             <button className={style.button_moveNext} type="button" onClick={() => { onNextStep(); }}>

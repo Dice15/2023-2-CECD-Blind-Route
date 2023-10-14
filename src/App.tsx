@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserRole } from './cores/types/UserRole';
 import Home from './components/pages/home/Home';
 import Client from './components/pages/client/Client';
@@ -22,6 +22,13 @@ function App() {
 
   /** 모달 추가 */
   useModalCreater();
+
+
+  /** 모바일 주소창을 고려한 vh크기*/
+  useEffect(() => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  });
 
 
   if ('serviceWorker' in navigator) {
