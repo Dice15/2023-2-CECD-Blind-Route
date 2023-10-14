@@ -1,0 +1,49 @@
+.PanelDetectingBus {
+    flex: 1 0 100%;
+    display: flex;
+}
+
+
+
+/* PanelDetectingBus's children elements */
+.busTable {
+    height: 95%;
+    width: 85%;
+    border-radius: 8px;
+    display: flex;
+}
+
+.button_movePrev,
+.button_moveNext {
+    height: 80%;
+    width: 5%;
+    margin: 0px;
+    margin-bottom: 5%;
+    padding: 0px;
+    border: 0px;
+    background-color: white;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.button_movePrev {
+    margin-right: 2%;
+}
+
+.button_moveNext {
+    margin-left: 2%;
+}
+
+
+
+/* busTable's children elements */
+.reserved_bus {
+    flex: 48 0 calc(50% - 5px - 5px - 1px);
+    padding: 5px;
+    border-right: 1px dashed var(--dividerline-color);
+}
+
+.detected_bus {
+    flex: 50 0 calc(50% - 5px - 5px - 1px);
+    padding: 5px;
+}

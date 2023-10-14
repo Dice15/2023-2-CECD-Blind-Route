@@ -1,0 +1,60 @@
+.PanelSelectingStation {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* PanelSelectingStation's children elements */
+.stationInfoContainer {
+    height: 80%;
+    width: 85%;
+    margin: 0px;
+    margin-bottom: 5%;
+    border-radius: 8px;
+    border: 1px solid var(--button-border--color);
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+}
+
+.stationInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.button_movePrev,
+.button_moveNext {
+    height: 80%;
+    width: 5%;
+    margin: 0px;
+    margin-bottom: 5%;
+    padding: 0px;
+    border: 0px;
+    background-color: white;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.button_movePrev {
+    margin-right: 2%;
+}
+
+.button_moveNext {
+    margin-left: 2%;
+}
+
+
+
+/* stationInfo's children elements */
+.stationInfo h1 {
+    font-weight: 550;
+}
+
+.stationInfo h3 {
+    font-weight: 400;
+}

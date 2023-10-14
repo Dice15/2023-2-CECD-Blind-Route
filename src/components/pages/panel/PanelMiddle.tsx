@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import style from "./PanelMiddle.module.css";
 import { UserRole } from "../../../cores/types/UserRole";
-import DetectingBus from "./system/DetectingBus";
-import ReservedBusTable from "./system/ReservedBusTable";
+import Station from "../../../cores/types/Station";
+import PanelSearchingStation from "./system/PanelSearchingStation";
+import PanelSelectingStation from "./system/PanelSelectingStation";
+import PanelDetectingBus from "./system/PanelDetectingBus";
 
 
 
@@ -13,65 +15,72 @@ export interface PanelMiddleProps {
 
 
 
+/** 컨트롤러 상태 */
+export type PanelMiddleState = "searchingStation" | "selectingStation" | "dectectingBus";
+
+
+
 /** PanelMiddle 컴포넌트 */
 export default function PanelMiddle({ userRole }: PanelMiddleProps) {
-    /** test */
-    const controlButton = useRef<HTMLButtonElement>(null);
+    // state
+    const [pageState, setPageState] = useState<PanelMiddleState>("searchingStation");
+    const [stationList, setStationList] = useState<Station[]>([]);
+    const [wishStation, setWishStation] = useState<Station | null>(null);
 
-    /** state */
-    const [panelSystemState, setPanelSystemState] = useState<"running" | "stopped">("stopped");
 
 
-    /** 버튼 클릭에 따른 시스템 변경 이벤트 */
-    const onClickControlButton = () => {
-        setPanelSystemState(panelSystemState === "running" ? "stopped" : "running");
+    /** 페이지 상태에 따른 알맞는 컨트롤러 반환 */
+    const getControllerForm = () => {
+        switch (pageState) {
+            case "searchingStation": {
+                return <PanelSearchingStation
+                    userRole={userRole}
+                    setPageState={setPageState}
+                    setStationList={setStationList}
+                />;
+            }
+            case "selectingStation": {
+                return <PanelSelectingStation
+                    userRole={userRole}
+                    setPageState={setPageState}
+                    stationList={stationList}
+                    setWishStation={setWishStation}
+                />
+            }
+            case "dectectingBus": {
+                return <PanelDetectingBus
+                    userRole={userRole}
+                    setPageState={setPageState}
+                    wishStation={wishStation!}
+                />
+            }
+            default: {
+                return <></>;
+            }
+        }
     };
 
 
 
-
-    /** 시스템 상태에 따른 버튼 변경 */
+    /** 페이지가 초기화 될때 페이지 상태는 searchingStation로 설정 */
     useEffect(() => {
-        const ctrlButton = controlButton.current;
-        if (ctrlButton) {
-            if (panelSystemState === "running") {
-                ctrlButton.textContent = "시스템 종료";
-                ctrlButton.className = [style.sysyem_control__button, style.stop_button].join(" ");
-            } else {
-                ctrlButton.textContent = "시스템 시작";
-                ctrlButton.className = [style.sysyem_control__button, style.start_button].join(" ");
-            }
-        }
-    }, [controlButton, panelSystemState]);
-
-
+        setPageState("searchingStation");
+    }, []);
 
 
 
     return (
         <div className={style.PanelMiddle}>
-            <div className={style.panel_middle__header}>
-                <button className={style.sysyem_control__button} type="button" onClick={onClickControlButton} ref={controlButton}></button>
-            </div>
-
-            <div className={style.panel_middle__body}>
-                <div className={style.display_reserved_table}>
-                    <ReservedBusTable
-                        taskState={panelSystemState}
-                        userRole={userRole}
-                    />
-                </div>
-                <div className={style.display_detectedbus}>
-                    <DetectingBus
-                        taskState={panelSystemState}
-                        userRole={userRole}
-                    />
-                </div>
-            </div>
+            {getControllerForm()}
         </div>
     );
 };
 
 /*
+                <div className={style.reserved_table}>
 
+                </div>
+                <div className={style.detected_bus}>
+
+                </div>
 */

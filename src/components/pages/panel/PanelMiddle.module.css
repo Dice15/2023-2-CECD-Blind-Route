@@ -8,55 +8,21 @@
 
 
 /* PanelMiddle's children elements */
-.panel_middle__header {
-    flex: 0 0 40px;
-    margin-bottom: 10px;
-    display: flex;
-}
-
-.panel_middle__body {
-    flex: 1 0 calc(100% - 10px - 40px);
+.body {
+    flex: 1 0 100%;
     display: flex;
 }
 
 
 
-/* panel_middle__header's children elements */
-.sysyem_control__button {
-    flex: 1 0 calc(100% - 10px - 10px - 3px - 3px);
-    border: 3px solid var(--button-border-color);
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 400;
-    color: var(--button-text-color);
-}
-
-.start_button {
-    background-color: var(--button-positive-color);
-}
-
-.start_button:hover {
-    background-color: var(--button-positive-hover-color);
-}
-
-.stop_button {
-    background-color: var(--button-negative-color);
-}
-
-.stop_button:hover {
-    background-color: var(--button-negative-hover-color);
-}
-
-
-
-/* panel_middle__body's children elements */
-.display_reserved_table {
+/* body's children elements */
+.reserved_table {
     flex: 48 0 calc(50% - 5px - 5px - 1px);
     padding: 5px;
     border-right: 1px dashed var(--dividerline-color);
 }
 
-.display_detectedbus {
+.detected_bus {
     flex: 50 0 calc(50% - 5px - 5px - 1px);
     padding: 5px;
 }
