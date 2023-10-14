@@ -20,8 +20,10 @@ function App() {
   const [authenticationActionType, setAuthenticationActionType] = useState<AuthenticationActionType>("idle");
 
 
+
   /** 모달 추가 */
   useModalCreater();
+
 
 
   /** 모바일 주소창을 고려한 vh크기 */
@@ -31,27 +33,6 @@ function App() {
     document.documentElement.style.setProperty("--vh", `${vh}px`);
   });
 
-
-  /** 당겨서 새로고침 막기 */
-  const preventClose = (e: BeforeUnloadEvent) => {
-    e.preventDefault();
-    e.returnValue = "deprecated";
-  };
-
-  useEffect(() => {
-    (() => { window.addEventListener("beforeunload", preventClose); })();
-    return () => { window.removeEventListener("beforeunload", preventClose); };
-  }, []);
-
-
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.ts').then(() => {
-      console.log("Service Worker Registered!");
-    }).catch(error => {
-      console.log("Service Worker Registration Failed:", error);
-    });
-  }
 
 
   return (
