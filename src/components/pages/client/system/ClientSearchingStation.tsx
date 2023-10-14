@@ -34,11 +34,9 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 );
             });
 
-            if (stationInstances.length >= 0) {
-                setStationList([
-                    new Station("111111", "111111", "창동역"),
-                    new Station("222222", "222222", "노원역")
-                ]);
+            if (stationInstances.length > 0) {
+                //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
+                setStationList(stationInstances);
                 setPageState("selectingStation");
             } else {
                 alert("검색된 정류장이 없습니다");

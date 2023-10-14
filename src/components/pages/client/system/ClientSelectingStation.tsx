@@ -86,11 +86,9 @@ export default function ClientSelectingStation({ userRole, setPageState, station
             );
         }));
 
-        if (busInstances.length >= 0) {
-            setBusList([
-                new Bus("111111", "111111", "1119", "1119"),
-                new Bus("111111", "222222", "1128", "1128")
-            ]);
+        if (busInstances.length > 0) {
+            //setBusList([new Bus("111111", "111111", "1119", "1119"),new Bus("111111", "222222", "1128", "1128")]);
+            setBusList(busInstances);
             setPageState("selectingBus");
         } else {
             alert(`${stationList[stationListIndex].stationName}에서 검색된 버스가 없습니다`);
