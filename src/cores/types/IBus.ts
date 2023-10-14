@@ -6,6 +6,7 @@
  * busDestination: 버스 도착 정류장 리스트
  */
 export default interface IBus {
+    stationArsId: string;
     busRouteId: string;
     busRouteNumber: string;
     busRouteAbbreviation: string;
@@ -15,6 +16,7 @@ export default interface IBus {
     }[];
 
     print(): {
+        stationArsId: string;
         busRouteId: string;
         busRouteNumber: string;
         busRouteAbbreviation: string;

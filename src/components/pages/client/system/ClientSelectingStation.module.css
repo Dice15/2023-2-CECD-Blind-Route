@@ -1,0 +1,43 @@
+.ClientSelectingStation {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ClientSearchStation's children elements */
+.stationInfo {
+    width: 70%;
+    height: 70%;
+    margin-bottom: 10%;
+    border-radius: 8px;
+    border: 1px solid var(--button-border--color);
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.button_movePrev,
+.button_moveNext {
+    width: 10%;
+    height: calc(100% - 15%);
+    margin: 0px;
+    margin-bottom: 14%;
+    padding: 0px;
+    border: 0px;
+    background-color: white;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.button_movePrev {
+    margin-right: 3.5%;
+}
+
+.button_moveNext {
+    margin-left: 3.5%;
+}

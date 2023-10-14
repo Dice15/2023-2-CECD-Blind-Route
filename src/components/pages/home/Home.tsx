@@ -27,16 +27,19 @@ export default function Home({ userRole, appType, authenticationActionType, setA
     const [authenticationState, setAuthenticationState] = useState<boolean>(false);
 
 
+
     /** 앱 페이지로 이동 */
     const moveToApp = (appType: AppType) => {
         history(`/${appType}`);
     }
 
 
-    /** 페이지 로딩 시 인증 액션 상태 "idle" */
-    useEffect(() => {
-        setAuthenticationActionType("idle");
-    }, [setAuthenticationActionType]);
+
+    /** 인증 요청 시 인증 액션타입 설정 */
+    const onAuthentication = (actionType: AuthenticationActionType) => {
+        setAuthenticationActionType(actionType);
+    };
+
 
 
     /** 페이지 로딩 시 인증 상태 확인 */
@@ -48,13 +51,15 @@ export default function Home({ userRole, appType, authenticationActionType, setA
     }, [userRole]);
 
 
-    /** 인증 요청 시 인증 액션타입 설정 */
-    const onAuthentication = (actionType: AuthenticationActionType) => {
-        setAuthenticationActionType(actionType);
-    };
+
+    /** 페이지 로딩 시 인증 액션 상태 "idle" */
+    useEffect(() => {
+        setAuthenticationActionType("idle");
+    }, [setAuthenticationActionType]);
 
 
     /** 인증 페이지로 이동 */
+
     useEffect(() => {
         if (authenticationActionType !== "idle") {
             history("/authentication");

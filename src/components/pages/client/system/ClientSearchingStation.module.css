@@ -1,10 +1,4 @@
-.ClientMiddle {
-    height: 100%;
-    width: 100%;
-}
-
-
-.search_station {
+.ClientSearchingStation {
     height: 100%;
     width: 100%;
     display: flex;
@@ -12,7 +6,9 @@
     align-items: center;
 }
 
-.search_text {
+
+/* ClientSearchStation's children elements */
+.textbox_stationName {
     width: 70%;
     height: 10%;
     margin-bottom: 15%;
@@ -25,14 +21,23 @@
     text-align: center;
 }
 
-.search_button {
+.button_movePrev,
+.button_moveNext {
     width: 10%;
-    height: 100%;
-    margin-left: 2%;
-    margin-right: 2%;
-    margin-bottom: 15%;
-    border: none;
+    height: calc(100% - 15%);
+    margin: 0px;
+    margin-bottom: 14%;
+    padding: 0px;
+    border: 0px;
     background-color: white;
     font-weight: 500;
     font-size: 20px;
+}
+
+.button_movePrev {
+    margin-right: 3.5%;
+}
+
+.button_moveNext {
+    margin-left: 3.5%;
 }

@@ -4,7 +4,7 @@ import { getBusDestinationList, getBusList, getStationList } from "../../../../c
 import Bus from "../../../../cores/types/Bus";
 import Station from "../../../../cores/types/Station";
 import { UserRole } from "../../../../cores/types/UserRole";
-import BusTable from "../../client/system/BusTable";
+import BusTable from "./BusTable";
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import { useModal } from "../../../../modules/modal/Modal";
 import { ModalAnimationType } from "../../../../modules/modal/ModalAnimations";
@@ -91,7 +91,7 @@ export default function StationTable({ userRole }: StationTableProps) {
                     bus.busRouteId,
                     bus.busRouteNm,
                     bus.busRouteAbrv,
-                    destinationInstances,
+          
                 );
             }));
 
