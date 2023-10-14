@@ -55,7 +55,15 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus }: Cl
             });
 
             if (apiData) {
-                setPageState("arrivedBus");
+                alert("버스가 도착했습니다!");
+
+                if (refreshTaskRef.current) {
+                    clearInterval(refreshTaskRef.current);
+                }
+
+                window.setTimeout(() => {
+                    setPageState("searchingStation");
+                }, 5000);  // 5 seconds delay
             }
         }, 2000);
 

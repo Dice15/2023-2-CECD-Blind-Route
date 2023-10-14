@@ -25,7 +25,8 @@ export default function PanelCameraCapture({ userRole, captureInterval }: PanelC
 
 
     // state
-    const [detectedImage, setCapturedImage] = useState<Blob | null>(null);
+    const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
+    const [detectedBus, setDetectedBus] = useState<Bus | null>(null);
 
 
     /** custom hook */
@@ -127,6 +128,7 @@ export default function PanelCameraCapture({ userRole, captureInterval }: PanelC
 
 
 
+    /** 버스 도착 테스트 (쌍문역 기준) */
     const test = useCallback(async (bus: Bus) => {
         const res = await detectedTest(userRole, {
             arsId: bus.stationArsId,
@@ -134,37 +136,38 @@ export default function PanelCameraCapture({ userRole, captureInterval }: PanelC
             busRouteNm: bus.busRouteNumber,
             busRouteAbrv: bus.busRouteAbbreviation
         });
-        console.log(`${bus.busRouteAbbreviation} remove -> ${res.result}`)
     }, [userRole]);
 
-
-
     useEffect(() => {
-        const buses = [new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")];
+        const buses = [
+            new Bus("10015", "122000002", "6102", "6102"),
+            new Bus("10015", "100100006", "101", "101"),
+            new Bus("10015", "100100011", "106", "106"),
+            new Bus("10015", "100100012", "107", "107")
+        ];
         let index = 0;
 
         const intervalId = setInterval(async () => {
             const bus = buses[index];
+            setDetectedBus(bus);
             await test(bus);
 
-            // Move to the next bus, or clear the interval if we've reached the end of the array
-            index += 1;
-            if (index >= buses.length) {
-                clearInterval(intervalId);
-            }
+            // Move to the next bus, or reset to the first bus if we've reached the end of the array
+            index = (index + 1) % buses.length;
+
         }, 2000);  // 2 seconds interval
 
         // Clear the interval when the component unmounts
         return () => clearInterval(intervalId);
 
-    }, [userRole, test]);  // Don't forget to include `test` in the dependency array if it's defined outside this useEffect
+    }, [userRole, test, setDetectedBus]);  // Don't forget to include `test` in the dependency array if it's defined outside this useEffect
 
 
 
     return (
         <div className={style.PanelCameraCapture} >
             <div className={style.detected_bus}>
-                <h3>{`도착한 버스: 1119 (Test)`}</h3>
+                <h3>{detectedBus && `도착한 버스: ${detectedBus.busRouteAbbreviation}`}</h3>
             </div>
             <div className={style.captured_image} ref={displayCameraRef}>
                 <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef}></video>

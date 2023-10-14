@@ -143,7 +143,7 @@ export async function detectedTest(userRole: UserRole, params: { arsId: string, 
     catch (error) {
         console.error("Search request failed:", error);
     }
-    console.log(data);
+    console.log("detectedTest: ", data);
     return { result: data };
 }
 
