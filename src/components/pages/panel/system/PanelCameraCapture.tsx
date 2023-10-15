@@ -56,7 +56,6 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
             });
             video.srcObject = stream;
         } catch (error) {
-            alert("카메라를 사용할 수 없습니다");
             console.error("Failed to start the camera:", error);
         }
     }, [videoWidth, videoHeight]);
@@ -70,7 +69,6 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
             const tracks = srcObject.getTracks();
             tracks.forEach((track: MediaStreamTrack) => track.stop());
         } catch (error) {
-            alert("카메라 종료할 수 없습니다");
             console.error("Failed to end the camera:", error);
         }
     }, []);
