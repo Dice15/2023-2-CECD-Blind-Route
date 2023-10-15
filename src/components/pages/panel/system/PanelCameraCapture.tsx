@@ -19,6 +19,10 @@ export interface PanelCameraCaptureProps {
 
 /** PanelCameraCapture 컴포넌트 */
 export default function PanelCameraCapture({ userRole, wishStation }: PanelCameraCaptureProps) {
+    // Const 
+    const { arsId } = wishStation;  // 비구조화를 통해 arsId 추출
+
+
     // Refs 
     const displayCameraRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -101,7 +105,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     /** 버스 정류장의 버스 리스트를 가져옴 */
     useEffect(() => {
         const getWishStationBusList = async () => {
-            const busApiData = await getBusList(userRole, { arsId: wishStation.arsId });
+            const busApiData = await getBusList(userRole, { arsId: arsId });
             const busInstances: Bus[] = await Promise.all(busApiData.busList.filter((bus) => bus.busRouteId !== undefined).map(async (bus) => {
                 const destinationApiData = await getBusDestinationList(userRole, { busRouteId: bus.busRouteId! });
                 const destinationInstances = destinationApiData.destinations.map((destination) => {
@@ -112,7 +116,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                 })
 
                 return new Bus(
-                    wishStation.arsId,
+                    arsId,
                     bus.busRouteId,
                     bus.busRouteNm,
                     bus.busRouteAbrv,
@@ -125,7 +129,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
 
         getWishStationBusList();
 
-    }, [userRole, wishStation, wishStation.arsId]);
+    }, [userRole, arsId]);
 
 
 
@@ -172,12 +176,12 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     useEffect(() => {
         const sendImage = async () => {
             if (capturedImage) {
-                const busApiData = await sendCapturedImage(userRole, { arsId: wishStation.arsId, image: capturedImage });
+                const busApiData = await sendCapturedImage(userRole, { arsId: arsId, image: capturedImage });
                 console.log(busApiData);
             }
         }
         sendImage();
-    }, [userRole, capturedImage]);
+    }, [userRole, arsId, capturedImage]);
 
 
 
