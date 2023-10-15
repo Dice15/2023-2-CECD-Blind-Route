@@ -2,38 +2,44 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import style from "./PanelCameraCapture.module.css"
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import { UserRole } from "../../../../cores/types/UserRole";
-import { detectedTest } from "../../../../cores/api/blindroutePanel";
+import { detectedTest, sendCapturedImage } from "../../../../cores/api/blindroutePanel";
 import Bus from "../../../../cores/types/Bus";
+import Station from "../../../../cores/types/Station";
+import { getBusDestinationList, getBusList } from "../../../../cores/api/blindrouteClient";
 
 
 
 /** PanelCameraCapture 컴포넌트 프로퍼티 */
 export interface PanelCameraCaptureProps {
     userRole: UserRole;
-    captureInterval: number;
+    wishStation: Station;
 }
 
 
 
 /** PanelCameraCapture 컴포넌트 */
-export default function PanelCameraCapture({ userRole, captureInterval }: PanelCameraCaptureProps) {
-    /** ref */
+export default function PanelCameraCapture({ userRole, wishStation }: PanelCameraCaptureProps) {
+    // Refs 
     const displayCameraRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const captureTaskRef = useRef<NodeJS.Timeout | null>(null);
 
 
-    // state
+    // States
     const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
+    const [busList, setBusList] = useState<Bus[]>([]);
     const [detectedBus, setDetectedBus] = useState<Bus | null>(null);
 
 
-    /** custom hook */
+    // Custom hooks
     const [videoWidth, videoHeight] = useElementDimensions<HTMLDivElement>(displayCameraRef, "Pure");
 
 
 
+    /**
+     * Handler functions
+     */
     /** 카메라 활성화 함수 */
     const startCamera = useCallback(async (video: HTMLVideoElement) => {
         try {
@@ -89,12 +95,46 @@ export default function PanelCameraCapture({ userRole, captureInterval }: PanelC
 
 
 
-    /** state에 따른 카메라 활성 여부 */
+    /** 
+     * Effects
+     */
+    /** 버스 정류장의 버스 리스트를 가져옴 */
+    useEffect(() => {
+        const getWishStationBusList = async () => {
+            const busApiData = await getBusList(userRole, { arsId: wishStation.arsId });
+            const busInstances: Bus[] = await Promise.all(busApiData.busList.filter((bus) => bus.busRouteId !== undefined).map(async (bus) => {
+                const destinationApiData = await getBusDestinationList(userRole, { busRouteId: bus.busRouteId! });
+                const destinationInstances = destinationApiData.destinations.map((destination) => {
+                    return {
+                        stationName: destination.stationNm,
+                        direction: destination.direction
+                    };
+                })
+
+                return new Bus(
+                    wishStation.arsId,
+                    bus.busRouteId,
+                    bus.busRouteNm,
+                    bus.busRouteAbrv,
+                    destinationInstances,
+                );
+            }));
+
+            setBusList(busInstances);
+        };
+
+        getWishStationBusList();
+
+    }, [userRole, wishStation, wishStation.arsId]);
+
+
+
+    /** 카메라로 taskInterval밀리초 마다 이미지 캡쳐 */
     useEffect(() => {
         const videoElement = videoRef.current;
         const canvasElement = canvasRef.current;
         const taskRef = captureTaskRef;
-        const taskInterval = captureInterval;
+        const taskInterval = 1000;
 
         const startCapture = async (video: HTMLVideoElement, canvas: HTMLCanvasElement, task: React.MutableRefObject<NodeJS.Timeout | null>) => {
             if (task && !task.current) {
@@ -124,46 +164,53 @@ export default function PanelCameraCapture({ userRole, captureInterval }: PanelC
                 clearInterval(taskRef.current);
             }
         }
-    }, [captureInterval, canvasRef, videoRef, captureTaskRef, startCamera, imageCapture, stopCamera]);
+    }, [canvasRef, videoRef, captureTaskRef, startCamera, imageCapture, stopCamera]);
 
 
 
-    /** 버스 도착 테스트 (쌍문역 기준) */
-    const test = useCallback(async (bus: Bus) => {
-        const res = await detectedTest(userRole, {
-            arsId: bus.stationArsId,
-            busRouteId: bus.busRouteId,
-            busRouteNm: bus.busRouteNumber,
-            busRouteAbrv: bus.busRouteAbbreviation
-        });
-    }, [userRole]);
-
+    /** 캡쳐된 이미지를 서버에 보냄 */
     useEffect(() => {
-        const buses = [
-            new Bus("10015", "122000002", "6102", "6102"),
-            new Bus("10015", "100100006", "101", "101"),
-            new Bus("10015", "100100011", "106", "106"),
-            new Bus("10015", "100100012", "107", "107")
-        ];
+        const sendImage = async () => {
+            if (capturedImage) {
+                const busApiData = await sendCapturedImage(userRole, { arsId: wishStation.arsId, image: capturedImage });
+                console.log(busApiData);
+            }
+        }
+        sendImage();
+    }, [userRole, capturedImage]);
+
+
+
+    /** Test Code : 버스 도착 테스트 */
+    useEffect(() => {
         let index = 0;
 
         const intervalId = setInterval(async () => {
-            const bus = buses[index];
+            const bus = busList[index];
             setDetectedBus(bus);
-            await test(bus);
 
-            // Move to the next bus, or reset to the first bus if we've reached the end of the array
-            index = (index + 1) % buses.length;
+            try {
+                const res = await detectedTest(userRole, {
+                    arsId: bus.stationArsId,
+                    busRouteId: bus.busRouteId,
+                    busRouteNm: bus.busRouteNumber,
+                    busRouteAbrv: bus.busRouteAbbreviation
+                });
+            } catch (error) {
+                console.error("Error in detectedTest:", error);
+            }
 
-        }, 2000);  // 2 seconds interval
+            index = (index + 1) % busList.length;
 
-        // Clear the interval when the component unmounts
+        }, 2000);
+
         return () => clearInterval(intervalId);
 
-    }, [userRole, test, setDetectedBus]);  // Don't forget to include `test` in the dependency array if it's defined outside this useEffect
+    }, [userRole, busList, setDetectedBus]);
 
 
 
+    // Render
     return (
         <div className={style.PanelCameraCapture} >
             <div className={style.detected_bus}>

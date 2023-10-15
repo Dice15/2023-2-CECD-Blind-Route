@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import style from "./DetectingBus.module.css";
 import { UserRole } from "../../../../cores/types/UserRole";
-import { getBusNumberFromImage } from "../../../../cores/api/blindroutePanel";
+import { sendCapturedImage } from "../../../../cores/api/blindroutePanel";
 import CameraCapture from "./CameraCapture";
 
 
@@ -26,7 +26,7 @@ export default function DetectingBus({ taskState, userRole }: DetectingBusProps)
 
     /** 캡쳐된 이미지에서 버스 번호를 인식하는 Api호출 */
     const detectingBusNumber = useCallback(async (image: Blob) => {
-        return await getBusNumberFromImage(userRole, { image: image });
+        return await sendCapturedImage(userRole, { arsId: "123", image: image });
     }, [userRole]);
 
 

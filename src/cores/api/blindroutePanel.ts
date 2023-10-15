@@ -70,19 +70,19 @@ export async function getReservedBusList(userRole: UserRole, params: { arsId: st
 
 
 /**
- * 버스 사진을 인식하여 버스 번호를 반환하는 API
- * IBusNumberFromImage
- * getBusNumberFromImage
+ * 전광판에서 캡쳐한 이미지를 서버로 보냄
+ * ISendCapturedImage
+ * sendCapturedImage
  */
 
-/** 이미지에서 버스 번호를 추출하는 API의 반환 형태*/
-export interface IBusNumberFromImage {
+/** 서버에서 받은 이미지를 리턴해줌 */
+export interface ISendCapturedImage {
     data?: Blob;
 }
 
-/** 이미지에서 버스 번호를 추출 */
-export async function getBusNumberFromImage(userRole: UserRole, params: { image: Blob }) {
-    let result: IBusNumberFromImage = { data: undefined };
+/** 전광판에서 캡쳐한 이미지를 서버로 보냄 */
+export async function sendCapturedImage(userRole: UserRole, params: { arsId: string, image: Blob }) {
+    let result: ISendCapturedImage = { data: undefined };
 
     const formData = new FormData();
     formData.append('image', params.image, 'photo.jpeg');

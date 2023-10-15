@@ -46,7 +46,7 @@ export default function PanelDetectingBus({ userRole, setPageState, wishStation 
                 <div className={style.detected_bus}>
                     <PanelCameraCapture
                         userRole={userRole}
-                        captureInterval={500}
+                        wishStation={wishStation}
                     />
                 </div>
             </div>
