@@ -5,7 +5,7 @@ import { ClientMiddleState } from "../ClientMiddle";
 import Station from "../../../../cores/types/Station";
 import { getStationList } from "../../../../cores/api/blindrouteClient";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
-import { speak } from "../../../../modules/speech-kit/Speech";
+import { speak } from "../../../../modules/speech/Speech";
 
 
 

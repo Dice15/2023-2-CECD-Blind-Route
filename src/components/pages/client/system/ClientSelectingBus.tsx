@@ -11,7 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
-import { speak } from "../../../../modules/speech-kit/Speech";
+import { speak } from "../../../../modules/speech/Speech";
 
 
 
