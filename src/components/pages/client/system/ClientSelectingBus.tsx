@@ -11,6 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
+import { speak } from "../../../../modules/speech-kit/Speech";
 
 
 
@@ -92,7 +93,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
                 >
                     {busList.map((bus, index) => (
                         <SwiperSlide key={index}>
-                            <div className={style.busInfo} style={{ height: `${busInfoContainerHeight}px` }}>
+                            <div className={style.busInfo} style={{ height: `${busInfoContainerHeight}px` }} onClick={() => { speak(`${bus.busRouteAbbreviation}`); }}>
                                 <h1>{bus.busRouteAbbreviation}</h1>
                                 <h3>{`id: ${bus.busRouteId}`}</h3>
                             </div>

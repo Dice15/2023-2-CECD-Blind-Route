@@ -1,10 +1,11 @@
 import style from "./ClientSearchingStation.module.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientMiddleState } from "../ClientMiddle";
 import Station from "../../../../cores/types/Station";
 import { getStationList } from "../../../../cores/api/blindrouteClient";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
+import { speak } from "../../../../modules/speech-kit/Speech";
 
 
 
@@ -25,7 +26,6 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
 
     // States
     const [isLoading, setIsLoading] = useState(false);
-
 
 
     /**
@@ -52,7 +52,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
 
     // Render
     return (
-        <div className={style.ClientSearchingStation}>
+        <div className={style.ClientSearchingStation} onClick={() => { speak("정류장을 입력하세요"); }}>
             <LoadingAnimation active={isLoading} />
 
             <button className={style.button_movePrev} type="button" onClick={() => { }}></button>
