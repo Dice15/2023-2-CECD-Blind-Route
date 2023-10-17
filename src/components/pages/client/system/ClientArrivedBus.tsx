@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientMiddleState } from "../ClientMiddle";
 import Bus from "../../../../cores/types/Bus";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -17,6 +18,10 @@ export interface ClientArrivedBusProps {
 
 /** ClientArrivedBus 컴포넌트 */
 export default function ClientArrivedBus({ setPageState, wishBus, setWishBus }: ClientArrivedBusProps) {
+    // Consts
+    const history = useNavigate();
+
+
     // ref
     const setPageStateTaskRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -26,8 +31,8 @@ export default function ClientArrivedBus({ setPageState, wishBus, setWishBus }: 
      */
     /** 이전 단계로 이동 */
     const onFirstStep = () => {
-        setPageState("searchingStation");
         setWishBus(null);
+        history(`/home`);
     };
 
 
@@ -35,8 +40,8 @@ export default function ClientArrivedBus({ setPageState, wishBus, setWishBus }: 
     // Effects
     useEffect(() => {
         setPageStateTaskRef.current = setInterval(() => {
-            setPageState("searchingStation");
             setWishBus(null);
+            history(`/home`);
         }, 5000);
 
         return () => {
@@ -44,7 +49,7 @@ export default function ClientArrivedBus({ setPageState, wishBus, setWishBus }: 
                 clearInterval(setPageStateTaskRef.current);
             }
         };
-    }, [setPageState, setWishBus]);
+    }, [setPageState, setWishBus, history]);
 
 
 

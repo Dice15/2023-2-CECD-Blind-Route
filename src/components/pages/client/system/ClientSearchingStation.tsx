@@ -1,12 +1,12 @@
 import style from "./ClientSearchingStation.module.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientMiddleState } from "../ClientMiddle";
 import Station from "../../../../cores/types/Station";
 import { getStationList } from "../../../../cores/api/blindrouteClient";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { useNavigate } from "react-router-dom";
-import VoiceProvider from "../../../../modules/speech/Speech";
+import { SpeechOutputProvider, SpeechInputProvider } from "../../../../modules/speech/SpeechProviders";
 
 
 
@@ -31,6 +31,9 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
 
     // States
     const [isLoading, setIsLoading] = useState(false);
+    const [isListening, setIsListening] = useState(false);
+    const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+
 
 
     /**
@@ -55,10 +58,50 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 setStationList(responsedStationList);
                 setPageState("selectingStation");
             } else {
-                VoiceProvider.speak("검색된 정류장이 없습니다");
+                SpeechOutputProvider.speak("검색된 정류장이 없습니다");
             }
         }
     };
+
+
+
+    /** 음성 인식 시작 및 종료 */
+    const toggleListening = () => {
+        if (isListening) {
+            // 음성 인식 중지
+            SpeechInputProvider.stopRecognition();
+            if (timeoutId) clearTimeout(timeoutId);
+        } else {
+            // 음성 인식 시작
+            SpeechOutputProvider.clearSpeak();
+            SpeechInputProvider.startRecognition((result: string) => {
+                if (textbox_stationName.current) {
+                    textbox_stationName.current.value = result;
+                }
+            });
+            // 10초 후에 음성 인식 중지
+            const id = setTimeout(() => {
+                SpeechInputProvider.stopRecognition();
+                setIsListening(false);
+            }, 10000);
+            setTimeoutId(id);
+        }
+        setIsListening(!isListening);
+    };
+
+
+
+    // Effects
+    // 컴포넌트 언마운트 시 타이머 및 음성 인식 중지
+    useEffect(() => {
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            if (isListening) {
+                SpeechInputProvider.stopRecognition();
+            }
+        };
+    }, [isListening, timeoutId]);
+
 
 
 
@@ -74,7 +117,11 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 </svg>
             </button>
 
-            <div className={style.stationNameContainer} onClick={() => { VoiceProvider.speak("정류장을 입력하세요"); }}>
+            <div className={style.stationNameContainer} onDoubleClick={toggleListening} onClick={() => {
+                if (!isListening) {
+                    SpeechOutputProvider.speak("정류장을 입력하세요. 더블 터치를 하면 음성인식이 시작됩니다");
+                }
+            }}>
                 <input className={style.textbox_stationName} type="text" placeholder="정류장 입력" ref={textbox_stationName} />
             </div>
 
