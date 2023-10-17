@@ -11,7 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
-import { speak } from "../../../../modules/speech/Speech";
+import VoiceProvider from "../../../../modules/speech/Speech";
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -58,7 +58,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
             setBusList(responsedBusList);
             setPageState("selectingBus");
         } else {
-            alert(`${stationList[stationListIndex].stationName}에서 검색된 버스가 없습니다`);
+            VoiceProvider.speak(`${stationList[stationListIndex].stationName}에 검색된 버스가 없습니다`);
         }
     }
 
@@ -85,7 +85,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
                 >
                     {stationList.map((station, index) => (
                         <SwiperSlide key={index}>
-                            <div className={style.stationInfo} style={{ height: `${stationInfoContainerHeight}px` }} onClick={() => { speak(`${station.stationName}`); }}>
+                            <div className={style.stationInfo} style={{ height: `${stationInfoContainerHeight}px` }} onClick={() => { VoiceProvider.speak(`${station.stationName}`); }}>
                                 <h1>{station.stationName}</h1>
                                 <h3>{`id: ${station.stationId}`}</h3>
                             </div>

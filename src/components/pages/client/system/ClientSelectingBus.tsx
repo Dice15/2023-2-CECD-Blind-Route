@@ -11,7 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
-import { speak } from "../../../../modules/speech/Speech";
+import VoiceProvider from "../../../../modules/speech/Speech";
 
 
 
@@ -63,10 +63,11 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
         setIsLoading(false);
 
         if (reserveResult) {
+            VoiceProvider.speak(`${busList[busListIndex].busRouteAbbreviation} 버스를 예약하였습니다`);
             setWishBus(busList[busListIndex]);
             setPageState("waitingBus");
         } else {
-            alert(`${busList[busListIndex].busRouteAbbreviation} 버스를 등록하는데 실패했습니다`);
+            VoiceProvider.speak(`${busList[busListIndex].busRouteAbbreviation} 버스를 예약하는데 실패했습니다`);
         }
     }
 
@@ -93,7 +94,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
                 >
                     {busList.map((bus, index) => (
                         <SwiperSlide key={index}>
-                            <div className={style.busInfo} style={{ height: `${busInfoContainerHeight}px` }} onClick={() => { speak(`${bus.busRouteAbbreviation}`); }}>
+                            <div className={style.busInfo} style={{ height: `${busInfoContainerHeight}px` }} onClick={() => { VoiceProvider.speak(`${bus.busRouteAbbreviation}`); }}>
                                 <h1>{bus.busRouteAbbreviation}</h1>
                                 <h3>{`id: ${bus.busRouteId}`}</h3>
                             </div>

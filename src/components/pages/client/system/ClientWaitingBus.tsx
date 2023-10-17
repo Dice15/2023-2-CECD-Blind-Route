@@ -5,7 +5,7 @@ import { ClientMiddleState } from "../ClientMiddle";
 import Bus from "../../../../cores/types/Bus";
 import { checkBusArrival, unreserveBus } from "../../../../cores/api/blindrouteClient";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
-import { speak } from "../../../../modules/speech/Speech";
+import VoiceProvider from "../../../../modules/speech/Speech";
 
 
 
@@ -48,7 +48,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
             setPageState("selectingBus");
             setWishBus(null);
         } else {
-            alert(`${wishBus.busRouteAbbreviation} 버스를 취소하는데 실패했습니다`);
+            VoiceProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 취소하는데 실패했습니다`);
         }
     };
 
@@ -83,7 +83,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
             });
 
             if (isWishBusArrived) {
-                speak(`${wishBus.busRouteAbbreviation}버스가 도착했습니다`);
+                VoiceProvider.speak(`${wishBus.busRouteAbbreviation} 버스가 도착했습니다`);
                 setPageState("arrivedBus");
             }
         }, 2000);
@@ -109,7 +109,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
                 </svg>
             </button>
 
-            <div className={style.wishBusInfo}>
+            <div className={style.wishBusInfo} onClick={() => { VoiceProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 대기중입니다`); }}>
                 <h1>{wishBus.busRouteAbbreviation}</h1>
                 <h3>{waitingMessage}</h3>
             </div>
