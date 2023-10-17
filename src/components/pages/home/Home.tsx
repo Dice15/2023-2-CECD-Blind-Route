@@ -45,7 +45,7 @@ export default function Home({ userRole, appType, authenticationActionType, setA
     /** 페이지 로딩 시 인증 상태 확인 */
     useEffect(() => {
         const checkAuth = async () => {
-            setAuthenticationState((await checkAuthSession(userRole)).sessionActive);
+            setAuthenticationState((await checkAuthSession(userRole)));
         };
         checkAuth();
     }, [userRole]);

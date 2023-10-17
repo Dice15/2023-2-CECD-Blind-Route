@@ -1,6 +1,7 @@
 import axios from "axios";
 import qs from 'qs';
 import { UserRole } from "../types/UserRole";
+import Bus from "../types/Bus";
 
 
 
@@ -35,7 +36,7 @@ function getApiUrl(userRole: UserRole, path: string) {
  */
 
 /** API로 부터 받은 예약된 버스 데이터 인터페이스*/
-export interface IReservedBusApi {
+interface IReservedBusApi {
     busInfo: {
         arsId?: string;
         busRouteId?: string;
@@ -46,7 +47,7 @@ export interface IReservedBusApi {
 
 /** 해당 정류장에 예약된 버스리스트를 받아옴 */
 export async function getReservedBusList(userRole: UserRole, params: { arsId: string }) {
-    let data: IReservedBusApi = { busInfo: [] };
+    let responsedReservedBusList: IReservedBusApi = { busInfo: [] };
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
@@ -59,12 +60,21 @@ export async function getReservedBusList(userRole: UserRole, params: { arsId: st
                 withCredentials: true
             }
         );
-        data = response.data;
+        responsedReservedBusList = response.data;
     }
     catch (error) {
         console.error("Search request failed:", error);
     }
-    return data;
+
+
+    return responsedReservedBusList.busInfo.map((bus) => {
+        return new Bus(
+            params.arsId,
+            bus.busRouteId,
+            bus.busRouteNm,
+            bus.busRouteAbrv,
+        );
+    });
 }
 
 
@@ -76,7 +86,7 @@ export async function getReservedBusList(userRole: UserRole, params: { arsId: st
  */
 
 /** 서버에서 받은 이미지를 리턴해줌 */
-export interface ISendCapturedImage {
+interface ISendCapturedImage {
     data?: Blob;
 }
 
@@ -110,7 +120,7 @@ export async function sendCapturedImage(userRole: UserRole, params: { arsId: str
         console.error("Image upload failed:", error);
     }
 
-    return result;
+    return result.data;
 }
 
 

@@ -5,7 +5,7 @@ import { UserRole } from "../../../../cores/types/UserRole";
 import { detectedTest, sendCapturedImage } from "../../../../cores/api/blindroutePanel";
 import Bus from "../../../../cores/types/Bus";
 import Station from "../../../../cores/types/Station";
-import { getBusDestinationList, getBusList } from "../../../../cores/api/blindrouteClient";
+import { getBusList } from "../../../../cores/api/blindrouteClient";
 
 
 
@@ -103,26 +103,8 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     /** 버스 정류장의 버스 리스트를 가져옴 */
     useEffect(() => {
         const getWishStationBusList = async () => {
-            const busApiData = await getBusList(userRole, { arsId: arsId });
-            const busInstances: Bus[] = await Promise.all(busApiData.busList.filter((bus) => bus.busRouteId !== undefined).map(async (bus) => {
-                const destinationApiData = await getBusDestinationList(userRole, { busRouteId: bus.busRouteId! });
-                const destinationInstances = destinationApiData.destinations.map((destination) => {
-                    return {
-                        stationName: destination.stationNm,
-                        direction: destination.direction
-                    };
-                })
-
-                return new Bus(
-                    arsId,
-                    bus.busRouteId,
-                    bus.busRouteNm,
-                    bus.busRouteAbrv,
-                    destinationInstances,
-                );
-            }));
-
-            setBusList(busInstances);
+            const responsedBusList: Bus[] = await getBusList(userRole, { arsId: arsId });
+            setBusList(responsedBusList);
         };
 
         getWishStationBusList();

@@ -35,7 +35,7 @@ export default function Client({ userRole }: ClientProps) {
     /** 페이지 로딩 시 인증 상태 확인 */
     useEffect(() => {
         const checkAuth = async () => {
-            if (!(await checkAuthSession(userRole)).sessionActive) {
+            if (!(await checkAuthSession(userRole))) {
                 alert("로그인이 필요한 페이지 입니다");
                 history("/home");
             } else {

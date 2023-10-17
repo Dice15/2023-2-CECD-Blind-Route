@@ -41,18 +41,10 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
     /** 정류장에 예약된 버스 리스트를 주기적으로 갱신함 */
     useEffect(() => {
         refreshTaskRef.current = setInterval(async () => {
-            const apiData = await getReservedBusList(userRole, { arsId: wishStation.arsId });
-            const busListInstances = apiData.busInfo.map((bus) => {
-                return new Bus(
-                    wishStation.arsId,
-                    bus.busRouteId,
-                    bus.busRouteNm,
-                    bus.busRouteAbrv,
-                );
-            });
+            const reponsedReservedBusList = await getReservedBusList(userRole, { arsId: wishStation.arsId });
             //setBusList([new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")]);
-            console.log(busListInstances);
-            setBusList(busListInstances);
+            console.log(reponsedReservedBusList);
+            setBusList(reponsedReservedBusList);
         }, 2000);
 
 

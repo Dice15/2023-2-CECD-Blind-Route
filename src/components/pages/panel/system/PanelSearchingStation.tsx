@@ -25,18 +25,11 @@ export default function PanelSearchingStation({ userRole, setPageState, setStati
     /** 다음 단계로 이동: 정류장 불러오고 페이지 상태 업데이트 */
     const onNextStep = async () => {
         if (textbox_stationName.current) {
-            const apiData = await getStationList(userRole, { searchKeyword: textbox_stationName.current.value });
-            const stationInstances: Station[] = apiData.busStations.map((station) => {
-                return new Station(
-                    station.arsId,
-                    station.stId,
-                    station.stNm
-                );
-            });
+            const responsedStationList = await getStationList(userRole, { searchKeyword: textbox_stationName.current.value });
 
-            if (stationInstances.length > 0) {
+            if (responsedStationList.length > 0) {
                 //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
-                setStationList(stationInstances);
+                setStationList(responsedStationList);
                 setPageState("selectingStation");
             } else {
                 alert("검색된 정류장이 없습니다");

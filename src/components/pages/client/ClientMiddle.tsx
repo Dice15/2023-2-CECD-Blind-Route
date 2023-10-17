@@ -7,6 +7,8 @@ import ClientSelectingStation from "./system/ClientSelectingStation";
 import Bus from "../../../cores/types/Bus";
 import ClientSelectingBus from "./system/ClientSelectingBus";
 import ClientWaitingBus from "./system/ClientWaitingBus";
+import ClientArrivedBus from "./system/ClientArrivedBus";
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 
 
@@ -24,7 +26,8 @@ export type ClientMiddleState = "searchingStation" | "selectingStation" | "selec
 
 /** ClientMiddle 컴포넌트 */
 export default function ClientMiddle({ userRole }: ClientMiddleProps) {
-    // state
+    // States
+    const [prevPageState, setPrevPageState] = useState<ClientMiddleState>("searchingStation");
     const [pageState, setPageState] = useState<ClientMiddleState>("searchingStation");
     const [stationList, setStationList] = useState<Station[]>([]);
     const [busList, setBusList] = useState<Bus[]>([]);
@@ -63,6 +66,14 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                     userRole={userRole}
                     setPageState={setPageState}
                     wishBus={wishBus!}
+                    setWishBus={setWishBus}
+                />
+            }
+            case "arrivedBus": {
+                return <ClientArrivedBus
+                    setPageState={setPageState}
+                    wishBus={wishBus!}
+                    setWishBus={setWishBus}
                 />
             }
             default: {
@@ -72,16 +83,51 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
     };
 
 
+    useEffect(() => {
+        setPrevPageState(pageState);
+    }, [pageState]);
+
+
+
+    /** 페이지 이동 애니메이션 */
+    const getAnimationDirection = () => {
+        const pageOrder = ["searchingStation", "selectingStation", "selectingBus", "waitingBus", "arrivedBus"];
+        const currentIndex = pageOrder.indexOf(pageState);
+        const prevIndex = pageOrder.indexOf(prevPageState);
+        return currentIndex > prevIndex ? 'left' : 'right';
+    };
+
+
 
     /** 페이지가 초기화 될때 페이지 상태는 searchingStation로 설정 */
     useEffect(() => {
         setPageState("searchingStation");
+        setStationList([]);
+        setBusList([]);
+        setWishBus(null);
     }, []);
 
 
+
+    // Render
     return (
         <div className={style.ClientMiddle}>
-            {getControllerForm()}
+            <TransitionGroup>
+                <CSSTransition
+                    key={pageState}
+                    timeout={300}
+                    classNames={{
+                        enter: style[`${getAnimationDirection()}SlideEnter`],
+                        enterActive: style[`${getAnimationDirection()}SlideEnterActive`],
+                        exit: style[`${getAnimationDirection()}SlideExit`],
+                        exitActive: style[`${getAnimationDirection()}SlideExitActive`]
+                    }}
+                >
+                    <div className={style.controllerForm}>
+                        {getControllerForm()}
+                    </div>
+                </CSSTransition>
+            </TransitionGroup>
         </div>
     );
 }

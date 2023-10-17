@@ -4,29 +4,56 @@ import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientMiddleState } from "../ClientMiddle";
 import Bus from "../../../../cores/types/Bus";
 import { checkBusArrival, unreserveBus } from "../../../../cores/api/blindrouteClient";
+import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 
 
 
-/** ClientSelectingStation 컴포넌트 프로퍼티 */
+/** ClientWaitingBus 컴포넌트 프로퍼티 */
 export interface ClientWaitingBusProps {
     userRole: UserRole;
     setPageState: React.Dispatch<React.SetStateAction<ClientMiddleState>>;
     wishBus: Bus;
+    setWishBus: React.Dispatch<React.SetStateAction<Bus | null>>;
 }
 
 
 
-/** ClientSelectingStation 컴포넌트 */
-export default function ClientWaitingBus({ userRole, setPageState, wishBus }: ClientWaitingBusProps) {
-    // ref
+/** ClientWaitingBus 컴포넌트 */
+export default function ClientWaitingBus({ userRole, setPageState, wishBus, setWishBus }: ClientWaitingBusProps) {
+    // Refs
     const refreshTaskRef = useRef<NodeJS.Timeout | null>(null);
 
 
-    // state
+    // States
     const [waitingMessage, setWaitingMessage] = useState("대기중");
+    const [isLoading, setIsLoading] = useState(false);
+
+
+    /**
+     * Handler functions
+     */
+    /** 이전 단계로 이동: 예약한 버스를 취소하고 이동 */
+    const onPrevStep = async () => {
+        setIsLoading(true);
+        const unreserveResult = await unreserveBus(userRole, {
+            arsId: wishBus.stationArsId,
+            busRouteId: wishBus.busRouteId,
+            busRouteNm: wishBus.busRouteNumber,
+            busRouteAbrv: wishBus.busRouteAbbreviation,
+        });
+        setIsLoading(false);
+
+        if (unreserveResult) {
+            setPageState("selectingBus");
+            setWishBus(null);
+        } else {
+            alert(`${wishBus.busRouteAbbreviation} 버스를 취소하는데 실패했습니다`);
+        }
+    };
 
 
 
+    // Effects
     /** 대기중 메시지 이벤트 */
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -44,26 +71,18 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus }: Cl
 
 
 
-    /** 예약한 버스가 도착했는데 2초마다 확인함 */
+    /** 예약한 버스가 도착했는지 2초마다 확인함 */
     useEffect(() => {
         refreshTaskRef.current = setInterval(async () => {
-            const apiData = await checkBusArrival(userRole, {
+            const isWishBusArrived = await checkBusArrival(userRole, {
                 arsId: wishBus.stationArsId,
                 busRouteId: wishBus.busRouteId,
                 busRouteNm: wishBus.busRouteNumber,
                 busRouteAbrv: wishBus.busRouteAbbreviation
             });
 
-            if (apiData) {
-                alert("버스가 도착했습니다!");
-
-                if (refreshTaskRef.current) {
-                    clearInterval(refreshTaskRef.current);
-                }
-
-                window.setTimeout(() => {
-                    setPageState("searchingStation");
-                }, 5000);  // 5 seconds delay
+            if (isWishBusArrived) {
+                setPageState("arrivedBus");
             }
         }, 2000);
 
@@ -76,27 +95,12 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus }: Cl
 
 
 
-    /** 이전 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
-    const onPrevStep = async () => {
-        const unreserveApiData = await unreserveBus(userRole, {
-            arsId: wishBus.stationArsId,
-            busRouteId: wishBus.busRouteId,
-            busRouteNm: wishBus.busRouteNumber,
-            busRouteAbrv: wishBus.busRouteAbbreviation,
-        });
-
-        if (unreserveApiData === "success") {
-            setPageState("selectingBus");
-        } else {
-            alert(`${wishBus.busRouteAbbreviation} 버스를 취소하는데 실패했습니다`);
-        }
-    };
-
-
-
+    // Render
     return (
         <div className={style.ClientWaitingBus}>
-            <button className={style.button_movePrev} type="button" onClick={() => { onPrevStep(); }}>
+            <LoadingAnimation active={isLoading} />
+
+            <button className={style.button_movePrev} type="button" onClick={onPrevStep}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20,15 L10,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
                     <path d="M35,15 L25,30 L35,45" fill="none" stroke="black" strokeWidth="2" />

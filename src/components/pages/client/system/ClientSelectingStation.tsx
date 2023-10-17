@@ -4,12 +4,13 @@ import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientMiddleState } from "../ClientMiddle";
 import Station from "../../../../cores/types/Station";
 import Bus from "../../../../cores/types/Bus";
-import { getBusDestinationList, getBusList } from "../../../../cores/api/blindrouteClient";
+import { getBusList } from "../../../../cores/api/blindrouteClient";
 
 // module
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
+import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -30,7 +31,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
 
     // state
     const [stationListIndex, setStationListIndex] = useState<number>(0);
-
+    const [isLoading, setIsLoading] = useState(false);
 
     // custom module
     const [stationInfoContainerWidth, stationInfoContainerHeight] = useElementDimensions<HTMLDivElement>(stationInfoContainer, "Pure");
@@ -47,28 +48,13 @@ export default function ClientSelectingStation({ userRole, setPageState, station
 
     /** 다음 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onNextStep = async () => {
-        const busApiData = await getBusList(userRole, { arsId: stationList[stationListIndex].arsId });
-        const busInstances: Bus[] = await Promise.all(busApiData.busList.filter((bus) => bus.busRouteId !== undefined).map(async (bus) => {
-            const destinationApiData = await getBusDestinationList(userRole, { busRouteId: bus.busRouteId! });
-            const destinationInstances = destinationApiData.destinations.map((destination) => {
-                return {
-                    stationName: destination.stationNm,
-                    direction: destination.direction
-                };
-            })
+        setIsLoading(true);
+        const responsedBusList: Bus[] = await getBusList(userRole, { arsId: stationList[stationListIndex].arsId });
+        setIsLoading(false);
 
-            return new Bus(
-                stationList[stationListIndex].arsId,
-                bus.busRouteId,
-                bus.busRouteNm,
-                bus.busRouteAbrv,
-                destinationInstances,
-            );
-        }));
-
-        if (busInstances.length > 0) {
+        if (responsedBusList.length > 0) {
             //setBusList([new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")]);
-            setBusList(busInstances);
+            setBusList(responsedBusList);
             setPageState("selectingBus");
         } else {
             alert(`${stationList[stationListIndex].stationName}에서 검색된 버스가 없습니다`);
@@ -77,15 +63,11 @@ export default function ClientSelectingStation({ userRole, setPageState, station
 
 
 
-    /** 이 컨트롤러가 처음 켜졌을 때는 버스 리스트 초기화 */
-    useEffect(() => {
-        setBusList([]);
-    }, [setBusList]);
-
-
-
+    // Render
     return (
         <div className={style.ClientSelectingStation}>
+            <LoadingAnimation active={isLoading} />
+
             <button className={style.button_movePrev} type="button" onClick={() => { onPrevStep(); }}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20,15 L10,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
