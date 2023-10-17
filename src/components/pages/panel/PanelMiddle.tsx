@@ -5,6 +5,7 @@ import Station from "../../../cores/types/Station";
 import PanelSearchingStation from "./system/PanelSearchingStation";
 import PanelSelectingStation from "./system/PanelSelectingStation";
 import PanelDetectingBus from "./system/PanelDetectingBus";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 
 
@@ -23,6 +24,7 @@ export type PanelMiddleState = "searchingStation" | "selectingStation" | "dectec
 /** PanelMiddle 컴포넌트 */
 export default function PanelMiddle({ userRole }: PanelMiddleProps) {
     // state
+    const [prevPageState, setPrevPageState] = useState<PanelMiddleState>("searchingStation");
     const [pageState, setPageState] = useState<PanelMiddleState>("searchingStation");
     const [stationList, setStationList] = useState<Station[]>([]);
     const [wishStation, setWishStation] = useState<Station | null>(null);
@@ -62,25 +64,51 @@ export default function PanelMiddle({ userRole }: PanelMiddleProps) {
 
 
 
+    /** 페이지 상태가 바뀌면 이전 페이지 저장 */
+    useEffect(() => {
+        setPrevPageState(pageState);
+    }, [pageState]);
+
+
+
     /** 페이지가 초기화 될때 페이지 상태는 searchingStation로 설정 */
     useEffect(() => {
         setPageState("searchingStation");
+        setStationList([]);
+        setWishStation(null);
     }, []);
+
+
+
+    /** 페이지 이동 애니메이션 */
+    const getAnimationDirection = () => {
+        const pageOrder = ["searchingStation", "selectingStation", "dectectingBus"];
+        const currentIndex = pageOrder.indexOf(pageState);
+        const prevIndex = pageOrder.indexOf(prevPageState);
+        return currentIndex > prevIndex ? 'left' : 'right';
+    };
+
 
 
 
     return (
         <div className={style.PanelMiddle}>
-            {getControllerForm()}
+            <TransitionGroup>
+                <CSSTransition
+                    key={pageState}
+                    timeout={300}
+                    classNames={{
+                        enter: style[`${getAnimationDirection()}SlideEnter`],
+                        enterActive: style[`${getAnimationDirection()}SlideEnterActive`],
+                        exit: style[`${getAnimationDirection()}SlideExit`],
+                        exitActive: style[`${getAnimationDirection()}SlideExitActive`]
+                    }}
+                >
+                    <div className={style.controllerForm}>
+                        {getControllerForm()}
+                    </div>
+                </CSSTransition>
+            </TransitionGroup>
         </div>
     );
 };
-
-/*
-                <div className={style.reserved_table}>
-
-                </div>
-                <div className={style.detected_bus}>
-
-                </div>
-*/

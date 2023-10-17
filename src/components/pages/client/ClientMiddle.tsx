@@ -83,6 +83,8 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
     };
 
 
+    
+    /** 페이지 상태가 바뀌면 이전 페이지 저장 */
     useEffect(() => {
         setPrevPageState(pageState);
     }, [pageState]);

@@ -55,7 +55,7 @@ export default function ClientArrivedBus({ setPageState, wishBus, setWishBus }: 
 
             <div className={style.wishBusInfo} onClick={onFirstStep}>
                 <h1>{wishBus.busRouteAbbreviation}</h1>
-                <h3>{"버스가 도착했습니다"}</h3>
+                <h3>{"버스가 도착했습니다!!"}</h3>
             </div>
 
             <button className={style.button_moveNext} type="button" onClick={() => { }}></button>

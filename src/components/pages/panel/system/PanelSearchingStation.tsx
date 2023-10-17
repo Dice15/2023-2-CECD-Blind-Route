@@ -1,9 +1,10 @@
 import style from "./PanelSearchingStation.module.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import Station from "../../../../cores/types/Station";
 import { getStationList } from "../../../../cores/api/blindrouteClient";
 import { PanelMiddleState } from "../PanelMiddle";
+import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 
 
 
@@ -22,10 +23,17 @@ export default function PanelSearchingStation({ userRole, setPageState, setStati
     const textbox_stationName = useRef<HTMLInputElement>(null);
 
 
+    // States
+    const [isLoading, setIsLoading] = useState(false);
+
+
+
     /** 다음 단계로 이동: 정류장 불러오고 페이지 상태 업데이트 */
     const onNextStep = async () => {
         if (textbox_stationName.current) {
+            setIsLoading(true);
             const responsedStationList = await getStationList(userRole, { searchKeyword: textbox_stationName.current.value });
+            setIsLoading(false);
 
             if (responsedStationList.length > 0) {
                 //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
@@ -47,6 +55,8 @@ export default function PanelSearchingStation({ userRole, setPageState, setStati
 
     return (
         <div className={style.PanelSearchingStation}>
+            <LoadingAnimation active={isLoading} />
+
             <button className={style.button_movePrev} type="button" onClick={() => { }}></button>
 
             <input className={style.textbox_stationName} type="text" placeholder="정류장 입력" ref={textbox_stationName} />

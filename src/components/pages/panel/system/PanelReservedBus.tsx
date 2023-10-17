@@ -6,6 +6,7 @@ import Bus from "../../../../cores/types/Bus";
 import { getReservedBusList } from "../../../../cores/api/blindroutePanel";
 import VirtualizedTable from "../../../../modules/virtualizedTable/VirtualizedTable";
 import useElementDimensions from "../../../../hooks/useElementDimensions";
+import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 
 
 /** 정류장에 예약된 버스를 보여주는 컴포넌트  프로퍼티 */
@@ -24,7 +25,8 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
 
 
     // state
-    const [busList, setBusList] = useState<Bus[]>([]);
+    const [busList, setBusList] = useState<Bus[] | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
 
     // custom module
@@ -41,9 +43,9 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
     /** 정류장에 예약된 버스 리스트를 주기적으로 갱신함 */
     useEffect(() => {
         refreshTaskRef.current = setInterval(async () => {
+            setIsLoading(!busList && true);
             const reponsedReservedBusList = await getReservedBusList(userRole, { arsId: wishStation.arsId });
-            //setBusList([new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")]);
-            console.log(reponsedReservedBusList);
+            setIsLoading(!busList && false);
             setBusList(reponsedReservedBusList);
         }, 2000);
 
@@ -54,36 +56,41 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 setBusList([]);
             }
         };
-    }, [userRole, wishStation]);
+    }, [userRole, wishStation, busList]);
 
 
 
     return (<div className={style.PanelReservedBus} ref={reservedBusTableRef}>
-        <VirtualizedTable
-            windowHeight={reservedBusTableHeight}
+        <LoadingAnimation active={isLoading} />
 
-            numColumns={tableColumns.length}
-            columnHeight={50}
-            columnWidths={tableColumns.map((column) => column.style)}
-            renderColumns={({ index, columnClassName, columnStyle }) => {
-                return (
-                    <div key={index} className={columnClassName} style={columnStyle}>
-                        {tableColumns[index].name}
-                    </div>
-                );
-            }}
+        {busList &&
+            <VirtualizedTable
+                windowHeight={reservedBusTableHeight}
 
-            numRows={busList.length}
-            rowHeight={40}
-            renderRows={({ index, rowClassName, rowStyle, itemClassName, itemStyles }) => {
-                const busInfo = busList[index].print();
-                return (
-                    <div key={index} id={`${index}`} className={rowClassName} style={rowStyle}>
-                        <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
-                        <div className={itemClassName} style={itemStyles[1]}>{busInfo.busRouteAbbreviation}</div>
-                    </div>
-                );
-            }}
-        />
+                numColumns={tableColumns.length}
+                columnHeight={50}
+                columnWidths={tableColumns.map((column) => column.style)}
+                renderColumns={({ index, columnClassName, columnStyle }) => {
+                    return (
+                        <div key={index} className={columnClassName} style={columnStyle}>
+                            {tableColumns[index].name}
+                        </div>
+                    );
+                }}
+
+                numRows={busList.length}
+                rowHeight={40}
+                renderRows={({ index, rowClassName, rowStyle, itemClassName, itemStyles }) => {
+                    const busInfo = busList[index].print();
+                    return (
+                        <div key={index} id={`${index}`} className={rowClassName} style={rowStyle}>
+                            <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
+                            <div className={itemClassName} style={itemStyles[1]}>{busInfo.busRouteAbbreviation}</div>
+                        </div>
+                    );
+                }}
+            />
+        }
+
     </div>);
 }

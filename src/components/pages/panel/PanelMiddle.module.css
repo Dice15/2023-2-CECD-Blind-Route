@@ -5,24 +5,42 @@
     flex-direction: column;
 }
 
-
-
-/* PanelMiddle's children elements */
-.body {
-    flex: 1 0 100%;
-    display: flex;
+.controllerForm {
+    height: calc(calc(calc(var(--vh, 1vh) * 100) - 5px - 10px) - 40px - 1px - 14px - 15px);
 }
 
-
-
-/* body's children elements */
-.reserved_table {
-    flex: 48 0 calc(50% - 5px - 5px - 1px);
-    padding: 5px;
-    border-right: 1px dashed var(--dividerline-color);
+.leftSlideEnter {
+    transform: translateX(100%);
 }
 
-.detected_bus {
-    flex: 50 0 calc(50% - 5px - 5px - 1px);
-    padding: 5px;
+.leftSlideEnterActive {
+    transform: translateX(0);
+    transition: transform 300ms ease-in-out;
+}
+
+.leftSlideExit {
+    transform: translateX(0);
+}
+
+.leftSlideExitActive {
+    transform: translateX(-100%);
+    transition: transform 300ms ease-in-out;
+}
+
+.rightSlideEnter {
+    transform: translateX(-100%);
+}
+
+.rightSlideEnterActive {
+    transform: translateX(0);
+    transition: transform 300ms ease-in-out;
+}
+
+.rightSlideExit {
+    transform: translateX(0);
+}
+
+.rightSlideExitActive {
+    transform: translateX(100%);
+    transition: transform 300ms ease-in-out;
 }
