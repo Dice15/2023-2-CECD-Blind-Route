@@ -76,7 +76,7 @@ export default function Home({ userRole, appType, authenticationActionType, setA
             </div>
             <div className={style.body}>
                 <div className={style.authentication}>
-                    {authenticationState !== undefined && (authenticationState !== false
+                    {authenticationState !== undefined && (authenticationState === false
                         ? (<>
                             <button className={style.login_button} type="button" onClick={() => { onAuthentication("login"); }}>로그인</button>
                             <button className={style.login_button} type="button" onClick={() => { }}>회원가입</button>
