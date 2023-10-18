@@ -1,5 +1,5 @@
 import style from "./ClientSelectingBus.module.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientSearchState } from "./ClientSearch";
 import Bus from "../../../../cores/types/Bus";
@@ -73,6 +73,14 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
 
 
 
+    // Effects
+    useEffect(() => {
+        SpeechOutputProvider.clearSpeak();
+        SpeechOutputProvider.speak("버스를 선택하세요");
+    }, []);
+
+
+
     // Render
     return (
         <div className={style.ClientSelectingBus}>
@@ -96,6 +104,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
                         <SwiperSlide key={index}>
                             <div className={`${style.busInfo} ${style.busInfo_bookmark}`} style={{ height: `${busInfoContainerHeight}px` }}
                                 onClick={() => {
+                                    SpeechOutputProvider.clearSpeak();
                                     SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}`);
                                 }}
                                 onDoubleClick={() => {

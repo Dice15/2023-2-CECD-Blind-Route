@@ -78,6 +78,8 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
 
 
     useEffect(() => {
+        setIsLoading(true);
+
         setBusList([
             new Bus(
                 "10266",
@@ -429,6 +431,11 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
                 ]
             )
         ]);
+        setIsLoading(false);
+
+        SpeechOutputProvider.clearSpeak();
+        SpeechOutputProvider.speak("버스를 선택하세요");
+
     }, [setBusList]);
 
 
@@ -456,7 +463,8 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
                         <SwiperSlide key={index}>
                             <div className={`${style.busInfo} ${style.busInfo_bookmark}`} style={{ height: `${busInfoContainerHeight}px` }}
                                 onClick={() => {
-                                    SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}`);
+                                    SpeechOutputProvider.clearSpeak();
+                                    SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
                                 }}
                                 onDoubleClick={() => {
                                     SpeechOutputProvider.clearSpeak();
