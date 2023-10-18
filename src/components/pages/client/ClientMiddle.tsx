@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserRole } from "../../../cores/types/UserRole";
 import style from "./ClientMiddle.module.css"
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ClientActionForm from "./action/ClientActionForm";
+import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
 
 
 
@@ -29,6 +30,14 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
     };
 
 
+
+    // Effects
+    useEffect(() => {
+        SpeechOutputProvider.speak("원하는 기능을 더블터치 하세요.");
+    }, []);
+
+
+
     // Render
     return (
         <div className={style.ClientMiddle}>
@@ -39,9 +48,21 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                 />} />
             </Routes>
             <div className={style.selectAction}>
-                <button type="button" onClick={() => { moveToAction("search"); }}>검색하기</button>
-                <button type="button" onClick={() => { moveToAction("bookmark"); }}>즐겨찾기</button>
+
+                <button type="button"
+                    onDoubleClick={() => { moveToAction("search"); }}
+                    onClick={() => { SpeechOutputProvider.speak("버스 검색하기"); }}
+                >
+                    검색하기
+                </button>
+
+                <button type="button"
+                    onDoubleClick={() => { moveToAction("bookmark"); }}
+                    onClick={() => { SpeechOutputProvider.speak("즐겨찾는 버스 조회"); }}
+                >
+                    즐겨찾기
+                </button>
             </div>
-        </div>
+        </div >
     );
 }

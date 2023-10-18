@@ -71,7 +71,7 @@ export default function ClientBookmark({ userRole }: ClientBookmarkProps) {
 
     /** 페이지 이동 애니메이션 */
     const getAnimationDirection = () => {
-        const pageOrder = ["selectingBus", "waitingBus", "arrivedBus"];
+        const pageOrder = ["selectingBookmarkedBus", "waitingBookmarkedBus", "arrivedBookmarkedBus"];
         const currentIndex = pageOrder.indexOf(pageState);
         const prevIndex = pageOrder.indexOf(prevPageState);
         return currentIndex > prevIndex ? 'left' : 'right';
