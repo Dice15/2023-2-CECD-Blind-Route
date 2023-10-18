@@ -28,14 +28,16 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const captureTaskRef = useRef<NodeJS.Timeout | null>(null);
-    const frameIdRef = useRef<number | null>(null);  // 프레임 ID를 저장하기
+    const frameIdRef = useRef<number | null>(null);
+    const lastFrameTimeRef = useRef<number | null>(null);  // 이전 프레임 시간을 저장하기 위한 ref
 
 
     // States
     const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
     const [busList, setBusList] = useState<Bus[]>([]);
     const [detectedBus, setDetectedBus] = useState<Bus | null>(null);
-    const [frameCount, setFrameCount] = useState<number>(0);  // 프레임 카운터 상태 추가
+    const [frameCount, setFrameCount] = useState<number>(0);
+    const [framesPerSecond, setFramesPerSecond] = useState<number>(0);  // 초당 프레임 상태 추가
 
 
     // Custom hooks
@@ -101,7 +103,12 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
 
     /** 프레임 카운트 업데이트 */
     const updateFrameCount = useCallback(() => {
-        setFrameCount(prevCount => prevCount + 1);  // 프레임 카운터 증가
+        const currentTime = performance.now();
+        if (lastFrameTimeRef.current !== null) {
+            const deltaTime = currentTime - lastFrameTimeRef.current;  // 시간 차이 계산
+            setFramesPerSecond(1000 / deltaTime);  // 초당 프레임 계산
+        }
+        lastFrameTimeRef.current = currentTime;  // 현재 시간을 이전 프레임 시간으로 저장
         frameIdRef.current = requestAnimationFrame(updateFrameCount);  // 프레임 ID 저장
     }, []);
 
@@ -228,7 +235,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                 <canvas style={{ display: "none" }} ref={canvasRef} ></canvas>
             </div>
             <div className={style.frame_count}>
-                <p>Frame: {frameCount}</p>  {/* 프레임 카운터 출력 */}
+                <p>FPS: {framesPerSecond.toFixed(2)}</p>
             </div>
         </div>
     );

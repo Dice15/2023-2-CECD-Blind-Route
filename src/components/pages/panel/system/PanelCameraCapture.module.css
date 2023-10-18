@@ -23,6 +23,9 @@
     height: 10%;
     width: 100%;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* detected_bus's children elements */
