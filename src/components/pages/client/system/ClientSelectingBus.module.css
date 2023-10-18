@@ -22,17 +22,17 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .busInfo_bookmark {
     background: linear-gradient(to bottom,
-            yellow 0%,
-            yellow 10%,
-            /* 여기서 10%는 노란색이 끝나는 위치입니다 */
-            transparent 10%,
-            transparent 100%
-            /* 여기서 100%는 투명색이 끝나는 위치입니다 */
-        );
+            rgb(247, 184, 90) 0%,
+            rgb(255, 255, 255) 30%,
+            transparent 30%,
+            transparent 100%);
+    border-radius: 8px;
 }
 
 

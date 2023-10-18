@@ -1,5 +1,5 @@
 import style from "./ClientSelectingBookmarkedBus.module.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import Bus from "../../../../cores/types/Bus";
 import { reserveBus } from "../../../../cores/api/blindrouteClient";
@@ -74,6 +74,362 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
             SpeechOutputProvider.speak(`${busList[busListIndex].busRouteAbbreviation} 버스를 예약하는데 실패했습니다`);
         }
     }
+
+
+
+    useEffect(() => {
+        setBusList([
+            new Bus(
+                "10266",
+                "창동역동측(노원방면)",
+                "100100138",
+                "1120",
+                "1120",
+                [
+                    {
+                        "stationName": "한성여객종점",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "홈플러스중계점",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "대진여자고등학교",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "중계건영2차아파트",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "어린이교통공원",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "마들근린공원.노원에코센터",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "창동주공17단지",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "창동주공18단지",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "창동주공19단지",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "창동동아아파트",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "창동농협물류센터",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "노원구청",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "노원역8번출구",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "노원구청앞",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "창4동주민센터",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "서울북부지방법원등기국",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "창동주공1단지",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "창5동현대1차아파트",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "도봉구보건소앞",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "쌍문동금호1차삼익아파트",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "쌍문동현대.한양아파트",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "쌍문동성원아파트",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "청구아파트",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "방학동우성.청구아파트",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "초당초등학교",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "쌍문동우이빌라",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "쌍문동청한빌라",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "서라벌중학교.우이동대우아파트",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "덕성여대솔밭근린공원",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "4.19민주묘지역",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "인수동장미원",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "가오리역",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "우이초등학교",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "강북노인종합복지관",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "신일병원",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "수유시장.성신여대미아캠퍼스앞",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "미아역8번출구.신일중고",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "미아역.신일중고",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "도봉세무서.성북시장",
+                        "direction": "삼양동입구"
+                    },
+                    {
+                        "stationName": "도봉세무서.성북시장",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "미아역.신일중고",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "수유시장.성신여대미아캠퍼스앞",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "신일병원",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "강북노인종합복지관",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "우이초등학교",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "가오리역",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "인수동장미원",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "4.19민주묘지역",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "덕성여대입구",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "서라벌중학교.우이동대우아파트",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "북서울교회",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "쌍문동청한빌라",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "쌍문동우이빌라",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "초당초등학교",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "방학동우성아파트",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "청구아파트",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "쌍문동성원아파트",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "쌍문동한양.현대아파트",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "쌍문동삼익금호1차아파트",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "도봉구보건소앞",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창5동현대아파트",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창동주공1단지아파트",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "서울북부지방법원등기국",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창동농협물류센터",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창동역동측(노원방면)",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창동농협물류센터",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "상계6동우체국",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "상계주공3단지",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "상계주공2단지",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "당현초등학교",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "상계주공2단지223동",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "상계주공2단지상가",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "상계주공2단지",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "상계주공6단지",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "노원구청앞",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창동농협물류센터",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창동역동측",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창동동아아파트",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창동주공19단지",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창동주공18단지",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "창동주공17단지",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "마들근린공원.노원에코센터",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "중계역2번출구",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "청계초등학교",
+                        "direction": "하계동"
+                    },
+                    {
+                        "stationName": "홈플러스중계점",
+                        "direction": "하계동"
+                    }
+                ]
+            )
+        ]);
+    }, [setBusList]);
 
 
 
