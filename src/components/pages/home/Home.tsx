@@ -7,10 +7,11 @@ import { AppType } from "../../../cores/types/AppType";
 import { checkAuthSession } from "../../../cores/api/blindrouteClient";
 
 
+
 /** 홈 페이지 프로퍼티 */
 export interface HomeProps {
-    appType: AppType;
     userRole: UserRole;
+    appType: AppType
     authenticationActionType: AuthenticationActionType;
     setAuthenticationActionType: React.Dispatch<React.SetStateAction<AuthenticationActionType>>;
 }
@@ -24,7 +25,7 @@ export default function Home({ userRole, appType, authenticationActionType, setA
 
 
     // state
-    const [authenticationState, setAuthenticationState] = useState<boolean>(false);
+    const [authenticationState, setAuthenticationState] = useState<boolean | undefined>(undefined);
 
 
 
@@ -75,7 +76,7 @@ export default function Home({ userRole, appType, authenticationActionType, setA
             </div>
             <div className={style.body}>
                 <div className={style.authentication}>
-                    {authenticationState === false
+                    {authenticationState !== undefined && (authenticationState !== false
                         ? (<>
                             <button className={style.login_button} type="button" onClick={() => { onAuthentication("login"); }}>로그인</button>
                             <button className={style.login_button} type="button" onClick={() => { }}>회원가입</button>
@@ -86,7 +87,7 @@ export default function Home({ userRole, appType, authenticationActionType, setA
                             <button className={style.signin_button} type="button" onClick={() => { onAuthentication("logout"); }}>로그아웃</button>
                         </>
                         )
-                    }
+                    )}
                 </div>
             </div>
         </div>

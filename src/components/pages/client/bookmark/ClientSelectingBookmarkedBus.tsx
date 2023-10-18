@@ -1,9 +1,9 @@
-import style from "./ClientSelectingBus.module.css";
+import style from "./ClientSelectingBookmarkedBus.module.css";
 import { useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
-import { ClientSearchState } from "./ClientSearch";
 import Bus from "../../../../cores/types/Bus";
 import { reserveBus } from "../../../../cores/api/blindrouteClient";
+import { ClientBookmarkState } from "./ClientBookmark";
 
 
 // module
@@ -12,26 +12,31 @@ import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
+import { useNavigate } from "react-router-dom";
 
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
-export interface ClientSelectingBusProps {
+export interface ClientSelectingBookmarkedBusProps {
     userRole: UserRole;
-    setPageState: React.Dispatch<React.SetStateAction<ClientSearchState>>;
-    busList: Bus[];
+    setPageState: React.Dispatch<React.SetStateAction<ClientBookmarkState>>;
     setWishBus: React.Dispatch<React.SetStateAction<Bus | null>>
 }
 
 
 
 /** ClientSelectingStation 컴포넌트 */
-export default function ClientSelectingBus({ userRole, setPageState, busList, setWishBus }: ClientSelectingBusProps) {
+export default function ClientSelectingBookmarkedBus({ userRole, setPageState, setWishBus }: ClientSelectingBookmarkedBusProps) {
+    // Const
+    const history = useNavigate();
+
+
     // Refs
     const busInfoContainer = useRef<HTMLDivElement>(null);
 
 
     // States
+    const [busList, setBusList] = useState<Bus[]>([]);
     const [busListIndex, setBusListIndex] = useState<number>(0);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -46,8 +51,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
      */
     /** 이전 단계로 이동: 선택한 버스를 제거하고 이전 단계로 이동 */
     const onPrevStep = () => {
-        setWishBus(null);
-        setPageState("selectingStation");
+        history(`/client`);
     };
 
 
@@ -65,7 +69,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
         if (reserveResult) {
             SpeechOutputProvider.speak(`${busList[busListIndex].busRouteAbbreviation} 버스를 예약하였습니다`);
             setWishBus(busList[busListIndex]);
-            setPageState("waitingBus");
+            setPageState("waitingBookmarkedBus");
         } else {
             SpeechOutputProvider.speak(`${busList[busListIndex].busRouteAbbreviation} 버스를 예약하는데 실패했습니다`);
         }
@@ -75,7 +79,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
 
     // Render
     return (
-        <div className={style.ClientSelectingBus}>
+        <div className={style.ClientSelectingBookmarkedBus}>
             <LoadingAnimation active={isLoading} />
 
             <button className={style.button_movePrev} type="button" onClick={onPrevStep}>
@@ -100,7 +104,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
                                 }}
                                 onDoubleClick={() => {
                                     SpeechOutputProvider.clearSpeak();
-                                    SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에 등록했습니다`);
+                                    SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 삭제했습니다`);
                                 }}
                             >
                                 <h1>{bus.busRouteAbbreviation}</h1>

@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserRole } from './cores/types/UserRole';
 import Home from './components/pages/home/Home';
 import Client from './components/pages/client/Client';
@@ -39,10 +39,16 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-
           <Route path="/" element={<Develop
             setAppType={setAppType}
             setUserRole={setUserRole}
+          />} />
+
+          <Route path="/home" element={<Home
+            userRole={userRole}
+            appType={appType}
+            authenticationActionType={authenticationActionType}
+            setAuthenticationActionType={setAuthenticationActionType}
           />} />
 
           <Route path="/authentication" element={<Authentication
@@ -50,14 +56,7 @@ function App() {
             actionType={authenticationActionType}
           />} />
 
-          <Route path="/home" element={<Home
-            appType={appType}
-            userRole={userRole}
-            authenticationActionType={authenticationActionType}
-            setAuthenticationActionType={setAuthenticationActionType}
-          />} />
-
-          <Route path="/client" element={<Client
+          <Route path="/client/*" element={<Client
             userRole={userRole}
           />} />
 
@@ -67,7 +66,7 @@ function App() {
 
         </Routes>
       </BrowserRouter>
-    </div>
+    </div >
   );
 }
 

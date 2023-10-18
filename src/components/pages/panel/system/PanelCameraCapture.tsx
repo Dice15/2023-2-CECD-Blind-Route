@@ -20,7 +20,7 @@ export interface PanelCameraCaptureProps {
 /** PanelCameraCapture 컴포넌트 */
 export default function PanelCameraCapture({ userRole, wishStation }: PanelCameraCaptureProps) {
     // Const 
-    const { arsId } = wishStation;  // 비구조화를 통해 arsId 추출
+    const { arsId, stationName } = wishStation;  // 비구조화를 통해 arsId 추출
 
 
     // Refs 
@@ -103,13 +103,13 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     /** 버스 정류장의 버스 리스트를 가져옴 */
     useEffect(() => {
         const getWishStationBusList = async () => {
-            const responsedBusList: Bus[] = await getBusList(userRole, { arsId: arsId });
+            const responsedBusList: Bus[] = await getBusList(userRole, arsId, stationName);
             setBusList(responsedBusList);
         };
 
         getWishStationBusList();
 
-    }, [userRole, arsId]);
+    }, [userRole, arsId, stationName]);
 
 
 

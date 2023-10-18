@@ -1,19 +1,19 @@
 import style from "./ClientSearchingStation.module.css";
 import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
-import { ClientMiddleState } from "../ClientMiddle";
 import Station from "../../../../cores/types/Station";
 import { getStationList } from "../../../../cores/api/blindrouteClient";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { useNavigate } from "react-router-dom";
 import { SpeechOutputProvider, SpeechInputProvider } from "../../../../modules/speech/SpeechProviders";
+import { ClientSearchState } from "./ClientSearch";
 
 
 
 /** ClientSearchingStation 컴포넌트 프로퍼티 */
 export interface ClientSearchingStationProps {
     userRole: UserRole;
-    setPageState: React.Dispatch<React.SetStateAction<ClientMiddleState>>;
+    setPageState: React.Dispatch<React.SetStateAction<ClientSearchState>>;
     setStationList: React.Dispatch<React.SetStateAction<Station[]>>;
 }
 
@@ -41,7 +41,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
      */
     /** 이전 단계로 이동: 홈페이지로 이동 */
     const onPrevStep = () => {
-        history(`/home`);
+        history(`/client`);
     }
 
 
@@ -56,6 +56,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
             if (responsedStationList.length > 0) {
                 //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
                 setStationList(responsedStationList);
+                console.log(responsedStationList);
                 setPageState("selectingStation");
             } else {
                 SpeechOutputProvider.speak("검색된 정류장이 없습니다");

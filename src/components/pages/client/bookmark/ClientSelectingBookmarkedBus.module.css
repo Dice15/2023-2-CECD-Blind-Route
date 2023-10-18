@@ -1,4 +1,4 @@
-.ClientSelectingBus {
+.ClientSelectingBookmarkedBus {
     height: 100%;
     width: 100%;
     display: flex;
@@ -6,7 +6,7 @@
     align-items: center;
 }
 
-/* ClientSearchStation's children elements */
+/* ClientSelectingBookmarkedBus's children elements */
 .busInfoContainer {
     height: 70%;
     width: 70%;
@@ -34,7 +34,6 @@
             /* 여기서 100%는 투명색이 끝나는 위치입니다 */
         );
 }
-
 
 .button_movePrev,
 .button_moveNext {

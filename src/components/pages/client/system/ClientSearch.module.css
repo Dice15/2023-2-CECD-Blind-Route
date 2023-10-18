@@ -1,0 +1,44 @@
+.ClientSearch {
+    height: 100%;
+    width: 100%;
+}
+
+.controllerForm {
+    height: calc(calc(calc(var(--vh, 1vh) * 100) - 5px - 10px) - 40px - 1px - 14px - 15px);
+}
+
+.leftSlideEnter {
+    transform: translateX(100%);
+}
+
+.leftSlideEnterActive {
+    transform: translateX(0);
+    transition: transform 300ms ease-in-out;
+}
+
+.leftSlideExit {
+    transform: translateX(0);
+}
+
+.leftSlideExitActive {
+    transform: translateX(-100%);
+    transition: transform 300ms ease-in-out;
+}
+
+.rightSlideEnter {
+    transform: translateX(-100%);
+}
+
+.rightSlideEnterActive {
+    transform: translateX(0);
+    transition: transform 300ms ease-in-out;
+}
+
+.rightSlideExit {
+    transform: translateX(0);
+}
+
+.rightSlideExitActive {
+    transform: translateX(100%);
+    transition: transform 300ms ease-in-out;
+}

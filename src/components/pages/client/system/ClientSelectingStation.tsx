@@ -1,7 +1,7 @@
 import style from "./ClientSelectingStation.module.css";
 import React, { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
-import { ClientMiddleState } from "../ClientMiddle";
+import { ClientSearchState } from "./ClientSearch";
 import Station from "../../../../cores/types/Station";
 import Bus from "../../../../cores/types/Bus";
 import { getBusList } from "../../../../cores/api/blindrouteClient";
@@ -17,7 +17,7 @@ import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
 export interface ClientSelectingStationProps {
     userRole: UserRole;
-    setPageState: React.Dispatch<React.SetStateAction<ClientMiddleState>>;
+    setPageState: React.Dispatch<React.SetStateAction<ClientSearchState>>;
     stationList: Station[];
     setBusList: React.Dispatch<React.SetStateAction<Bus[]>>
 }
@@ -50,7 +50,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
     /** 다음 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onNextStep = async () => {
         setIsLoading(true);
-        const responsedBusList: Bus[] = await getBusList(userRole, { arsId: stationList[stationListIndex].arsId });
+        const responsedBusList: Bus[] = await getBusList(userRole, stationList[stationListIndex].arsId, stationList[stationListIndex].stationName);
         setIsLoading(false);
 
         if (responsedBusList.length > 0) {

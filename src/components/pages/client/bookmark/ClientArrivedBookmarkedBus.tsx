@@ -1,20 +1,20 @@
 import Bus from "../../../../cores/types/Bus";
 import { useNavigate } from "react-router-dom";
-import style from "./ClientArrivedBus.module.css";
+import style from "./ClientArrivedBookmarkedBus.module.css";
 import { useEffect, useRef } from "react";
 
 
 
-/** ClientArrivedBus 컴포넌트 프로퍼티 */
-export interface ClientArrivedBusProps {
+/** ClientArrivedBookmarkedBus 컴포넌트 프로퍼티 */
+export interface ClientArrivedBookmarkedBusProps {
     wishBus: Bus;
     setWishBus: React.Dispatch<React.SetStateAction<Bus | null>>;
 }
 
 
 
-/** ClientArrivedBus 컴포넌트 */
-export default function ClientArrivedBus({ wishBus, setWishBus }: ClientArrivedBusProps) {
+/** ClientArrivedBookmarkedBus 컴포넌트 */
+export default function ClientArrivedBookmarkedBus({ wishBus, setWishBus }: ClientArrivedBookmarkedBusProps) {
     // Consts
     const history = useNavigate();
 
@@ -52,7 +52,7 @@ export default function ClientArrivedBus({ wishBus, setWishBus }: ClientArrivedB
 
     // Render
     return (
-        <div className={style.ClientArrivedBus}>
+        <div className={style.ClientArrivedBookmarkedBus}>
             <button className={style.button_movePrev} type="button" onClick={() => { }}></button>
 
             <div className={style.wishBusInfo} onClick={onFirstStep}>

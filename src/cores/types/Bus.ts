@@ -10,6 +10,7 @@ import IBus from "./IBus";
  */
 export default class Bus implements IBus {
     stationArsId: string;
+    stationName: string;
     busRouteId: string;
     busRouteNumber: string;
     busRouteAbbreviation: string;
@@ -20,6 +21,7 @@ export default class Bus implements IBus {
 
     constructor(
         stationArsId?: string,
+        stationName?: string,
         busRouteId?: string,
         busRouteNumber?: string,
         busRouteAbbreviation?: string,
@@ -29,6 +31,7 @@ export default class Bus implements IBus {
         }[],
     ) {
         this.stationArsId = stationArsId ? stationArsId : "";
+        this.stationName = stationName ? stationName : "";
         this.busRouteId = busRouteId ? busRouteId : "";
         this.busRouteNumber = busRouteNumber ? busRouteNumber : "";
         this.busRouteAbbreviation = busRouteAbbreviation ? busRouteAbbreviation : "";
@@ -38,6 +41,7 @@ export default class Bus implements IBus {
     public print() {
         return {
             stationArsId: this.stationArsId,
+            stationName: this.stationName,
             busRouteId: this.busRouteId,
             busRouteNumber: this.busRouteNumber,
             busRouteAbbreviation: this.busRouteAbbreviation,

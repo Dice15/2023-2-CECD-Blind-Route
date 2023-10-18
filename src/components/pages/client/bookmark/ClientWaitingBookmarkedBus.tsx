@@ -1,26 +1,26 @@
-import style from "./ClientWaitingBus.module.css";
+import style from "./ClientWaitingBookmarkedBus.module.css";
 import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
-import { ClientSearchState } from "./ClientSearch";
 import Bus from "../../../../cores/types/Bus";
 import { checkBusArrival, unreserveBus } from "../../../../cores/api/blindrouteClient";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
+import { ClientBookmarkState } from "./ClientBookmark";
 
 
 
-/** ClientWaitingBus 컴포넌트 프로퍼티 */
-export interface ClientWaitingBusProps {
+/** ClientWaitingBookmarkedBus 컴포넌트 프로퍼티 */
+export interface ClientWaitingBookmarkedBusProps {
     userRole: UserRole;
-    setPageState: React.Dispatch<React.SetStateAction<ClientSearchState>>;
+    setPageState: React.Dispatch<React.SetStateAction<ClientBookmarkState>>;
     wishBus: Bus;
     setWishBus: React.Dispatch<React.SetStateAction<Bus | null>>;
 }
 
 
 
-/** ClientWaitingBus 컴포넌트 */
-export default function ClientWaitingBus({ userRole, setPageState, wishBus, setWishBus }: ClientWaitingBusProps) {
+/** ClientWaitingBookmarkedBus 컴포넌트 */
+export default function ClientWaitingBookmarkedBus({ userRole, setPageState, wishBus, setWishBus }: ClientWaitingBookmarkedBusProps) {
     // Refs
     const refreshTaskRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -47,7 +47,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
         if (unreserveResult) {
             SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스 예약을 취소하였습니다`);
             setWishBus(null);
-            setPageState("selectingBus");
+            setPageState("selectingBookmarkedBus");
         } else {
             SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 취소하는데 실패했습니다`);
         }
@@ -85,7 +85,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
 
             if (isWishBusArrived) {
                 SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스가 도착했습니다`);
-                setPageState("arrivedBus");
+                setPageState("arrivedBookmarkedBus");
             }
         }, 2000);
 
@@ -100,7 +100,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
 
     // Render
     return (
-        <div className={style.ClientWaitingBus}>
+        <div className={style.ClientWaitingBookmarkedBus}>
             <LoadingAnimation active={isLoading} />
 
             <button className={style.button_movePrev} type="button" onClick={onPrevStep}>

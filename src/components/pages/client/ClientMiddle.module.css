@@ -3,42 +3,27 @@
     width: 100%;
 }
 
-.controllerForm {
-    height: calc(calc(calc(var(--vh, 1vh) * 100) - 5px - 10px) - 40px - 1px - 14px - 15px);
+/* body's children elements */
+.selectAction {
+    height: calc(100% - 15%);
+    width: 100%;
+    padding-bottom: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
-.leftSlideEnter {
-    transform: translateX(100%);
-}
 
-.leftSlideEnterActive {
-    transform: translateX(0);
-    transition: transform 300ms ease-in-out;
-}
-
-.leftSlideExit {
-    transform: translateX(0);
-}
-
-.leftSlideExitActive {
-    transform: translateX(-100%);
-    transition: transform 300ms ease-in-out;
-}
-
-.rightSlideEnter {
-    transform: translateX(-100%);
-}
-
-.rightSlideEnterActive {
-    transform: translateX(0);
-    transition: transform 300ms ease-in-out;
-}
-
-.rightSlideExit {
-    transform: translateX(0);
-}
-
-.rightSlideExitActive {
-    transform: translateX(100%);
-    transition: transform 300ms ease-in-out;
+/* authentication's children elements */
+.selectAction button {
+    width: 80%;
+    height: 10%;
+    border-radius: 8px;
+    border: 1px solid var(--button-border--color);
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    font-size: 1.2rem;
+    font-weight: 550;
 }

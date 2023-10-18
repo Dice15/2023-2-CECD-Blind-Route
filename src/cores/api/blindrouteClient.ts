@@ -178,11 +178,11 @@ async function getBusDestinationList(userRole: UserRole, params: { busRouteId: s
 
 
 /** API로 부터 받은 버스 데이터를 Bus타입의 리스트 형태로 반환 */
-export async function getBusList(userRole: UserRole, params: { arsId: string }) {
+export async function getBusList(userRole: UserRole, stationArsId: string, stationName: string) {
     let responsedBusList: IBusApi = { busList: [] };
 
     try {
-        const postData = qs.stringify(params);
+        const postData = qs.stringify({ arsId: stationArsId });
         const response = await axios.post(
             getApiUrl(userRole, "/select/route"),
             postData,
@@ -209,7 +209,8 @@ export async function getBusList(userRole: UserRole, params: { arsId: string }) 
         })
 
         return new Bus(
-            params.arsId,
+            stationArsId,
+            stationName,
             bus.busRouteId,
             bus.busRouteNm,
             bus.busRouteAbrv,

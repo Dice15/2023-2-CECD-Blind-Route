@@ -7,6 +7,7 @@
  */
 export default interface IBus {
     stationArsId: string;
+    stationName: string;
     busRouteId: string;
     busRouteNumber: string;
     busRouteAbbreviation: string;
@@ -17,6 +18,7 @@ export default interface IBus {
 
     print(): {
         stationArsId: string;
+        stationName: string;
         busRouteId: string;
         busRouteNumber: string;
         busRouteAbbreviation: string;
