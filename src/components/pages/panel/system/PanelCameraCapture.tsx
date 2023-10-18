@@ -28,12 +28,14 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const captureTaskRef = useRef<NodeJS.Timeout | null>(null);
+    const frameIdRef = useRef<number | null>(null);  // 프레임 ID를 저장하기
 
 
     // States
     const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
     const [busList, setBusList] = useState<Bus[]>([]);
     const [detectedBus, setDetectedBus] = useState<Bus | null>(null);
+    const [frameCount, setFrameCount] = useState<number>(0);  // 프레임 카운터 상태 추가
 
 
     // Custom hooks
@@ -97,6 +99,14 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
 
 
 
+    /** 프레임 카운트 업데이트 */
+    const updateFrameCount = useCallback(() => {
+        setFrameCount(prevCount => prevCount + 1);  // 프레임 카운터 증가
+        frameIdRef.current = requestAnimationFrame(updateFrameCount);  // 프레임 ID 저장
+    }, []);
+
+
+
     /** 
      * Effects
      */
@@ -156,12 +166,25 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     useEffect(() => {
         const sendImage = async () => {
             if (capturedImage) {
-                const busApiData = await sendCapturedImage(userRole, { arsId: arsId, image: capturedImage });
-                console.log(busApiData);
+                await sendCapturedImage(userRole, { arsId: arsId, image: capturedImage });
             }
         }
         sendImage();
     }, [userRole, arsId, capturedImage]);
+
+
+
+    /** 촬영중인 영상 프레임 업데이트 */
+    useEffect(() => {
+        // 카메라가 활성화되고 난 후에 프레임 카운트를 시작
+        updateFrameCount();
+        // 컴포넌트가 언마운트될 때 프레임 카운트 업데이트를 중지
+        return () => {
+            if (frameIdRef.current !== null) {
+                cancelAnimationFrame(frameIdRef.current);
+            }
+        };
+    }, [updateFrameCount]);
 
 
 
@@ -203,6 +226,9 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
             <div className={style.captured_image} ref={displayCameraRef}>
                 <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef}></video>
                 <canvas style={{ display: "none" }} ref={canvasRef} ></canvas>
+            </div>
+            <div className={style.frame_count}>
+                <p>Frame: {frameCount}</p>  {/* 프레임 카운터 출력 */}
             </div>
         </div>
     );
