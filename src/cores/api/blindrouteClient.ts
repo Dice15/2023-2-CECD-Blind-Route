@@ -324,3 +324,165 @@ export async function checkBusArrival(userRole: UserRole, params: { arsId: strin
 
     return isArrival;
 }
+
+
+
+/**
+ * 버스를 즐거찾기에 등록
+ * IRegisterBookmark
+ * registerBookmark
+ */
+
+/** 버스를 즐거찾기에 등록의 성공여부를 반환*/
+type IRegisterBookmarkApi = boolean;
+
+/** 버스를 즐거찾기에 등록 */
+export async function registerBookmark(userRole: UserRole, targetBus: Bus): Promise<boolean> {
+    let result: IRegisterBookmarkApi = false;
+    try {
+        const postData = qs.stringify({
+            arsId: targetBus.stationArsId,
+            stNm: targetBus.stationName,
+            busRouteId: targetBus.busRouteId,
+            busRouteNm: targetBus.busRouteNumber,
+            busRouteAbrv: targetBus.busRouteAbbreviation
+        });
+        const response = await axios.post(
+            getApiUrl(userRole, "/bookmark/register"),
+            postData,
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                withCredentials: true
+            }
+        );
+        result = response.data;
+    }
+    catch (error) {
+        console.error("Search request failed:", error);
+    }
+
+    return result;
+}
+
+
+
+/**
+ * 버스를 즐거찾기에서 삭제
+ * IRemoveBookmark
+ * removeBookmark
+ */
+
+/** 버스를 즐거찾기에서 삭제의 성공여부를 반환*/
+type IRemoveBookmarkApi = boolean;
+
+/** 버스를 즐거찾기에서 삭제 */
+export async function removeBookmark(userRole: UserRole, targetBus: Bus): Promise<boolean> {
+    let result: IRemoveBookmarkApi = false;
+    try {
+        const postData = qs.stringify({
+            arsId: targetBus.stationArsId,
+            stNm: targetBus.stationName,
+            busRouteId: targetBus.busRouteId,
+            busRouteNm: targetBus.busRouteNumber,
+            busRouteAbrv: targetBus.busRouteAbbreviation
+        });
+        const response = await axios.post(
+            getApiUrl(userRole, "/bookmark/remove"),
+            postData,
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                withCredentials: true
+            }
+        );
+        result = response.data;
+    }
+    catch (error) {
+        console.error("Search request failed:", error);
+    }
+
+    return result;
+}
+
+
+
+/**
+ * 즐겨찾기 비우기
+ * IClearBookmark
+ * clearBookmark
+ */
+
+/** 즐겨찾기 비우기 성공 여부 반환*/
+type IClearBookmarkApi = boolean;
+
+/** 즐겨찾기 비우기 */
+export async function clearBookmark(userRole: UserRole): Promise<boolean> {
+    let result: IClearBookmarkApi = false;
+    try {
+        const response = await axios.post(
+            getApiUrl(userRole, "/bookmark/removeall"),
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                withCredentials: true
+            }
+        );
+        result = response.data;
+    }
+    catch (error) {
+        console.error("Search request failed:", error);
+    }
+
+    return result;
+}
+
+
+
+/**
+ * 즐겨찾기 목록 가져오기
+ * IClearBookmark
+ * clearBookmark
+ */
+
+/** 즐겨찾기 목록*/
+interface IGetBookmarkListApi {
+    bookmarkList: {
+        arsId: string,
+        stNm: string,
+        busRouteId: string,
+        busRouteNm: string,
+        busRouteAbrv: string
+    }[]
+};
+
+/** 즐겨찾기 목록 가져오기 */
+export async function getBookmarkList(userRole: UserRole): Promise<Bus[]> {
+    let result: IGetBookmarkListApi = { bookmarkList: [] };
+    try {
+        const response = await axios.post(
+            getApiUrl(userRole, "/bookmark/list"),
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                withCredentials: true
+            }
+        );
+        result = response.data;
+    }
+    catch (error) {
+        console.error("Search request failed:", error);
+    }
+
+    return result.bookmarkList.map((bookmark) => new Bus(
+        bookmark.arsId,
+        bookmark.stNm,
+        bookmark.busRouteId,
+        bookmark.busRouteNm,
+        bookmark.busRouteAbrv
+    ));
+}
