@@ -433,7 +433,6 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
         ]);
         setIsLoading(false);
 
-        SpeechOutputProvider.clearSpeak();
         SpeechOutputProvider.speak("버스를 선택하세요");
 
     }, [setBusList]);
@@ -463,11 +462,9 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
                         <SwiperSlide key={index}>
                             <div className={`${style.busInfo} ${style.busInfo_bookmark}`} style={{ height: `${busInfoContainerHeight}px` }}
                                 onClick={() => {
-                                    SpeechOutputProvider.clearSpeak();
                                     SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
                                 }}
                                 onDoubleClick={() => {
-                                    SpeechOutputProvider.clearSpeak();
                                     SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 삭제했습니다`);
                                 }}
                             >

@@ -36,6 +36,8 @@ export default function ClientArrivedBookmarkedBus({ wishBus, setWishBus }: Clie
 
     // Effects
     useEffect(() => {
+        navigator.vibrate(5000);
+
         setPageStateTaskRef.current = setInterval(() => {
             setWishBus(null);
             history(`/client`);

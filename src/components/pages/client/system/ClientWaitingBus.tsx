@@ -110,7 +110,11 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
                 </svg>
             </button>
 
-            <div className={style.wishBusInfo} onClick={() => { SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 대기중입니다`); }}>
+            <div className={style.wishBusInfo}
+                onClick={() => {
+                    SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 대기중입니다`);
+                }}
+            >
                 <h1>{wishBus.busRouteAbbreviation}</h1>
                 <h3>{waitingMessage}</h3>
             </div>

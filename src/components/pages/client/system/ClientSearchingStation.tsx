@@ -56,7 +56,6 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
             if (responsedStationList.length > 0) {
                 //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
                 setStationList(responsedStationList);
-                console.log(responsedStationList);
                 setPageState("selectingStation");
             } else {
                 SpeechOutputProvider.speak("검색된 정류장이 없습니다");
@@ -105,6 +104,12 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
 
 
 
+    // Effects
+    useEffect(() => {
+        SpeechOutputProvider.speak("정류장을 입력하세요. 더블 터치를 하면 음성인식이 시작됩니다");
+    }, []);
+
+
 
     // Render
     return (
@@ -118,11 +123,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 </svg>
             </button>
 
-            <div className={style.stationNameContainer} onDoubleClick={toggleListening} onClick={() => {
-                if (!isListening) {
-                    SpeechOutputProvider.speak("정류장을 입력하세요. 더블 터치를 하면 음성인식이 시작됩니다");
-                }
-            }}>
+            <div className={style.stationNameContainer} onDoubleClick={toggleListening}>
                 <input className={style.textbox_stationName} type="text" placeholder="정류장 입력" ref={textbox_stationName} />
             </div>
 

@@ -63,6 +63,12 @@ export default function ClientSelectingStation({ userRole, setPageState, station
     }
 
 
+    // Effects
+    useEffect(() => {
+        SpeechOutputProvider.speak("정류장을 선택하세요");
+    }, []);
+
+
 
     // Render
     return (
@@ -85,9 +91,12 @@ export default function ClientSelectingStation({ userRole, setPageState, station
                 >
                     {stationList.map((station, index) => (
                         <SwiperSlide key={index}>
-                            <div className={style.stationInfo} style={{ height: `${stationInfoContainerHeight}px` }} onClick={() => { SpeechOutputProvider.speak(`${station.stationName}`); }}>
+                            <div className={style.stationInfo} style={{ height: `${stationInfoContainerHeight}px` }}
+                                onClick={() => {
+                                    SpeechOutputProvider.speak(`${station.stationName}`);
+                                }}
+                            >
                                 <h1>{station.stationName}</h1>
-                                <h3>{`id: ${station.stationId}`}</h3>
                             </div>
                         </SwiperSlide>
                     ))}

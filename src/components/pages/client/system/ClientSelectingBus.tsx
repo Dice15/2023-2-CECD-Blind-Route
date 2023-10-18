@@ -75,7 +75,6 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
 
     // Effects
     useEffect(() => {
-        SpeechOutputProvider.clearSpeak();
         SpeechOutputProvider.speak("버스를 선택하세요");
     }, []);
 
@@ -104,11 +103,9 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
                         <SwiperSlide key={index}>
                             <div className={`${style.busInfo} ${style.busInfo_bookmark}`} style={{ height: `${busInfoContainerHeight}px` }}
                                 onClick={() => {
-                                    SpeechOutputProvider.clearSpeak();
                                     SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}`);
                                 }}
                                 onDoubleClick={() => {
-                                    SpeechOutputProvider.clearSpeak();
                                     SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에 등록했습니다`);
                                 }}
                             >
