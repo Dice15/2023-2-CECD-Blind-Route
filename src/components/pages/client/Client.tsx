@@ -43,8 +43,8 @@ export default function Client({ userRole }: ClientProps) {
                 setAuthenticationState(true);
             }
         };
-        //setAuthenticationState(true);
-        checkAuth();
+        setAuthenticationState(true);
+        //checkAuth();
     }, [userRole, history]);
 
 
