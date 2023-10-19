@@ -441,8 +441,10 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
 
     /** 즐겨찾기 불러오기 */
     const loadBookmark = useCallback(async () => {
+        setIsLoading(true);
         setBookmarkList(await getBookmarkList(userRole));
-    }, [userRole, setBookmarkList]);
+        setIsLoading(false);
+    }, [userRole, setIsLoading, setBookmarkList]);
 
 
 
@@ -464,12 +466,14 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
     // Effects
     useEffect(() => {
         (async () => {
-            setIsLoading(true);
             await loadBookmark();
-            setIsLoading(false);
-            SpeechOutputProvider.speak("버스를 선택하세요");
+            if (bookmarkList.length < 1) {
+                SpeechOutputProvider.speak("즐겨찾기에 등록된 버스가 없습니다");
+            } else {
+                SpeechOutputProvider.speak("버스를 선택하세요");
+            }
         })();
-    }, [setIsLoading, loadBookmark]);
+    }, [bookmarkList, loadBookmark]);
 
 
 

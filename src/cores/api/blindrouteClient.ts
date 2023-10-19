@@ -358,6 +358,7 @@ export async function registerBookmark(userRole: UserRole, targetBus: Bus): Prom
             }
         );
         result = response.data;
+        console.log(result, response.data, typeof response.data);
     }
     catch (error) {
         console.error("Search request failed:", error);
@@ -399,6 +400,7 @@ export async function removeBookmark(userRole: UserRole, targetBus: Bus): Promis
             }
         );
         result = response.data;
+        console.log(result, response.data, typeof response.data);
     }
     catch (error) {
         console.error("Search request failed:", error);

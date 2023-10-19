@@ -78,8 +78,10 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
     /** 즐겨찾기 불러오기 */
     const loadBookmark = useCallback(async () => {
+        setIsLoading(true);
         setBookmarkList(await getBookmarkList(userRole));
-    }, [userRole, setBookmarkList]);
+        setIsLoading(false);
+    }, [userRole, setIsLoading, setBookmarkList]);
 
 
 
@@ -94,22 +96,26 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
     /** 즐겨찾기에 추가 */
     const addBookmark = useCallback(async (bus: Bus) => {
+        setIsLoading(true);
         if (await registerBookmark(userRole, bus)) {
             setBookmarkList([...bookmarkList, bus]);
             SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에 등록했습니다`);
         }
+        setIsLoading(false);
     }, [userRole, bookmarkList, setBookmarkList]);
 
 
 
     /** 즐겨찾기에서 제거 */
     const removeBookmarkedBus = useCallback(async (bus: Bus) => {
+        setIsLoading(true);
         if (await removeBookmark(userRole, bus)) {
             setBookmarkList(bookmarkList.filter(bookmark =>
                 bookmark.stationArsId !== bus.stationArsId || bookmark.busRouteId !== bus.busRouteId
             ));
             SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 해제하였습니다`);
         }
+        setIsLoading(false);
     }, [userRole, bookmarkList, setBookmarkList]);
 
 
@@ -117,12 +123,10 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
     // Effects
     useEffect(() => {
         (async () => {
-            setIsLoading(true);
             await loadBookmark();
-            setIsLoading(false);
             SpeechOutputProvider.speak("버스를 선택하세요");
         })();
-    }, [setIsLoading, loadBookmark]);
+    }, [loadBookmark]);
 
 
 
