@@ -79,7 +79,10 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
     /** 즐겨찾기 불러오기 */
     const loadBookmark = useCallback(async () => {
         setIsLoading(true);
-        setBookmarkList(await getBookmarkList(userRole));
+        const busList = await getBookmarkList(userRole);
+        if (busList.length > 0) {
+            setBookmarkList(busList);
+        }
         setIsLoading(false);
     }, [userRole, setIsLoading, setBookmarkList]);
 

@@ -424,8 +424,10 @@ type IClearBookmarkApi = boolean;
 export async function clearBookmark(userRole: UserRole): Promise<boolean> {
     let result: IClearBookmarkApi = false;
     try {
+        const postData = qs.stringify({});
         const response = await axios.post(
             getApiUrl(userRole, "/bookmark/removeall"),
+            postData,
             {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
@@ -466,8 +468,10 @@ interface IGetBookmarkListApi {
 export async function getBookmarkList(userRole: UserRole): Promise<Bus[]> {
     let result: IGetBookmarkListApi = { bookmarkList: [] };
     try {
+        const postData = qs.stringify({});
         const response = await axios.post(
             getApiUrl(userRole, "/bookmark/list"),
+            postData,
             {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"

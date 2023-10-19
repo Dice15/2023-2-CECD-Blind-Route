@@ -474,9 +474,10 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
                 SpeechOutputProvider.speak("버스를 선택하세요");
             } else {
                 SpeechOutputProvider.speak("즐겨찾기에 등록된 버스가 없습니다");
+                history(`/client`);
             }
         })();
-    }, [bookmarkList, loadBookmark]);
+    }, [history, bookmarkList, loadBookmark]);
 
 
 
