@@ -58,7 +58,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
         };
     }, [userRole, wishStation, busList]);
 
-
+    // TODO: row 크기 조정
 
     return (<div className={style.PanelReservedBus} ref={reservedBusTableRef}>
         <LoadingAnimation active={isLoading} />

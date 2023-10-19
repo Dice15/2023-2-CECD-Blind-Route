@@ -31,6 +31,7 @@ export default function ClientSearch({ userRole }: ClientSearchProps) {
     const [pageState, setPageState] = useState<ClientSearchState>("searchingStation");
     const [stationList, setStationList] = useState<Station[]>([]);
     const [busList, setBusList] = useState<Bus[]>([]);
+    const [bookmarkList, setBookmarkList] = useState<Bus[]>([]);
     const [wishBus, setWishBus] = useState<Bus | null>(null);
 
 
@@ -58,6 +59,8 @@ export default function ClientSearch({ userRole }: ClientSearchProps) {
                     userRole={userRole}
                     setPageState={setPageState}
                     busList={busList}
+                    bookmarkList={bookmarkList}
+                    setBookmarkList={setBookmarkList}
                     setWishBus={setWishBus}
                 />
             }

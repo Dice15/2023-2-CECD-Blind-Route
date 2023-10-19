@@ -1,9 +1,9 @@
 import style from "./ClientSelectingBus.module.css";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientSearchState } from "./ClientSearch";
 import Bus from "../../../../cores/types/Bus";
-import { reserveBus } from "../../../../cores/api/blindrouteClient";
+import { getBookmarkList, registerBookmark, removeBookmark, reserveBus } from "../../../../cores/api/blindrouteClient";
 
 
 // module
@@ -20,13 +20,15 @@ export interface ClientSelectingBusProps {
     userRole: UserRole;
     setPageState: React.Dispatch<React.SetStateAction<ClientSearchState>>;
     busList: Bus[];
-    setWishBus: React.Dispatch<React.SetStateAction<Bus | null>>
+    bookmarkList: Bus[];
+    setBookmarkList: React.Dispatch<React.SetStateAction<Bus[]>>;
+    setWishBus: React.Dispatch<React.SetStateAction<Bus | null>>;
 }
 
 
 
 /** ClientSelectingStation 컴포넌트 */
-export default function ClientSelectingBus({ userRole, setPageState, busList, setWishBus }: ClientSelectingBusProps) {
+export default function ClientSelectingBus({ userRole, setPageState, busList, bookmarkList, setBookmarkList, setWishBus }: ClientSelectingBusProps) {
     // Refs
     const busInfoContainer = useRef<HTMLDivElement>(null);
 
@@ -51,6 +53,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
     };
 
 
+
     /** 다음 단계로 이동: 선택한 버스를 예약 등록을 함 */
     const onNextStep = async () => {
         setIsLoading(true);
@@ -73,10 +76,53 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
 
 
 
+    /** 즐겨찾기 불러오기 */
+    const loadBookmark = useCallback(async () => {
+        setBookmarkList(await getBookmarkList(userRole));
+    }, [userRole, setBookmarkList]);
+
+
+
+    /** 불러온 버스가 즐겨찾기에 등록되어 있는 버스인지 확인 */
+    const isBookmarkedBus = (bus: Bus) => {
+        return bookmarkList.some((bookmark) =>
+            bookmark.stationArsId === bus.stationArsId && bookmark.busRouteId === bus.busRouteId
+        );
+    };
+
+
+
+    /** 즐겨찾기에 추가 */
+    const addBookmark = useCallback(async (bus: Bus) => {
+        if (await registerBookmark(userRole, bus)) {
+            setBookmarkList([...bookmarkList, bus]);
+            SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에 등록했습니다`);
+        }
+    }, [userRole, bookmarkList, setBookmarkList]);
+
+
+
+    /** 즐겨찾기에서 제거 */
+    const removeBookmarkedBus = useCallback(async (bus: Bus) => {
+        if (await removeBookmark(userRole, bus)) {
+            setBookmarkList(bookmarkList.filter(bookmark =>
+                bookmark.stationArsId !== bus.stationArsId || bookmark.busRouteId !== bus.busRouteId
+            ));
+            SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 해제하였습니다`);
+        }
+    }, [userRole, bookmarkList, setBookmarkList]);
+
+
+
     // Effects
     useEffect(() => {
-        SpeechOutputProvider.speak("버스를 선택하세요");
-    }, []);
+        (async () => {
+            setIsLoading(true);
+            await loadBookmark();
+            setIsLoading(false);
+            SpeechOutputProvider.speak("버스를 선택하세요");
+        })();
+    }, [setIsLoading, loadBookmark]);
 
 
 
@@ -101,12 +147,13 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, se
                 >
                     {busList.map((bus, index) => (
                         <SwiperSlide key={index}>
-                            <div className={`${style.busInfo} ${style.busInfo_bookmark}`} style={{ height: `${busInfoContainerHeight}px` }}
+                            <div className={`${style.busInfo} ${isBookmarkedBus(bus) && style.busInfo_bookmark}`}
+                                style={{ height: `${busInfoContainerHeight}px` }}
                                 onClick={() => {
                                     SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}`);
                                 }}
                                 onDoubleClick={() => {
-                                    SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에 등록했습니다`);
+                                    isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
                                 }}
                             >
                                 <h1>{bus.busRouteAbbreviation}</h1>
