@@ -3,12 +3,12 @@ import style from "./Develop.module.css"
 import { UserRole, userRoleList } from "../../../cores/types/UserRole";
 import { AppType, appTypeList } from "../../../cores/types/AppType";
 import { useRef } from "react";
+import { LocalStorageProvider } from "../../../modules/storage/AppStorageProvider";
 
 
 
 /** Develop 페이지 프로퍼티 */
 export interface DevelopProps {
-    setAppType: React.Dispatch<React.SetStateAction<AppType>>;
     setUserRole: React.Dispatch<React.SetStateAction<UserRole>>;
 }
 
@@ -21,7 +21,7 @@ export interface DevelopProps {
  * 유저 타입: user, developer
  * 
  */
-export default function Develop({ setAppType, setUserRole }: DevelopProps) {
+export default function Develop({ setUserRole }: DevelopProps) {
     /* const */
     const history = useNavigate();
 
@@ -32,8 +32,8 @@ export default function Develop({ setAppType, setUserRole }: DevelopProps) {
 
 
     /** home 페이지로 이동 */
-    const moveToHome = (appTyle: AppType, userRole: UserRole) => {
-        setAppType(appTyle)
+    const moveToHome = (appType: AppType, userRole: UserRole) => {
+        LocalStorageProvider.set("appType", appType);
         setUserRole(userRole);
         history("/home");
     }

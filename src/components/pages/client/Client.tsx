@@ -4,6 +4,7 @@ import { UserRole } from "../../../cores/types/UserRole";
 import { useEffect, useState } from "react";
 import { checkAuthSession } from "../../../cores/api/blindrouteClient";
 import { useNavigate } from "react-router-dom";
+import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
 
 
 
@@ -26,8 +27,8 @@ export default function Client({ userRole }: ClientProps) {
 
 
     /** 홈 페이지로 이동 */
-    const moveToHome = () => {
-        history("/home");
+    const moveToClient = () => {
+        history("/client");
     };
 
 
@@ -36,7 +37,7 @@ export default function Client({ userRole }: ClientProps) {
     useEffect(() => {
         const checkAuth = async () => {
             if (!(await checkAuthSession(userRole))) {
-                alert("로그인이 필요한 페이지 입니다");
+                SpeechOutputProvider.speak("로그인이 필요한 페이지 입니다. 로그인을 해주세요");
                 history("/home");
             } else {
                 setAuthenticationState(true);
@@ -51,7 +52,12 @@ export default function Client({ userRole }: ClientProps) {
     return (<>{authenticationState &&
         <div className={style.Client} >
             <div className={style.header}>
-                <h1 className={style.header__title} onClick={() => { moveToHome() }}>{`Blind Route`}</h1>
+                <h1 className={style.header__title}
+                    onClick={() => { SpeechOutputProvider.speak("이 버튼을 더블터치하면 홈으로 이동합니다"); }}
+                    onDoubleClick={() => { moveToClient() }}
+                >
+                    {`Blind Route`}
+                </h1>
             </div>
             <div className={style.body}>
                 <ClientMiddle userRole={userRole} />
