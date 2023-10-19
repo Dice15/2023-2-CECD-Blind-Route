@@ -119,14 +119,13 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
     /** 버스 정보 더블 클릭 이벤트 */
     const busInfoClickGestureBind = useGesture({
-        /* onClick: ({ args }) => {
-             const bus: Bus = args[0];
-             SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
-         },*/
+        onClick: ({ args }) => {
+            const bus: Bus = args[0];
+            SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
+        },
         onDoubleClick: ({ args }) => {
             const bus: Bus = args[0];
-            SpeechOutputProvider.speak("더블 더치");
-            //isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
+            isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
         }
     });
 
