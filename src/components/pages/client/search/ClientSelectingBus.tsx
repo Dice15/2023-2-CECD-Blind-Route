@@ -4,15 +4,13 @@ import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientSearchState } from "./ClientSearch";
 import Bus from "../../../../cores/types/Bus";
 import { getBookmarkList, registerBookmark, removeBookmark, reserveBus } from "../../../../cores/api/blindrouteApi";
-
-
-// module
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { useGesture } from "@use-gesture/react";
+
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -121,10 +119,10 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
     /** 버스 정보 더블 클릭 이벤트 */
     const busInfoClickGestureBind = useGesture({
-        onClick: ({ args }) => {
-            const bus: Bus = args[0];
-            SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
-        },
+        /* onClick: ({ args }) => {
+             const bus: Bus = args[0];
+             SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
+         },*/
         onDoubleClick: ({ args }) => {
             const bus: Bus = args[0];
             SpeechOutputProvider.speak("더블 더치");
