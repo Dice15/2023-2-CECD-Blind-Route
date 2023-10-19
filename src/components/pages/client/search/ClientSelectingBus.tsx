@@ -9,7 +9,7 @@ import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
-import { useDoubleTap } from "use-double-tap";
+import useMobileTouch from "../../../../hooks/useMobileTouch";
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -116,12 +116,18 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
 
 
-    /** 버스 정보 더블 클릭 이벤트 */
-    const busInfoDoubleClick = useDoubleTap((event) => {
-        const currentTarget = event.currentTarget as HTMLElement;
-        const bus: Bus = JSON.parse(currentTarget.dataset.bus as string);
-        isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
+    /** 버스 정보 클릭 이벤트 */
+    const handleBusInfoClick = useMobileTouch({
+        onSingleTouch: () => {
+            const bus = busList[busListIndex];
+            SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
+        },
+        onDoubleTouch: () => {
+            const bus = busList[busListIndex];
+            isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
+        }
     });
+
 
 
     // Effects
@@ -155,12 +161,9 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
                 >
                     {busList.map((bus, index) => (
                         <SwiperSlide key={index}>
-                            <div
-                                {...busInfoDoubleClick}
-                                data-bus={JSON.stringify(bus)}
-                                className={`${style.busInfo} ${isBookmarkedBus(bus) && style.busInfo_bookmark}`}
+                            <div className={`${style.busInfo} ${isBookmarkedBus(bus) && style.busInfo_bookmark}`}
                                 style={{ height: `${busInfoContainerHeight}px` }}
-                                onClick={() => { SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`); }}
+                                onClick={handleBusInfoClick}
                             >
                                 <h1>{bus.busRouteAbbreviation}</h1>
                                 <h3>{bus.stationName}</h3>
