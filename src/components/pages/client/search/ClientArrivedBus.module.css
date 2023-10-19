@@ -32,6 +32,7 @@
     background-color: white;
     font-weight: 500;
     font-size: 20px;
+    cursor: pointer;
 }
 
 .button_movePrev {
@@ -40,4 +41,13 @@
 
 .button_moveNext {
     margin-left: 3.5%;
+}
+
+
+
+/* wishBusInfo's children elements */
+.wishBusInfo h1,
+.wishBusInfo h3 {
+    cursor: pointer;
+    user-select: none;
 }

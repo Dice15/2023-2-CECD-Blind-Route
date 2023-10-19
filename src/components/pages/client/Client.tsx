@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { isSessionValid } from "../../../cores/api/blindrouteApi";
 import { useNavigate } from "react-router-dom";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
+import useTapEvents from "../../../hooks/useTapEvents";
 
 
 
@@ -32,6 +33,11 @@ export default function Client({ userRole }: ClientProps) {
     };
 
 
+    const handleHeaderTitleClick = useTapEvents({
+        onSingleTouch: () => { SpeechOutputProvider.speak("이 버튼을 더블터치하면 홈으로 이동합니다"); },
+        onDoubleTouch: () => { moveToClient(); }
+    })
+
 
     /** 페이지 로딩 시 인증 상태 확인 */
     useEffect(() => {
@@ -43,8 +49,8 @@ export default function Client({ userRole }: ClientProps) {
                 setAuthenticationState(true);
             }
         };
-        setAuthenticationState(true);
-        //checkAuth();
+        //setAuthenticationState(true);
+        checkAuth();
     }, [userRole, history]);
 
 
@@ -53,8 +59,7 @@ export default function Client({ userRole }: ClientProps) {
         <div className={style.Client} >
             <div className={style.header}>
                 <h1 className={style.header__title}
-                    onClick={() => { SpeechOutputProvider.speak("이 버튼을 더블터치하면 홈으로 이동합니다"); }}
-                    onDoubleClick={() => { moveToClient() }}
+                    onClick={handleHeaderTitleClick}
                 >
                     {`Blind Route`}
                 </h1>

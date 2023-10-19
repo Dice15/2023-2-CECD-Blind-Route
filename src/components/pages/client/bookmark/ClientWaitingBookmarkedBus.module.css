@@ -41,3 +41,17 @@
 .button_moveNext {
     margin-left: 3.5%;
 }
+
+
+/* wishBusInfo's children elements */
+.wishBusInfo h1 {
+    font-weight: 550;
+    cursor: pointer;
+    user-select: none;
+}
+
+.wishBusInfo h3 {
+    font-weight: 400;
+    cursor: pointer;
+    user-select: none;
+}

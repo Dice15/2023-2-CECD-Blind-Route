@@ -26,4 +26,6 @@
     color: var(--button-text-color);
     font-size: 1.2rem;
     font-weight: 550;
+    cursor: pointer;
+    user-select: none;
 }

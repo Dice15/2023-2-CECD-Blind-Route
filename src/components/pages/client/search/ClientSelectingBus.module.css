@@ -47,6 +47,7 @@
     background-color: white;
     font-weight: 500;
     font-size: 20px;
+    cursor: pointer;
 }
 
 .button_movePrev {
@@ -61,8 +62,12 @@
 /* busInfo's children elements */
 .busInfo h1 {
     font-weight: 550;
+    cursor: pointer;
+    user-select: none;
 }
 
 .busInfo h3 {
     font-weight: 400;
+    cursor: pointer;
+    user-select: none;
 }

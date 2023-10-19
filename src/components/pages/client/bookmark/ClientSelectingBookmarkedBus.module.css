@@ -60,8 +60,12 @@
 /* busInfo's children elements */
 .busInfo h1 {
     font-weight: 550;
+    cursor: pointer;
+    user-select: none;
 }
 
 .busInfo h3 {
     font-weight: 400;
+    cursor: pointer;
+    user-select: none;
 }
