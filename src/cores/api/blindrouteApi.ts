@@ -57,6 +57,7 @@ export function redirectToLogout(userRole: UserRole): void {
  * @returns {Promise<boolean>} 로그인 세션이 유효하면 true, 그렇지 않으면 false를 반환합니다.
  */
 export async function isSessionValid(userRole: UserRole): Promise<boolean> {
+    let sessionData: boolean = false;
     try {
         const response = await axios.get(
             getApiUrl(userRole, "/authentication"),
@@ -68,11 +69,11 @@ export async function isSessionValid(userRole: UserRole): Promise<boolean> {
                 withCredentials: true
             }
         );
-        return response.data;
+        sessionData = response.data;
     } catch (error) {
         console.error("로그인 세션 확인 실패:", error);
-        throw error;
     }
+    return sessionData;
 }
 
 
@@ -116,7 +117,6 @@ export async function getStationList(userRole: UserRole, searchKeyword: string):
         stationListData = response.data;
     } catch (error) {
         console.error("정류장 검색 요청 실패:", error);
-        throw error;
     }
     return stationListData.busStations.map(station => new Station(station.arsId, station.stId, station.stNm));
 }

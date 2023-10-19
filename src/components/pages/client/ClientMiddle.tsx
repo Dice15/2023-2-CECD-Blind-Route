@@ -4,6 +4,7 @@ import style from "./ClientMiddle.module.css"
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ClientActionForm, { ClientAction } from "./action/ClientActionForm";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
+import { useDoubleTap } from "use-double-tap";
 
 
 
@@ -31,12 +32,18 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
     };
 
 
+    /** 버스 정보 더블 클릭 이벤트 */
+
+    // Double tap hooks for each button
+    const bindSearch = useDoubleTap(() => { moveToAction("search"); });
+    const bindBookmark = useDoubleTap(() => { moveToAction("bookmark"); });
+    const bindResetBookmark = useDoubleTap(() => { moveToAction("resetBookmark"); });
+
 
     // Effects
     useEffect(() => {
         SpeechOutputProvider.speak("원하는 기능을 더블터치 하세요.");
     }, []);
-
 
 
     // Render
@@ -48,22 +55,19 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                 } />
                 <Route path="/" element={
                     <div className={style.selectAction}>
-                        <button type="button"
-                            onDoubleClick={() => { moveToAction("search"); }}
+                        <button type="button" {...bindSearch}
                             onClick={() => { SpeechOutputProvider.speak("버스 검색하기"); }}
                         >
                             검색하기
                         </button>
 
-                        <button type="button"
-                            onDoubleClick={() => { moveToAction("bookmark"); }}
+                        <button type="button" {...bindBookmark}
                             onClick={() => { SpeechOutputProvider.speak("즐겨찾는 버스 조회"); }}
                         >
                             즐겨찾기
                         </button>
 
-                        <button type="button"
-                            onDoubleClick={() => { moveToAction("resetBookmark"); }}
+                        <button type="button" {...bindResetBookmark}
                             onClick={() => { SpeechOutputProvider.speak("즐겨찾기 초기화"); }}
                         >
                             즐겨찾기 초기화
