@@ -85,7 +85,7 @@ export async function isSessionValid(userRole: UserRole): Promise<boolean> {
  *****************************************************************/
 
 /** 정류장 데이터 인터페이스 */
-interface IStationList {
+interface IResponseStationList {
     busStations: {
         arsId?: string;
         stId?: string;
@@ -100,7 +100,7 @@ interface IStationList {
  * @returns {Promise<Station[]>} 검색된 정류장 목록을 반환합니다.
  */
 export async function getStationList(userRole: UserRole, searchKeyword: string): Promise<Station[]> {
-    let stationListData: IStationList = { busStations: [] };
+    let stationListData: IResponseStationList = { busStations: [] };
     try {
         const postData = qs.stringify({ searchKeyword: searchKeyword });
         const response = await axios.post(
@@ -131,19 +131,19 @@ export async function getStationList(userRole: UserRole, searchKeyword: string):
  *****************************************************************/
 
 /** 버스 노선 데이터 인터페이스 */
-interface IDestinationList {
+interface IResponseDestinationList {
     destinations: {
-        stationName: string;
+        stationNm: string;
         direction: string;
     }[];
 }
 
 /** 버스 데이터 인터페이스 */
-interface IBusList {
+interface IResponseBusList {
     busList: {
         busRouteId?: string;
-        busRouteName?: string;
-        busRouteAbbreviation?: string;
+        busRouteNm?: string;
+        busRouteAbrv?: string;
     }[];
 }
 
@@ -151,10 +151,10 @@ interface IBusList {
  * getBusDestinationList 메서드는 API로부터 버스 노선 데이터를 가져옵니다.
  * @param userRole 사용자 역할입니다.
  * @param busRouteId 버스 노선 ID입니다.
- * @returns {Promise<IDestinationList>} 버스 노선 데이터를 반환합니다.
+ * @returns {Promise<IResponseDestinationList>} 버스 노선 데이터를 반환합니다.
  */
-async function getBusDestinationList(userRole: UserRole, busRouteId: string): Promise<IDestinationList> {
-    let destinationListData: IDestinationList = { destinations: [] };
+async function getBusDestinationList(userRole: UserRole, busRouteId: string): Promise<IResponseDestinationList> {
+    let destinationListData: IResponseDestinationList = { destinations: [] };
     try {
         const postData = qs.stringify({ busRouteId: busRouteId });
         const response = await axios.post(
@@ -184,7 +184,7 @@ async function getBusDestinationList(userRole: UserRole, busRouteId: string): Pr
  * @returns {Promise<Bus[]>} 버스 데이터 리스트를 반환합니다.
  */
 export async function getBusList(userRole: UserRole, stationArsId: string, stationName: string): Promise<Bus[]> {
-    let busListData: IBusList = { busList: [] };
+    let busListData: IResponseBusList = { busList: [] };
 
     try {
         const postData = qs.stringify({ arsId: stationArsId });
@@ -205,9 +205,9 @@ export async function getBusList(userRole: UserRole, stationArsId: string, stati
     }
 
     return Promise.all(busListData.busList.filter((bus) => bus.busRouteId !== undefined).map(async (bus) => {
-        const fetchedDestinationList = (await getBusDestinationList(userRole, bus.busRouteId!)).destinations.map((destination) => {
+        const destinationListData = (await getBusDestinationList(userRole, bus.busRouteId!)).destinations.map((destination) => {
             return {
-                stationName: destination.stationName,
+                stationName: destination.stationNm,
                 direction: destination.direction
             };
         })
@@ -216,9 +216,9 @@ export async function getBusList(userRole: UserRole, stationArsId: string, stati
             stationArsId,
             stationName,
             bus.busRouteId,
-            bus.busRouteName,
-            bus.busRouteAbbreviation,
-            fetchedDestinationList,
+            bus.busRouteNm,
+            bus.busRouteAbrv,
+            destinationListData,
         );
     }));
 }
@@ -234,10 +234,10 @@ export async function getBusList(userRole: UserRole, stationArsId: string, stati
  *****************************************************************/
 
 /** 버스 예약 상태 인터페이스 */
-type IReserveStatus = "success" | "fail";
+type IResponseReserveStatus = "success" | "fail";
 
 /** 버스 도착 확인 인터페이스 */
-type IArrivalCheck = boolean;
+type IResponseArrivalCheck = boolean;
 
 /**
  * reserveBus 메서드는 해당 정류장의 버스를 예약합니다.
@@ -246,7 +246,7 @@ type IArrivalCheck = boolean;
  * @returns {Promise<boolean>} 예약 성공 여부를 반환합니다.
  */
 export async function reserveBus(userRole: UserRole, targetBus: Bus): Promise<boolean> {
-    let reservationStatus: IReserveStatus = "fail";
+    let reservationStatus: IResponseReserveStatus = "fail";
     try {
         const postData = qs.stringify({
             arsId: targetBus.stationArsId,
@@ -280,7 +280,7 @@ export async function reserveBus(userRole: UserRole, targetBus: Bus): Promise<bo
  * @returns {Promise<boolean>} 예약 취소 성공 여부를 반환합니다.
  */
 export async function unreserveBus(userRole: UserRole, targetBus: Bus): Promise<boolean> {
-    let cancellationStatus: IReserveStatus = "fail";
+    let cancellationStatus: IResponseReserveStatus = "fail";
     try {
         const postData = qs.stringify({
             arsId: targetBus.stationArsId,
@@ -314,7 +314,7 @@ export async function unreserveBus(userRole: UserRole, targetBus: Bus): Promise<
  * @returns {Promise<boolean>} 버스 도착 여부를 반환합니다.
  */
 export async function checkBusArrival(userRole: UserRole, targetBus: Bus): Promise<boolean> {
-    let arrivalStatus: IArrivalCheck = false;
+    let arrivalStatus: IResponseArrivalCheck = false;
     try {
         const postData = qs.stringify({
             arsId: targetBus.stationArsId,
@@ -351,7 +351,7 @@ export async function checkBusArrival(userRole: UserRole, targetBus: Bus): Promi
  *****************************************************************/
 
 /** 즐겨찾기 등록/삭제/목록 가져오기 상태 인터페이스 */
-type IBookmarkStatus = boolean;
+type IResponseBookmarkStatus = boolean;
 
 /** 즐겨찾기 목록 인터페이스 */
 interface IBookmarkList {
@@ -371,7 +371,7 @@ interface IBookmarkList {
  * @returns {Promise<boolean>} 즐겨찾기 등록 성공 여부를 반환합니다.
  */
 export async function registerBookmark(userRole: UserRole, targetBus: Bus): Promise<boolean> {
-    let registrationStatus: IBookmarkStatus = false;
+    let registrationStatus: IResponseBookmarkStatus = false;
     try {
         const postData = qs.stringify({
             arsId: targetBus.stationArsId,
@@ -406,7 +406,7 @@ export async function registerBookmark(userRole: UserRole, targetBus: Bus): Prom
  * @returns {Promise<boolean>} 즐겨찾기 삭제 성공 여부를 반환합니다.
  */
 export async function removeBookmark(userRole: UserRole, targetBus: Bus): Promise<boolean> {
-    let removalStatus: IBookmarkStatus = false;
+    let removalStatus: IResponseBookmarkStatus = false;
     try {
         const postData = qs.stringify({
             arsId: targetBus.stationArsId,
@@ -440,7 +440,7 @@ export async function removeBookmark(userRole: UserRole, targetBus: Bus): Promis
  * @returns {Promise<boolean>} 즐겨찾기 비우기 성공 여부를 반환합니다.
  */
 export async function clearBookmark(userRole: UserRole): Promise<boolean> {
-    let clearStatus: IBookmarkStatus = false;
+    let clearStatus: IResponseBookmarkStatus = false;
     try {
         const postData = qs.stringify({});
         const response = await axios.post(
