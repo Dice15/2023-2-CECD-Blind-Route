@@ -4,6 +4,7 @@ import style from "./ClientMiddle.module.css"
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ClientActionForm from "./action/ClientActionForm";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
+import { clearBookmark } from "../../../cores/api/blindrouteClient";
 
 
 
@@ -61,6 +62,13 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                     onClick={() => { SpeechOutputProvider.speak("즐겨찾는 버스 조회"); }}
                 >
                     즐겨찾기
+                </button>
+
+                <button type="button"
+                    onDoubleClick={() => { clearBookmark(userRole); }}
+                    onClick={() => { SpeechOutputProvider.speak("즐겨찾기 초기화"); }}
+                >
+                    즐겨찾기 초기화
                 </button>
             </div>
         </div >

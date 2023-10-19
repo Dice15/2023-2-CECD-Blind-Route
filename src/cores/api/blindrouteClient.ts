@@ -434,6 +434,7 @@ export async function clearBookmark(userRole: UserRole): Promise<boolean> {
             }
         );
         result = response.data;
+        console.log(result, response.data, typeof response.data);
     }
     catch (error) {
         console.error("Search request failed:", error);
