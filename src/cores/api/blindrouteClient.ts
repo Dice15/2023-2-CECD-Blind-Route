@@ -479,6 +479,8 @@ export async function getBookmarkList(userRole: UserRole): Promise<Bus[]> {
         console.error("Search request failed:", error);
     }
 
+    console.log(result)
+
     return (result.bookmarkList || []).map((bookmark) => new Bus(
         bookmark.arsId,
         bookmark.stNm,
