@@ -2,30 +2,44 @@ import React, { useState, useCallback } from 'react';
 import styles from "./VirtualizedTable.module.css"
 
 
+
+/*****************************************************************
+ * 가상 스크롤링을 지원하는 테이블 컴포넌트입니다.
+ *****************************************************************/
+
+/** VirtualizedTable의 속성 인터페이스 */
 export interface VirtualizedTableProps {
-    windowHeight: number;
+    windowHeight: number;  // 윈도우 높이
 
-    numColumns: number;
-    columnHeight: number;
-    columnWidths: React.CSSProperties[];
-    renderColumns: (item: { index: number; columnClassName: string; columnStyle: React.CSSProperties; }) => JSX.Element;
+    numColumns: number;  // 열의 개수
+    columnHeight: number;  // 열 높이
+    columnWidths: React.CSSProperties[];  // 각 열의 너비
+    renderColumns: (item: { index: number; columnClassName: string; columnStyle: React.CSSProperties; }) => JSX.Element;  // 열 렌더링 함수
 
-    numRows: number;
-    rowHeight: number;
-    renderRows: (item: { index: number; rowClassName: string; rowStyle: React.CSSProperties, itemClassName: string; itemStyles: React.CSSProperties[]; }) => JSX.Element;
+    numRows: number;  // 행의 개수
+    rowHeight: number;  // 행 높이
+    renderRows: (item: { index: number; rowClassName: string; rowStyle: React.CSSProperties, itemClassName: string; itemStyles: React.CSSProperties[]; }) => JSX.Element;  // 행 렌더링 함수
 }
 
-
-/** 가상 스크롤 테이블 */
+/**
+ * VirtualizedTable 함수 컴포넌트는 가상 스크롤링을 지원하는 테이블을 렌더링합니다.
+ * 
+ * 이 컴포넌트는 주어진 window 높이와 열/행의 속성에 따라 테이블을 구성하며,
+ * 스크롤 위치에 따라 현재 보이는 행만 렌더링하여 성능을 최적화합니다.
+ *
+ * @param {VirtualizedTableProps} props - VirtualizedTable의 속성입니다.
+ * @returns {JSX.Element} 렌더링된 가상 스크롤 테이블입니다.
+ */
 export default function VirtualizedTable({
     windowHeight,
     numColumns, columnHeight, columnWidths, renderColumns,
     numRows, rowHeight, renderRows,
-}: VirtualizedTableProps) {
-    const [scrollTop, setScrollTop] = useState(0);
+}: VirtualizedTableProps): JSX.Element {
+    const [scrollTop, setScrollTop] = useState(0);  // 현재 스크롤 위치
 
+    // 스크롤 이벤트 핸들러
     const onScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-        setScrollTop(e.currentTarget.scrollTop);
+        setScrollTop(e.currentTarget.scrollTop);  // 스크롤 위치 업데이트
     }, []);
 
     const innerHeight = numRows * rowHeight;

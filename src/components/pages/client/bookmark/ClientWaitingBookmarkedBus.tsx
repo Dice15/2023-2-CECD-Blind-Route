@@ -2,7 +2,7 @@ import style from "./ClientWaitingBookmarkedBus.module.css";
 import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import Bus from "../../../../cores/types/Bus";
-import { checkBusArrival, unreserveBus } from "../../../../cores/api/blindrouteClient";
+import { checkBusArrival, unreserveBus } from "../../../../cores/api/blindrouteApi";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { ClientBookmarkState } from "./ClientBookmark";
@@ -36,12 +36,7 @@ export default function ClientWaitingBookmarkedBus({ userRole, setPageState, wis
     /** 이전 단계로 이동: 예약한 버스를 취소하고 이동 */
     const onPrevStep = async () => {
         setIsLoading(true);
-        const unreserveResult = await unreserveBus(userRole, {
-            arsId: wishBus.stationArsId,
-            busRouteId: wishBus.busRouteId,
-            busRouteNm: wishBus.busRouteNumber,
-            busRouteAbrv: wishBus.busRouteAbbreviation,
-        });
+        const unreserveResult = await unreserveBus(userRole, wishBus);
         setIsLoading(false);
 
         if (unreserveResult) {
@@ -76,12 +71,7 @@ export default function ClientWaitingBookmarkedBus({ userRole, setPageState, wis
     /** 예약한 버스가 도착했는지 2초마다 확인함 */
     useEffect(() => {
         refreshTaskRef.current = setInterval(async () => {
-            const isWishBusArrived = await checkBusArrival(userRole, {
-                arsId: wishBus.stationArsId,
-                busRouteId: wishBus.busRouteId,
-                busRouteNm: wishBus.busRouteNumber,
-                busRouteAbrv: wishBus.busRouteAbbreviation
-            });
+            const isWishBusArrived = await checkBusArrival(userRole, wishBus);
 
             if (isWishBusArrived) {
                 SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스가 도착했습니다`);

@@ -5,7 +5,7 @@ import { UserRole } from "../../../../cores/types/UserRole";
 import { detectedTest, sendCapturedImage } from "../../../../cores/api/blindroutePanel";
 import Bus from "../../../../cores/types/Bus";
 import Station from "../../../../cores/types/Station";
-import { getBusList } from "../../../../cores/api/blindrouteClient";
+import { getBusList } from "../../../../cores/api/blindrouteApi";
 
 
 

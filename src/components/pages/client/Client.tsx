@@ -2,7 +2,7 @@ import style from "./Client.module.css"
 import ClientMiddle from "./ClientMiddle";
 import { UserRole } from "../../../cores/types/UserRole";
 import { useEffect, useState } from "react";
-import { checkAuthSession } from "../../../cores/api/blindrouteClient";
+import { isSessionValid } from "../../../cores/api/blindrouteApi";
 import { useNavigate } from "react-router-dom";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
 
@@ -36,15 +36,15 @@ export default function Client({ userRole }: ClientProps) {
     /** 페이지 로딩 시 인증 상태 확인 */
     useEffect(() => {
         const checkAuth = async () => {
-            if (!(await checkAuthSession(userRole))) {
+            if (!(await isSessionValid(userRole))) {
                 SpeechOutputProvider.speak("로그인이 필요한 페이지 입니다. 로그인을 해주세요");
                 history("/home");
             } else {
                 setAuthenticationState(true);
             }
         };
-        setAuthenticationState(true);
-        // checkAuth();
+        //setAuthenticationState(true);
+        checkAuth();
     }, [userRole, history]);
 
 

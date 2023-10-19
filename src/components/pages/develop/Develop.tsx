@@ -8,9 +8,7 @@ import { LocalStorageProvider } from "../../../modules/storage/AppStorageProvide
 
 
 /** Develop 페이지 프로퍼티 */
-export interface DevelopProps {
-    setUserRole: React.Dispatch<React.SetStateAction<UserRole>>;
-}
+export interface DevelopProps { }
 
 
 
@@ -21,7 +19,7 @@ export interface DevelopProps {
  * 유저 타입: user, developer
  * 
  */
-export default function Develop({ setUserRole }: DevelopProps) {
+export default function Develop() {
     /* const */
     const history = useNavigate();
 
@@ -34,7 +32,7 @@ export default function Develop({ setUserRole }: DevelopProps) {
     /** home 페이지로 이동 */
     const moveToHome = (appType: AppType, userRole: UserRole) => {
         LocalStorageProvider.set("appType", appType);
-        setUserRole(userRole);
+        LocalStorageProvider.set("userRole", userRole);
         history("/home");
     }
 

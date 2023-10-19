@@ -2,7 +2,7 @@ import style from "./Panel.module.css";
 import { UserRole } from "../../../cores/types/UserRole";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { checkAuthSession } from "../../../cores/api/blindrouteClient";
+import { isSessionValid } from "../../../cores/api/blindrouteApi";
 import PanelMiddle from "./PanelMiddle";
 
 
@@ -35,7 +35,7 @@ export default function Panel({ userRole }: PanelProps) {
     /** 페이지 로딩 시 인증 상태 확인 */
     useEffect(() => {
         const checkAuth = async () => {
-            if (!(await checkAuthSession(userRole))) {
+            if (!(await isSessionValid(userRole))) {
                 alert("로그인이 필요한 페이지 입니다");
                 history("/home");
             } else {

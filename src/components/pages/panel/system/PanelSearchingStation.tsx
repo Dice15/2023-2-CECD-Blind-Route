@@ -2,7 +2,7 @@ import style from "./PanelSearchingStation.module.css";
 import { useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import Station from "../../../../cores/types/Station";
-import { getStationList } from "../../../../cores/api/blindrouteClient";
+import { getStationList } from "../../../../cores/api/blindrouteApi";
 import { PanelMiddleState } from "../PanelMiddle";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 
@@ -32,7 +32,7 @@ export default function PanelSearchingStation({ userRole, setPageState, setStati
     const onNextStep = async () => {
         if (textbox_stationName.current) {
             setIsLoading(true);
-            const responsedStationList = await getStationList(userRole, { searchKeyword: textbox_stationName.current.value });
+            const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
             setIsLoading(false);
 
             if (responsedStationList.length > 0) {

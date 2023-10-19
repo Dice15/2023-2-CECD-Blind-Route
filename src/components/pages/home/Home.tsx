@@ -1,9 +1,9 @@
 import style from "./Home.module.css";
 import { useNavigate } from "react-router-dom";
 import { UserRole } from "../../../cores/types/UserRole";
-import { AuthenticationActionType } from "../common/authentication/Authentication";
+import { AuthenticationAction } from "../common/authentication/Authentication";
 import React, { useCallback, useEffect, useState } from "react";
-import { checkAuthSession } from "../../../cores/api/blindrouteClient";
+import { isSessionValid } from "../../../cores/api/blindrouteApi";
 import { LocalStorageProvider } from "../../../modules/storage/AppStorageProvider";
 import { AppType } from "../../../cores/types/AppType";
 
@@ -11,15 +11,15 @@ import { AppType } from "../../../cores/types/AppType";
 
 /** 홈 페이지 프로퍼티 */
 export interface HomeProps {
-    userRole: UserRole;
-    authenticationActionType: AuthenticationActionType;
-    setAuthenticationActionType: React.Dispatch<React.SetStateAction<AuthenticationActionType>>;
+    setUserRole: React.Dispatch<React.SetStateAction<UserRole>>
+    authenticationAction: AuthenticationAction;
+    setAuthenticationAction: React.Dispatch<React.SetStateAction<AuthenticationAction>>;
 }
 
 
 
 /** 홈 페이지 */
-export default function Home({ userRole, authenticationActionType, setAuthenticationActionType }: HomeProps) {
+export default function Home({ setUserRole, authenticationAction, setAuthenticationAction }: HomeProps) {
     /* const */
     const history = useNavigate();
 
@@ -31,14 +31,15 @@ export default function Home({ userRole, authenticationActionType, setAuthentica
 
     /** 앱 페이지로 이동 */
     const moveToApp = useCallback(() => {
-        history(`/${LocalStorageProvider.get<string>("apptype") || ("client" as AppType)}`);
-    }, [history]);
+        setUserRole((LocalStorageProvider.get<string>("useRole") || "user") as UserRole);
+        history(`/${(LocalStorageProvider.get<string>("apptype") || "client") as AppType}`);
+    }, [setUserRole, history]);
 
 
 
     /** 인증 요청 시 인증 액션타입 설정 */
-    const onAuthentication = (actionType: AuthenticationActionType) => {
-        setAuthenticationActionType(actionType);
+    const onAuthentication = (actionType: AuthenticationAction) => {
+        setAuthenticationAction(actionType);
     };
 
 
@@ -46,30 +47,30 @@ export default function Home({ userRole, authenticationActionType, setAuthentica
     /** 페이지 로딩 시 인증 상태 확인 */
     useEffect(() => {
         const checkAuth = async () => {
-            const isAuthed = await checkAuthSession(userRole);
+            const isAuthed = await isSessionValid((LocalStorageProvider.get<string>("useRole") || "user") as UserRole);
             setAuthenticationState(isAuthed);
             if (isAuthed) {
                 moveToApp();
             }
         };
         checkAuth();
-    }, [userRole, moveToApp]);
+    }, [moveToApp]);
 
 
 
     /** 페이지 로딩 시 인증 액션 상태 "idle" */
     useEffect(() => {
-        setAuthenticationActionType("idle");
-    }, [setAuthenticationActionType]);
+        setAuthenticationAction("idle");
+    }, [setAuthenticationAction]);
 
 
 
     /** 인증 페이지로 이동 */
     useEffect(() => {
-        if (authenticationActionType !== "idle") {
+        if (authenticationAction !== "idle") {
             history("/authentication");
         }
-    }, [authenticationActionType, setAuthenticationActionType, history]);
+    }, [authenticationAction, history]);
 
 
 

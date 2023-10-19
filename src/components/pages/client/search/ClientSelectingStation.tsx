@@ -4,7 +4,7 @@ import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientSearchState } from "./ClientSearch";
 import Station from "../../../../cores/types/Station";
 import Bus from "../../../../cores/types/Bus";
-import { getBusList } from "../../../../cores/api/blindrouteClient";
+import { getBusList } from "../../../../cores/api/blindrouteApi";
 
 // module
 import { Swiper, SwiperSlide } from 'swiper/react';

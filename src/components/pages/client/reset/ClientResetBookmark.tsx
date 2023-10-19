@@ -4,7 +4,7 @@ import { UserRole } from "../../../../cores/types/UserRole";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { useNavigate } from "react-router-dom";
-import { clearBookmark } from "../../../../cores/api/blindrouteClient";
+import { clearBookmark } from "../../../../cores/api/blindrouteApi";
 
 
 

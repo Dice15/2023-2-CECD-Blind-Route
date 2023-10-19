@@ -7,7 +7,7 @@ import Client from './components/pages/client/Client';
 import Panel from './components/pages/panel/Panel';
 import Develop from './components/pages/develop/Develop';
 import useModalCreater from './modules/modal/Modal';
-import Authentication, { AuthenticationActionType } from './components/pages/common/authentication/Authentication';
+import Authentication, { AuthenticationAction } from './components/pages/common/authentication/Authentication';
 
 
 
@@ -15,7 +15,7 @@ import Authentication, { AuthenticationActionType } from './components/pages/com
 function App() {
   /** state */
   const [userRole, setUserRole] = useState<UserRole>("user");
-  const [authenticationActionType, setAuthenticationActionType] = useState<AuthenticationActionType>("idle");
+  const [authenticationAction, setAuthenticationAction] = useState<AuthenticationAction>("idle");
 
 
 
@@ -37,19 +37,17 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Develop
-            setUserRole={setUserRole}
-          />} />
+          <Route path="/" element={<Develop />} />
 
           <Route path="/home" element={<Home
-            userRole={userRole}
-            authenticationActionType={authenticationActionType}
-            setAuthenticationActionType={setAuthenticationActionType}
+            setUserRole={setUserRole}
+            authenticationAction={authenticationAction}
+            setAuthenticationAction={setAuthenticationAction}
           />} />
 
           <Route path="/authentication" element={<Authentication
             userRole={userRole}
-            actionType={authenticationActionType}
+            authenticationAction={authenticationAction}
           />} />
 
           <Route path="/client/*" element={<Client

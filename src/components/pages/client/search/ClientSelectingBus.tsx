@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { UserRole } from "../../../../cores/types/UserRole";
 import { ClientSearchState } from "./ClientSearch";
 import Bus from "../../../../cores/types/Bus";
-import { getBookmarkList, registerBookmark, removeBookmark, reserveBus } from "../../../../cores/api/blindrouteClient";
+import { getBookmarkList, registerBookmark, removeBookmark, reserveBus } from "../../../../cores/api/blindrouteApi";
 
 
 // module
@@ -57,12 +57,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
     /** 다음 단계로 이동: 선택한 버스를 예약 등록을 함 */
     const onNextStep = async () => {
         setIsLoading(true);
-        const reserveResult = await reserveBus(userRole, {
-            arsId: busList[busListIndex].stationArsId,
-            busRouteId: busList[busListIndex].busRouteId,
-            busRouteNm: busList[busListIndex].busRouteNumber,
-            busRouteAbrv: busList[busListIndex].busRouteAbbreviation,
-        });
+        const reserveResult = await reserveBus(userRole, busList[busListIndex]);
         setIsLoading(false);
 
         if (reserveResult) {
