@@ -44,34 +44,33 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
         <div className={style.ClientMiddle}>
             <Routes>
                 <Route path="/action" element={
-                    <div>
-                        <ClientActionForm userRole={userRole} action={actionOption} />
+                    <ClientActionForm userRole={userRole} action={actionOption} />
+                } />
+                <Route path="/" element={
+                    <div className={style.selectAction}>
+                        <button type="button"
+                            onDoubleClick={() => { moveToAction("search"); }}
+                            onClick={() => { SpeechOutputProvider.speak("버스 검색하기"); }}
+                        >
+                            검색하기
+                        </button>
+
+                        <button type="button"
+                            onDoubleClick={() => { moveToAction("bookmark"); }}
+                            onClick={() => { SpeechOutputProvider.speak("즐겨찾는 버스 조회"); }}
+                        >
+                            즐겨찾기
+                        </button>
+
+                        <button type="button"
+                            onDoubleClick={() => { moveToAction("resetBookmark"); }}
+                            onClick={() => { SpeechOutputProvider.speak("즐겨찾기 초기화"); }}
+                        >
+                            즐겨찾기 초기화
+                        </button>
                     </div>
                 } />
             </Routes>
-
-            <div className={style.selectAction}>
-                <button type="button"
-                    onDoubleClick={() => { moveToAction("search"); }}
-                    onClick={() => { SpeechOutputProvider.speak("버스 검색하기"); }}
-                >
-                    검색하기
-                </button>
-
-                <button type="button"
-                    onDoubleClick={() => { moveToAction("bookmark"); }}
-                    onClick={() => { SpeechOutputProvider.speak("즐겨찾는 버스 조회"); }}
-                >
-                    즐겨찾기
-                </button>
-
-                <button type="button"
-                    onDoubleClick={() => { moveToAction("resetBookmark"); }}
-                    onClick={() => { SpeechOutputProvider.speak("즐겨찾기 초기화"); }}
-                >
-                    즐겨찾기 초기화
-                </button>
-            </div>
         </div>
     );
 }
