@@ -12,7 +12,7 @@ import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
-
+import { useGesture } from "@use-gesture/react";
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -93,6 +93,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
 
     /** 즐겨찾기에 추가 */
+    // const modify
     const addBookmark = useCallback(async (bus: Bus) => {
         setIsLoading(true);
         if (await registerBookmark(userRole, bus)) {
@@ -115,6 +116,18 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
         }
         setIsLoading(false);
     }, [userRole, bookmarkList, setBookmarkList]);
+
+
+
+    /** 버스 정보 더블 클릭 이벤트 */
+    const busInfoClickGestureBind = useGesture({
+        onClick: ({ args }) => {
+            SpeechOutputProvider.speak(`${args.busRouteAbbreviation}, ${args.stationName}`);
+        },
+        onDoubleClick: ({ args }) => {
+            isBookmarkedBus(args) ? removeBookmarkedBus(args) : addBookmark(args);
+        }
+    });
 
 
 
@@ -149,15 +162,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
                 >
                     {busList.map((bus, index) => (
                         <SwiperSlide key={index}>
-                            <div className={`${style.busInfo} ${isBookmarkedBus(bus) && style.busInfo_bookmark}`}
-                                style={{ height: `${busInfoContainerHeight}px` }}
-                                onClick={() => {
-                                    SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}`);
-                                }}
-                                onDoubleClick={() => {
-                                    isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
-                                }}
-                            >
+                            <div {...busInfoClickGestureBind(bus)} className={`${style.busInfo} ${isBookmarkedBus(bus) && style.busInfo_bookmark}`} style={{ height: `${busInfoContainerHeight}px` }}>
                                 <h1>{bus.busRouteAbbreviation}</h1>
                                 <h3>{bus.stationName}</h3>
                             </div>

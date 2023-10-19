@@ -13,6 +13,7 @@ import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { useNavigate } from "react-router-dom";
+import { useGesture } from "@use-gesture/react";
 
 
 
@@ -466,6 +467,18 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
 
 
 
+    /** 버스 정보 더블 클릭 이벤트 */
+    const busInfoClickGestureBind = useGesture({
+        onClick: ({ args }) => {
+            SpeechOutputProvider.speak(`${args.busRouteAbbreviation}, ${args.stationName}`);
+        },
+        onDoubleClick: ({ args }) => {
+            removeBookmarkedBus(args);
+        }
+    });
+
+
+
     // Effects
     useEffect(() => {
         (async () => {
@@ -501,14 +514,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
                 >
                     {bookmarkList.map((bus, index) => (
                         <SwiperSlide key={index}>
-                            <div className={`${style.busInfo} ${style.busInfo_bookmark}`} style={{ height: `${busInfoContainerHeight}px` }}
-                                onClick={() => {
-                                    SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
-                                }}
-                                onDoubleClick={() => {
-                                    removeBookmarkedBus(bus);
-                                }}
-                            >
+                            <div {...busInfoClickGestureBind(bus)} className={`${style.busInfo} ${style.busInfo_bookmark}`} style={{ height: `${busInfoContainerHeight}px` }} >
                                 <h1>{bus.busRouteAbbreviation}</h1>
                                 <h3>{bus.stationName}</h3>
                             </div>
