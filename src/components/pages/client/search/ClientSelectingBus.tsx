@@ -127,8 +127,8 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
         },
         onDoubleClick: ({ args }) => {
             const bus: Bus = args[0];
-            SpeechOutputProvider.clearSpeak();
-            isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
+            SpeechOutputProvider.speak("더블 더치");
+            //isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
         }
     });
 
