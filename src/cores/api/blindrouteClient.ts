@@ -456,7 +456,7 @@ interface IGetBookmarkListApi {
         busRouteId: string,
         busRouteNm: string,
         busRouteAbrv: string
-    }[]
+    }[] | null;
 };
 
 /** 즐겨찾기 목록 가져오기 */
@@ -472,14 +472,14 @@ export async function getBookmarkList(userRole: UserRole): Promise<Bus[]> {
                 withCredentials: true
             }
         );
-        console.log(response.data);
+
         result = response.data;
     }
     catch (error) {
         console.error("Search request failed:", error);
     }
 
-    return result.bookmarkList.map((bookmark) => new Bus(
+    return (result.bookmarkList || []).map((bookmark) => new Bus(
         bookmark.arsId,
         bookmark.stNm,
         bookmark.busRouteId,
