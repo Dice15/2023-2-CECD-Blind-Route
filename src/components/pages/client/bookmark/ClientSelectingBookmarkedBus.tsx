@@ -470,10 +470,13 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
     /** 버스 정보 더블 클릭 이벤트 */
     const busInfoClickGestureBind = useGesture({
         onClick: ({ args }) => {
-            SpeechOutputProvider.speak(`${args.busRouteAbbreviation}, ${args.stationName}`);
+            const bus: Bus = args[0];
+            SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
         },
         onDoubleClick: ({ args }) => {
-            removeBookmarkedBus(args);
+            const bus: Bus = args[0];
+            SpeechOutputProvider.clearSpeak();
+            removeBookmarkedBus(bus);
         }
     });
 
