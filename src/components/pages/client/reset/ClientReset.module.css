@@ -1,0 +1,26 @@
+.ClientReset {
+    height: 100%;
+    width: 100%;
+}
+
+.controllerForm {
+    height: calc(calc(calc(var(--vh, 1vh) * 100) - 5px - 10px) - 40px - 1px - 14px - 15px);
+}
+
+.zoomEnter {
+    transform: scale(0);
+}
+
+.zoomEnterActive {
+    transform: scale(1);
+    transition: transform 300ms ease-in-out;
+}
+
+.zoomExit {
+    transform: scale(1);
+}
+
+.zoomExitActive {
+    transform: scale(0);
+    transition: transform 300ms ease-in-out;
+}

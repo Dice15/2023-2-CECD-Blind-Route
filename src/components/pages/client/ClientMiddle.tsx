@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { UserRole } from "../../../cores/types/UserRole";
 import style from "./ClientMiddle.module.css"
 import { Route, Routes, useNavigate } from "react-router-dom";
-import ClientActionForm from "./action/ClientActionForm";
+import ClientActionForm, { ClientAction } from "./action/ClientActionForm";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
-import { clearBookmark } from "../../../cores/api/blindrouteClient";
 
 
 
@@ -14,6 +13,7 @@ export interface ClientMiddleProps {
 }
 
 
+
 /** ClientMiddle 컴포넌트 */
 export default function ClientMiddle({ userRole }: ClientMiddleProps) {
     // Consts
@@ -21,11 +21,11 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
 
 
     // States
-    const [actionOption, setActionOption] = useState<"search" | "bookmark">("search");
+    const [actionOption, setActionOption] = useState<ClientAction>("search");
 
 
     /** */
-    const moveToAction = (action: "search" | "bookmark") => {
+    const moveToAction = (action: ClientAction) => {
         setActionOption(action);
         history(`/client/action`);
     };
@@ -65,7 +65,7 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                 </button>
 
                 <button type="button"
-                    onDoubleClick={() => { clearBookmark(userRole); }}
+                    onDoubleClick={() => { moveToAction("resetBookmark"); }}
                     onClick={() => { SpeechOutputProvider.speak("즐겨찾기 초기화"); }}
                 >
                     즐겨찾기 초기화
