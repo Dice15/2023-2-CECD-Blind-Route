@@ -454,11 +454,15 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
             setBookmarkList(bookmarkList.filter(bookmark =>
                 bookmark.stationArsId !== bus.stationArsId || bookmark.busRouteId !== bus.busRouteId
             ));
-            await loadBookmark();
-            SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 해제하였습니다`);
+            if (await loadBookmark()) {
+                SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 해제하였습니다`);
+            } else {
+                SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 해제하였습니다. 이제 즐겨찾기에 등록된 버스가 없습니다`);
+                history(`/client`);
+            }
         }
         setIsLoading(false);
-    }, [userRole, bookmarkList, setBookmarkList, loadBookmark]);
+    }, [userRole, history, bookmarkList, setBookmarkList, loadBookmark]);
 
 
 
