@@ -4,7 +4,7 @@ import style from "./ClientMiddle.module.css"
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ClientActionForm, { ClientAction } from "./action/ClientActionForm";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
-import useMobileTouch from "../../../hooks/useMobileTouch";
+import useTapEvents from "../../../hooks/useTapEvents";
 
 
 
@@ -50,7 +50,7 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                 <Route path="/" element={
                     <div className={style.selectAction}>
                         <button type="button"
-                            onClick={useMobileTouch({
+                            onClick={useTapEvents({
                                 onSingleTouch: () => { SpeechOutputProvider.speak("버스 검색하기"); },
                                 onDoubleTouch: () => { moveToAction("search"); }
                             })}
@@ -59,7 +59,7 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                         </button>
 
                         <button type="button"
-                            onClick={useMobileTouch({
+                            onClick={useTapEvents({
                                 onSingleTouch: () => { SpeechOutputProvider.speak("즐겨찾는 버스 조회"); },
                                 onDoubleTouch: () => { moveToAction("bookmark"); }
                             })}
@@ -68,7 +68,7 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                         </button>
 
                         <button type="button"
-                            onClick={useMobileTouch({
+                            onClick={useTapEvents({
                                 onSingleTouch: () => { SpeechOutputProvider.speak("즐겨찾기 초기화"); },
                                 onDoubleTouch: () => { moveToAction("resetBookmark"); }
                             })}

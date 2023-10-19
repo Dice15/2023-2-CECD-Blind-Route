@@ -14,7 +14,7 @@ import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { useNavigate } from "react-router-dom";
 import { useGesture } from "@use-gesture/react";
-import useMobileTouch from "../../../../hooks/useMobileTouch";
+import useTapEvents from "../../../../hooks/useTapEvents";
 
 
 
@@ -469,7 +469,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
 
 
     /** 버스 정보 클릭 이벤트 */
-    const handleBusInfoClick = useMobileTouch({
+    const handleBusInfoClick = useTapEvents({
         onSingleTouch: () => {
             const bus = bookmarkList[busListIndex];
             SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);

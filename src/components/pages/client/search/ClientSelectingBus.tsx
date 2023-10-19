@@ -9,7 +9,7 @@ import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
-import useMobileTouch from "../../../../hooks/useMobileTouch";
+import useTapEvents from "../../../../hooks/useTapEvents";
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -117,7 +117,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
 
     /** 버스 정보 클릭 이벤트 */
-    const handleBusInfoClick = useMobileTouch({
+    const handleBusInfoClick = useTapEvents({
         onSingleTouch: () => {
             const bus = busList[busListIndex];
             SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
