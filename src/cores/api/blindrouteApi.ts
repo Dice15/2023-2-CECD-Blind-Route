@@ -255,7 +255,7 @@ export async function reserveBus(userRole: UserRole, targetBus: Bus): Promise<bo
             busRouteAbrv: targetBus.busRouteAbbreviation
         });
         const response = await axios.post(
-            getApiUrl(userRole, "/reserve/bus"),
+            getApiUrl(userRole, "/select/bus"),
             postData,
             {
                 headers: {
@@ -289,7 +289,7 @@ export async function unreserveBus(userRole: UserRole, targetBus: Bus): Promise<
             busRouteAbrv: targetBus.busRouteAbbreviation
         });
         const response = await axios.post(
-            getApiUrl(userRole, "/unreserve/bus"),
+            getApiUrl(userRole, "/delete/bus"),
             postData,
             {
                 headers: {
@@ -323,7 +323,7 @@ export async function checkBusArrival(userRole: UserRole, targetBus: Bus): Promi
             busRouteAbrv: targetBus.busRouteAbbreviation
         });
         const response = await axios.post(
-            getApiUrl(userRole, "/check/arrival"),
+            getApiUrl(userRole, "/select/arrivalCheck"),
             postData,
             {
                 headers: {
