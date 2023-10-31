@@ -41,6 +41,10 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
      */
     /** 이전 단계로 이동: 홈페이지로 이동 */
     const onPrevStep = () => {
+        // 진동 1초
+        navigator.vibrate(1000);
+
+        // client 페이지로 이동
         history(`/client`);
     }
 
@@ -48,19 +52,34 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
 
     /** 다음 단계로 이동: 정류장 불러오고 페이지 상태 업데이트 */
     const onNextStep = async () => {
-        if (textbox_stationName.current) {
-            setIsLoading(true);
-            const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
-            setIsLoading(false);
+        // 음성인식 중지
+        SpeechInputProvider.stopRecognition();
 
-            if (responsedStationList.length > 0) {
-                //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
-                setStationList(responsedStationList);
-                setPageState("selectingStation");
-            } else {
-                SpeechOutputProvider.speak("검색된 정류장이 없습니다");
+        // 진동 1초
+        navigator.vibrate(1000);
+
+        // 로딩 모션 on
+        setIsLoading(true);
+
+        // 1.5초후 정류장 검색 시작
+        setTimeout(async () => {
+            if (textbox_stationName.current) {
+                const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
+                setIsLoading(false);    // 로딩 모션 off
+
+                if (responsedStationList.length > 0) {
+                    //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
+                    setStationList(responsedStationList);
+                    setTimeout(() => {
+                        setIsLoading(false);    // 로딩 모션 off
+                        setPageState("selectingStation");
+                    }, 500);
+                } else {
+                    SpeechOutputProvider.speak("검색된 정류장이 없습니다");
+                    setIsLoading(false);    // 로딩 모션 off
+                }
             }
-        }
+        }, 1500);
     };
 
 
@@ -79,11 +98,11 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                     textbox_stationName.current.value = result;
                 }
             });
-            // 10초 후에 음성 인식 중지
+            // 20초 후에 음성 인식 중지
             const id = setTimeout(() => {
                 SpeechInputProvider.stopRecognition();
                 setIsListening(false);
-            }, 10000);
+            }, 20000);
             setTimeoutId(id);
         }
         setIsListening(!isListening);

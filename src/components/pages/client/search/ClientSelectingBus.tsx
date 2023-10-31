@@ -45,7 +45,13 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
      */
     /** 이전 단계로 이동: 선택한 버스를 제거하고 이전 단계로 이동 */
     const onPrevStep = () => {
+        // 진동 1초
+        navigator.vibrate(1000);
+
+        // 선택한 버스 삭제
         setWishBus(null);
+
+        // 이전 상태로 이동
         setPageState("selectingStation");
     };
 
@@ -53,17 +59,28 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
     /** 다음 단계로 이동: 선택한 버스를 예약 등록을 함 */
     const onNextStep = async () => {
-        setIsLoading(true);
-        const reserveResult = await reserveBus(userRole, busList[busListIndex]);
-        setIsLoading(false);
+        // 진동 1초
+        navigator.vibrate(1000);
 
-        if (reserveResult) {
-            SpeechOutputProvider.speak(`${busList[busListIndex].busRouteAbbreviation} 버스를 예약하였습니다`);
-            setWishBus(busList[busListIndex]);
-            setPageState("waitingBus");
-        } else {
-            SpeechOutputProvider.speak(`${busList[busListIndex].busRouteAbbreviation} 버스를 예약하는데 실패했습니다`);
-        }
+        // 로딩 모션 on
+        setIsLoading(true);
+
+        // 버스 예약
+        setTimeout(async () => {
+            const reserveResult = await reserveBus(userRole, busList[busListIndex]);
+
+            if (reserveResult) {
+                SpeechOutputProvider.speak(`버스를 예약하였습니다`);
+                setWishBus(busList[busListIndex]);
+                setTimeout(() => {
+                    setIsLoading(false);    // 로딩 모션 off
+                    setPageState("waitingBus");
+                }, 2500);
+            } else {
+                SpeechOutputProvider.speak(`버스를 예약하는데 실패했습니다`);
+                setIsLoading(false);    // 로딩 모션 off
+            }
+        }, 500);
     }
 
 

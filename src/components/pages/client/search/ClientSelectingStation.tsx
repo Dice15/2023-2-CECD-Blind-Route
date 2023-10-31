@@ -41,7 +41,13 @@ export default function ClientSelectingStation({ userRole, setPageState, station
 
     /** 이전 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onPrevStep = () => {
+        // 진동 1초
+        navigator.vibrate(1000);
+
+        // 버스 리스트 비우기
         setBusList([]);
+
+        // 이전 상태로 변경
         setPageState("searchingStation");
     };
 
@@ -49,17 +55,28 @@ export default function ClientSelectingStation({ userRole, setPageState, station
 
     /** 다음 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onNextStep = async () => {
-        setIsLoading(true);
-        const responsedBusList: Bus[] = await getBusList(userRole, stationList[stationListIndex].arsId, stationList[stationListIndex].stationName);
-        setIsLoading(false);
+        // 진동 1초
+        navigator.vibrate(1000);
 
-        if (responsedBusList.length > 0) {
-            //setBusList([new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")]);
-            setBusList(responsedBusList);
-            setPageState("selectingBus");
-        } else {
-            SpeechOutputProvider.speak(`${stationList[stationListIndex].stationName}에 검색된 버스가 없습니다`);
-        }
+        // 로딩 모션 On
+        setIsLoading(true);
+
+        // 버스 검색
+        setTimeout(async () => {
+            const responsedBusList: Bus[] = await getBusList(userRole, stationList[stationListIndex].arsId, stationList[stationListIndex].stationName);
+
+            if (responsedBusList.length > 0) {
+                //setBusList([new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")]);
+                setBusList(responsedBusList);
+                setTimeout(() => {
+                    setIsLoading(false);    // 로딩 모션 off
+                    setPageState("selectingBus");
+                }, 500);
+            } else {
+                SpeechOutputProvider.speak(`검색된 버스가 없습니다`);
+                setIsLoading(false);    // 로딩 모션 off
+            }
+        }, 500);
     }
 
 

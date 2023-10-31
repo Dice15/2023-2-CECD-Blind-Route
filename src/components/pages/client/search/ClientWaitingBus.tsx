@@ -35,17 +35,28 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
      */
     /** 이전 단계로 이동: 예약한 버스를 취소하고 이동 */
     const onPrevStep = async () => {
-        setIsLoading(true);
-        const unreserveResult = await unreserveBus(userRole, wishBus);
-        setIsLoading(false);
+        // 진동 1초
+        navigator.vibrate(100);
 
-        if (unreserveResult) {
-            SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스 예약을 취소하였습니다`);
-            setWishBus(null);
-            setPageState("selectingBus");
-        } else {
-            SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 취소하는데 실패했습니다`);
-        }
+        // 로딩 모션 On
+        setIsLoading(true);
+
+        // 버스 검색
+        setTimeout(async () => {
+            const unreserveResult = await unreserveBus(userRole, wishBus);
+
+            if (unreserveResult) {
+                SpeechOutputProvider.speak(`버스 예약을 취소하였습니다`);
+                setWishBus(null);
+                setTimeout(() => {
+                    setIsLoading(false);    // 로딩 모션 off
+                    setPageState("selectingBus");
+                }, 2000);
+            } else {
+                SpeechOutputProvider.speak(`버스를 취소하는데 실패했습니다`);
+                setIsLoading(false);    // 로딩 모션 off
+            }
+        }, 500);
     };
 
 
