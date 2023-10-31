@@ -44,48 +44,68 @@ export default function ClientSelectingStation({ userRole, setPageState, station
 
 
     /** 이전 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
-    const onPrevStep = () => {
-        // 진동 1초
-        VibrationProvider.vibrate(1000);
+    const handlePrevStepClick = useTapEvents({
+        onSingleTouch: () => {
+            // 진동 1초
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("더블 터치하면 정류장 검색 페이지로 돌아갑니다");
+        },
+        onDoubleTouch: () => {
+            // 더블 터치 진동
+            VibrationProvider.repeatVibrate(500, 200, 2);
 
-        // 버스 리스트 비우기
-        setBusList([]);
+            // 버스 리스트 비우기
+            setBusList([]);
 
-        // 이전 상태로 변경
-        setPageState("searchingStation");
-    };
+            // 이전 상태로 변경
+            setPageState("searchingStation");
+        }
+    });
 
 
 
     /** 다음 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
-    const onNextStep = async () => {
-        // 진동 1초
-        VibrationProvider.vibrate(1000);
+    const handleNextStepClick = useTapEvents({
+        onSingleTouch: () => {
+            // 진동 1초
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("더블 터치하면 정류장의 버스를 검색합니다.");
+        },
+        onDoubleTouch: async () => {
+            // 더블 터치 진동
+            VibrationProvider.repeatVibrate(500, 200, 2);
 
-        // 로딩 모션 On
-        setIsLoading(true);
+            // 음성 출력
+            SpeechOutputProvider.speak("버스를 검색합니다");
 
-        // 버스 검색
-        setTimeout(async () => {
-            const responsedBusList: Bus[] = await getBusList(
-                userRole,
-                stationList[stationListIndexRef.current].arsId,
-                stationList[stationListIndexRef.current].stationName
-            );
+            // 로딩 모션 On
+            setIsLoading(true);
 
-            if (responsedBusList.length > 0) {
-                //setBusList([new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")]);
-                setBusList(responsedBusList);
-                setTimeout(() => {
+            // 버스 검색
+            setTimeout(async () => {
+                const responsedBusList: Bus[] = await getBusList(
+                    userRole,
+                    stationList[stationListIndexRef.current].arsId,
+                    stationList[stationListIndexRef.current].stationName
+                );
+
+                if (responsedBusList.length > 0) {
+                    //setBusList([new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")]);
+                    setBusList(responsedBusList);
+                    setTimeout(() => {
+                        setIsLoading(false);    // 로딩 모션 off
+                        setPageState("selectingBus");
+                    }, 500);
+                } else {
+                    SpeechOutputProvider.speak(`검색된 버스가 없습니다`);
                     setIsLoading(false);    // 로딩 모션 off
-                    setPageState("selectingBus");
-                }, 500);
-            } else {
-                SpeechOutputProvider.speak(`검색된 버스가 없습니다`);
-                setIsLoading(false);    // 로딩 모션 off
-            }
-        }, 500);
-    }
+                }
+            }, 500);
+        }
+    });
+
+
+
 
 
 
@@ -112,7 +132,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
         <div className={style.ClientSelectingStation}>
             <LoadingAnimation active={isLoading} />
 
-            <button className={style.button_movePrev} type="button" onClick={() => { onPrevStep(); }}>
+            <button className={style.button_movePrev} type="button" onClick={handlePrevStepClick}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20,15 L10,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
                     <path d="M35,15 L25,30 L35,45" fill="none" stroke="black" strokeWidth="2" />
@@ -143,7 +163,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
                 </Swiper>
             </div>
 
-            <button className={style.button_moveNext} type="button" onClick={() => { onNextStep(); }}>
+            <button className={style.button_moveNext} type="button" onClick={() => { handleNextStepClick(); }}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5,15 L15,30 L5,45" fill="none" stroke="black" strokeWidth="2" />
                     <path d="M20,15 L30,30 L20,45" fill="none" stroke="black" strokeWidth="2" />

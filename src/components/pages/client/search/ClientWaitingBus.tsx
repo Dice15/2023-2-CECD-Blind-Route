@@ -7,6 +7,7 @@ import { checkBusArrival, unreserveBus } from "../../../../cores/api/blindrouteA
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
+import useTapEvents from "../../../../hooks/useTapEvents";
 
 
 
@@ -35,32 +36,39 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
      * Handler functions
      */
     /** 이전 단계로 이동: 예약한 버스를 취소하고 이동 */
-    const onPrevStep = async () => {
-        // 진동 1초
-        VibrationProvider.vibrate(1000);
+    const handlePrevStepClick = useTapEvents({
+        onSingleTouch: () => {
+            // 진동 1초
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("더블 터치하면 예약을 취소합니다.");
+        },
+        onDoubleTouch: async () => {
+            // 진동 1초
+            VibrationProvider.vibrate(1000);
 
-        // 로딩 모션 On
-        setIsLoading(true);
+            // 로딩 모션 On
+            setIsLoading(true);
 
-        // 버스 검색
-        setTimeout(async () => {
-            if (wishBus) {
-                const unreserveResult = await unreserveBus(userRole, wishBus);
+            // 버스 검색
+            setTimeout(async () => {
+                if (wishBus) {
+                    const unreserveResult = await unreserveBus(userRole, wishBus);
 
-                if (unreserveResult) {
-                    SpeechOutputProvider.speak(`버스 예약을 취소하였습니다`);
-                    setWishBus(null);
-                    setTimeout(() => {
+                    if (unreserveResult) {
+                        SpeechOutputProvider.speak(`버스 예약을 취소하였습니다`);
+                        setWishBus(null);
+                        setTimeout(() => {
+                            setIsLoading(false);    // 로딩 모션 off
+                            setPageState("selectingBus");
+                        }, 2000);
+                    } else {
+                        SpeechOutputProvider.speak(`버스를 취소하는데 실패했습니다`);
                         setIsLoading(false);    // 로딩 모션 off
-                        setPageState("selectingBus");
-                    }, 2000);
-                } else {
-                    SpeechOutputProvider.speak(`버스를 취소하는데 실패했습니다`);
-                    setIsLoading(false);    // 로딩 모션 off
+                    }
                 }
-            }
-        }, 500);
-    };
+            }, 500);
+        }
+    });
 
 
 
@@ -109,7 +117,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
         <div className={style.ClientWaitingBus}>
             <LoadingAnimation active={isLoading} />
 
-            <button className={style.button_movePrev} type="button" onClick={onPrevStep}>
+            <button className={style.button_movePrev} type="button" onClick={handlePrevStepClick}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20,15 L10,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
                     <path d="M35,15 L25,30 L35,45" fill="none" stroke="black" strokeWidth="2" />

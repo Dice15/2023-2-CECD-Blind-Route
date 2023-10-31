@@ -15,6 +15,7 @@ import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders
 import { useNavigate } from "react-router-dom";
 import { useGesture } from "@use-gesture/react";
 import useTapEvents from "../../../../hooks/useTapEvents";
+import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
 
 
 
@@ -35,11 +36,10 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
 
     // Refs
     const busInfoContainer = useRef<HTMLDivElement>(null);
-
+    const busListIndexRef = useRef<number>(0);
 
     // States
     const [bookmarkList, setBookmarkList] = useState<Bus[]>([]);
-    const [busListIndex, setBusListIndex] = useState<number>(0);
     const [isLoading, setIsLoading] = useState(false);
 
 
@@ -52,26 +52,51 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
      * Handler functions
      */
     /** 이전 단계로 이동: 선택한 버스를 제거하고 이전 단계로 이동 */
-    const onPrevStep = () => {
-        history(`/client`);
-    };
+    const handlePrevStepClick = useTapEvents({
+        onSingleTouch: () => {
+            // 진동 1초
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("더블 터치하면 홈페이지로 돌아갑니다");
+        },
+        onDoubleTouch: () => {
+            // 더블 터치 진동
+            VibrationProvider.repeatVibrate(500, 200, 2);
+            history(`/client`);
+        }
+    });
+
 
 
     /** 다음 단계로 이동: 선택한 버스를 예약 등록을 함 */
-    const onNextStep = async () => {
-        setIsLoading(true);
-        const reserveResult = await reserveBus(userRole, bookmarkList[busListIndex]);
-        setIsLoading(false);
+    const handleNextStepClick = useTapEvents({
+        onSingleTouch: () => {
+            // 진동 1초
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("더블 터치하면 버스를 예약합니다.");
+        },
+        onDoubleTouch: async () => {
+            // 더블 터치 진동
+            VibrationProvider.repeatVibrate(500, 200, 2);
 
-        if (reserveResult) {
-            SpeechOutputProvider.speak(`${bookmarkList[busListIndex].busRouteAbbreviation} 버스를 예약하였습니다`);
-            setWishBus(bookmarkList[busListIndex]);
-            setPageState("waitingBookmarkedBus");
-        } else {
-            SpeechOutputProvider.speak(`${bookmarkList[busListIndex].busRouteAbbreviation} 버스를 예약하는데 실패했습니다`);
+            // 로딩 모션 on
+            setIsLoading(true);
+
+            // 버스 예약
+            setTimeout(async () => {
+                const reserveResult = await reserveBus(userRole, bookmarkList[busListIndexRef.current]);
+
+                if (reserveResult) {
+                    SpeechOutputProvider.speak(`버스를 예약하였습니다`);
+                    setWishBus(bookmarkList[busListIndexRef.current]);
+                    setIsLoading(false);    // 로딩 모션 off
+                    setPageState("waitingBookmarkedBus");
+                } else {
+                    SpeechOutputProvider.speak(`버스를 예약하는데 실패했습니다`);
+                    setIsLoading(false);    // 로딩 모션 off
+                }
+            }, 500);
         }
-    }
-
+    });
 
 
     /* useEffect(() => {
@@ -471,11 +496,11 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
     /** 버스 정보 클릭 이벤트 */
     const handleBusInfoClick = useTapEvents({
         onSingleTouch: () => {
-            const bus = bookmarkList[busListIndex];
+            const bus = bookmarkList[busListIndexRef.current];
             SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
         },
         onDoubleTouch: () => {
-            const bus = bookmarkList[busListIndex];
+            const bus = bookmarkList[busListIndexRef.current];
             removeBookmarkedBus(bus);
         }
     });
@@ -486,13 +511,14 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
     useEffect(() => {
         (async () => {
             if (await loadBookmark()) {
-                SpeechOutputProvider.speak("버스를 선택하세요");
+                const bus = bookmarkList[busListIndexRef.current];
+                SpeechOutputProvider.speak(`버스를 선택하세요, ${bus.busRouteAbbreviation}`);
             } else {
                 SpeechOutputProvider.speak("즐겨찾기에 등록된 버스가 없습니다");
                 history(`/client`);
             }
         })();
-    }, [history, loadBookmark]);
+    }, [history, loadBookmark, bookmarkList]);
 
 
 
@@ -501,7 +527,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
         <div className={style.ClientSelectingBookmarkedBus}>
             <LoadingAnimation active={isLoading} />
 
-            <button className={style.button_movePrev} type="button" onClick={onPrevStep}>
+            <button className={style.button_movePrev} type="button" onClick={handlePrevStepClick}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20,15 L10,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
                     <path d="M35,15 L25,30 L35,45" fill="none" stroke="black" strokeWidth="2" />
@@ -512,7 +538,11 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
                 <Swiper
                     slidesPerView={1}
                     spaceBetween={50}
-                    onSlideChange={(swiper: any) => { setBusListIndex(swiper.realIndex); }}
+                    onSlideChange={(swiper: any) => {
+                        busListIndexRef.current = swiper.realIndex;
+                        VibrationProvider.vibrate(200);
+                        handleBusInfoClick();
+                    }}
                     loop={true}
                 >
                     {bookmarkList.map((bus, index) => (
@@ -529,7 +559,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
                 </Swiper>
             </div>
 
-            <button className={style.button_moveNext} type="button" onClick={onNextStep}>
+            <button className={style.button_moveNext} type="button" onClick={handleNextStepClick}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5,15 L15,30 L5,45" fill="none" stroke="black" strokeWidth="2" />
                     <path d="M20,15 L30,30 L20,45" fill="none" stroke="black" strokeWidth="2" />

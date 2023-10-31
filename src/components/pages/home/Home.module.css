@@ -35,20 +35,20 @@
 
 /* body's children elements */
 .authentication {
-    flex: 1 0 calc(100% - 15%);
-    padding-bottom: 15%;
+    flex: 1 0 calc(100% - 5%);
+    padding-bottom: 5%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 10%;
 }
 
 
 /* authentication's children elements */
 .authentication button {
     width: 80%;
-    height: 10%;
+    height: 40%;
     border-radius: 8px;
     border: 1px solid var(--button-border--color);
     background-color: var(--button-color);

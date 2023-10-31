@@ -6,6 +6,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { isSessionValid } from "../../../cores/api/blindrouteApi";
 import { LocalStorageProvider } from "../../../modules/storage/AppStorageProvider";
 import { AppType } from "../../../cores/types/AppType";
+import useTapEvents from "../../../hooks/useTapEvents";
+import { VibrationProvider } from "../../../modules/vibration/VibrationProvider";
+import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
 
 
 
@@ -41,6 +44,12 @@ export default function Home({ setUserRole, authenticationAction, setAuthenticat
     const onAuthentication = (actionType: AuthenticationAction) => {
         setAuthenticationAction(actionType);
     };
+
+
+    const handleAuthenticationClick = useTapEvents({
+        onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("더블 터치하면 로그인을 합니다"); },
+        onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); onAuthentication("login"); }
+    });
 
 
 
@@ -83,7 +92,7 @@ export default function Home({ setUserRole, authenticationAction, setAuthenticat
                 <div className={style.authentication}>
                     {authenticationState !== undefined && authenticationState === false &&
                         (<>
-                            <button type="button" onClick={() => { onAuthentication("login"); }}>로그인</button>
+                            <button type="button" onClick={handleAuthenticationClick}>로그인</button>
                             <button type="button" onClick={() => { }}>회원가입</button>
                         </>)
                     }

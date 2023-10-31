@@ -65,11 +65,11 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
 
     /** 다음 단계로 이동: 선택한 버스를 예약 등록을 함 */
-    const onNextStep = useTapEvents({
+    const handleNextStepClick = useTapEvents({
         onSingleTouch: () => {
             // 진동 1초
             VibrationProvider.vibrate(1000);
-            SpeechOutputProvider.speak("더블 터치하면 버스를 예약할 수 있습니다.");
+            SpeechOutputProvider.speak("더블 터치하면 버스를 예약합니다.");
         },
         onDoubleTouch: async () => {
             // 더블 터치 진동
@@ -167,7 +167,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
         (async () => {
             await loadBookmark();
             const bus = busList[busListIndexRef.current];
-            SpeechOutputProvider.speak(`버스를 선택하세요, ${bus}`);
+            SpeechOutputProvider.speak(`버스를 선택하세요, ${bus.busRouteAbbreviation}`);
         })();
     }, [loadBookmark, busList]);
 
@@ -211,7 +211,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
                 </Swiper>
             </div>
 
-            <button className={style.button_moveNext} type="button" onClick={onNextStep}>
+            <button className={style.button_moveNext} type="button" onClick={handleNextStepClick}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5,15 L15,30 L5,45" fill="none" stroke="black" strokeWidth="2" />
                     <path d="M20,15 L30,30 L20,45" fill="none" stroke="black" strokeWidth="2" />

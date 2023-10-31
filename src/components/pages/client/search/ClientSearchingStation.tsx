@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { SpeechOutputProvider, SpeechInputProvider } from "../../../../modules/speech/SpeechProviders";
 import { ClientSearchState } from "./ClientSearch";
 import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
+import useTapEvents from "../../../../hooks/useTapEvents";
 
 
 
@@ -41,48 +42,62 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
      * Handler functions
      */
     /** 이전 단계로 이동: 홈페이지로 이동 */
-    const onPrevStep = () => {
-        // 진동 1초
-        VibrationProvider.vibrate(1000);
+    const handlePrevStepClick = useTapEvents({
+        onSingleTouch: () => {
+            // 진동 1초
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("더블 터치하면 홈페이지로 이동합니다");
+        },
+        onDoubleTouch: () => {
+            // 더블 터치 진동
+            VibrationProvider.repeatVibrate(500, 200, 2);
 
-        // client 페이지로 이동
-        history(`/client`);
-    }
+            // client 페이지로 이동
+            history(`/client`);
+        }
+    });
 
 
 
     /** 다음 단계로 이동: 정류장 불러오고 페이지 상태 업데이트 */
-    const onNextStep = async () => {
-        // 음성인식 중지
-        SpeechInputProvider.stopRecognition();
+    const handleNextStepClick = useTapEvents({
+        onSingleTouch: () => {
+            // 진동 1초
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("더블 터치하면 정류장을 검색합니다.");
+        },
+        onDoubleTouch: async () => {
+            // 음성인식 중지
+            SpeechInputProvider.stopRecognition();
 
-        // 진동 1초
-        VibrationProvider.vibrate(1000);
+            // 더블 터치 진동
+            VibrationProvider.repeatVibrate(500, 200, 2);
 
-        // 음성 출력
-        SpeechOutputProvider.speak("정류장을 검색합니다");
+            // 음성 출력
+            SpeechOutputProvider.speak("정류장을 검색합니다");
 
-        // 로딩 모션 on
-        setIsLoading(true);
+            // 로딩 모션 on
+            setIsLoading(true);
 
-        // 1.5초후 정류장 검색 시작
-        setTimeout(async () => {
-            if (textbox_stationName.current) {
-                const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
-                setIsLoading(false);    // 로딩 모션 off
-
-                if (responsedStationList.length > 0) {
-                    //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
-                    setStationList(responsedStationList);
+            // 1.5초후 정류장 검색 시작
+            setTimeout(async () => {
+                if (textbox_stationName.current) {
+                    const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
                     setIsLoading(false);    // 로딩 모션 off
-                    setPageState("selectingStation");
-                } else {
-                    SpeechOutputProvider.speak("검색된 정류장이 없습니다");
-                    setIsLoading(false);    // 로딩 모션 off
+
+                    if (responsedStationList.length > 0) {
+                        //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
+                        setStationList(responsedStationList);
+                        setIsLoading(false);    // 로딩 모션 off
+                        setPageState("selectingStation");
+                    } else {
+                        SpeechOutputProvider.speak("검색된 정류장이 없습니다");
+                        setIsLoading(false);    // 로딩 모션 off
+                    }
                 }
-            }
-        }, 1000);
-    };
+            }, 1000);
+        }
+    });
 
 
 
@@ -137,7 +152,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
         <div className={style.ClientSearchingStation} >
             <LoadingAnimation active={isLoading} />
 
-            <button className={style.button_movePrev} type="button" onClick={onPrevStep}>
+            <button className={style.button_movePrev} type="button" onClick={handlePrevStepClick}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20,15 L10,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
                     <path d="M35,15 L25,30 L35,45" fill="none" stroke="black" strokeWidth="2" />
@@ -148,7 +163,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 <input className={style.textbox_stationName} type="text" placeholder="정류장 입력" ref={textbox_stationName} />
             </div>
 
-            <button className={style.button_moveNext} type="button" onClick={onNextStep}>
+            <button className={style.button_moveNext} type="button" onClick={handleNextStepClick}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5,15 L15,30 L5,45" fill="none" stroke="black" strokeWidth="2" />
                     <path d="M20,15 L30,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
