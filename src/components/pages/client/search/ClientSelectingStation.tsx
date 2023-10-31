@@ -30,10 +30,12 @@ export interface ClientSelectingStationProps {
 export default function ClientSelectingStation({ userRole, setPageState, stationList, setBusList }: ClientSelectingStationProps) {
     // ref
     const stationInfoContainer = useRef<HTMLDivElement>(null);
+    const stationListIndexRef = useRef<number>(0);  // useRef를 사용하여 현재 인덱스를 저장
+
 
 
     // state
-    const [stationListIndex, setStationListIndex] = useState<number>(0);
+    //    const [stationListIndex, setStationListIndex] = useState<number>(0);
     const [isLoading, setIsLoading] = useState(false);
 
     // custom module
@@ -65,7 +67,11 @@ export default function ClientSelectingStation({ userRole, setPageState, station
 
         // 버스 검색
         setTimeout(async () => {
-            const responsedBusList: Bus[] = await getBusList(userRole, stationList[stationListIndex].arsId, stationList[stationListIndex].stationName);
+            const responsedBusList: Bus[] = await getBusList(
+                userRole,
+                stationList[stationListIndexRef.current].arsId,
+                stationList[stationListIndexRef.current].stationName
+            );
 
             if (responsedBusList.length > 0) {
                 //setBusList([new Bus("111111", "111111", "1119", "1119"), new Bus("111111", "222222", "1128", "1128")]);
@@ -86,7 +92,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
     /** 버스 정보 클릭 이벤트 */
     const handleBusInfoClick = useTapEvents({
         onSingleTouch: () => {
-            const station = stationList[stationListIndex];
+            const station = stationList[stationListIndexRef.current];
             SpeechOutputProvider.speak(`${station.stationName}`);
         },
     });
@@ -117,9 +123,8 @@ export default function ClientSelectingStation({ userRole, setPageState, station
                     slidesPerView={1}
                     spaceBetween={50}
                     onSlideChange={(swiper: any) => {
-                        setStationListIndex(swiper.realIndex);
-                        VibrationProvider.vibrate(200);  // 0.2초 동안 진동 생성
-                        handleBusInfoClick();
+                        stationListIndexRef.current = swiper.realIndex;
+                        VibrationProvider.vibrate(200);
                     }}
                     loop={true}
                 >

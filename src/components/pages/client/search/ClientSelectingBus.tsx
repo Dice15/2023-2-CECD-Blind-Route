@@ -29,10 +29,9 @@ export interface ClientSelectingBusProps {
 export default function ClientSelectingBus({ userRole, setPageState, busList, bookmarkList, setBookmarkList, setWishBus }: ClientSelectingBusProps) {
     // Refs
     const busInfoContainer = useRef<HTMLDivElement>(null);
-
+    const busListIndexRef = useRef<number>(0);
 
     // States
-    const [busListIndex, setBusListIndex] = useState<number>(0);
     const [isLoading, setIsLoading] = useState(false);
 
 
@@ -68,11 +67,11 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
         // 버스 예약
         setTimeout(async () => {
-            const reserveResult = await reserveBus(userRole, busList[busListIndex]);
+            const reserveResult = await reserveBus(userRole, busList[busListIndexRef.current]);
 
             if (reserveResult) {
                 SpeechOutputProvider.speak(`버스를 예약하였습니다`);
-                setWishBus(busList[busListIndex]);
+                setWishBus(busList[busListIndexRef.current]);
                 setIsLoading(false);    // 로딩 모션 off
                 setPageState("waitingBus");
             } else {
@@ -135,11 +134,11 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
     /** 버스 정보 클릭 이벤트 */
     const handleBusInfoClick = useTapEvents({
         onSingleTouch: () => {
-            const bus = busList[busListIndex];
+            const bus = busList[busListIndexRef.current];
             SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
         },
         onDoubleTouch: () => {
-            const bus = busList[busListIndex];
+            const bus = busList[busListIndexRef.current];
             isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
         }
     });
@@ -173,10 +172,11 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
                     slidesPerView={1}
                     spaceBetween={50}
                     onSlideChange={(swiper: any) => {
-                        setBusListIndex(swiper.realIndex);
-                        VibrationProvider.vibrate(200);  // 0.2초 동안 진동 생성
-                        handleBusInfoClick();  // handleBusInfoClick의 onSingleTouch 메서드 호출
+                        busListIndexRef.current = swiper.realIndex;
+                        VibrationProvider.vibrate(200);
+                        handleBusInfoClick();
                     }}
+
                     loop={true}
                 >
                     {busList.map((bus, index) => (
