@@ -36,7 +36,7 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
 
     // Effects
     useEffect(() => {
-        SpeechOutputProvider.speak("원하는 기능을 더블터치 하세요.");
+        SpeechOutputProvider.speak("원하는 기능을 더블터치 하세요. 버튼을 터치하여 기능을 확인할 수 있습니다.");
     }, []);
 
 
@@ -52,8 +52,8 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                     <div className={style.selectAction}>
                         <button type="button"
                             onClick={useTapEvents({
-                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("버스 검색"); },
-                                onDoubleTouch: () => { VibrationProvider.patternVibrate([500, 500]); moveToAction("search"); }
+                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("더블 터치하면 버스 검색을 시작합니다"); },
+                                onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); moveToAction("search"); }
                             })}
                         >
                             검색하기
@@ -61,8 +61,8 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
 
                         <button type="button"
                             onClick={useTapEvents({
-                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("즐겨찾는 버스 조회"); },
-                                onDoubleTouch: () => { VibrationProvider.patternVibrate([500, 500]); moveToAction("bookmark"); }
+                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("더블 터치하면 즐겨찾는 버스를 조회할 수 있습니다"); },
+                                onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); moveToAction("bookmark"); }
                             })}
                         >
                             즐겨찾기
@@ -70,8 +70,8 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
 
                         <button type="button"
                             onClick={useTapEvents({
-                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("즐겨찾는 버스 초기화"); },
-                                onDoubleTouch: () => { VibrationProvider.patternVibrate([500, 500]); moveToAction("resetBookmark"); }
+                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("더블 터치하여 즐겨찾는 버스를 초기화 할 수 있습니다"); },
+                                onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); moveToAction("resetBookmark"); }
                             })}
                         >
                             즐겨찾기 초기화

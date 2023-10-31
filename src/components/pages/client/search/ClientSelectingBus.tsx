@@ -44,42 +44,59 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
      * Handler functions
      */
     /** 이전 단계로 이동: 선택한 버스를 제거하고 이전 단계로 이동 */
-    const onPrevStep = () => {
-        // 진동 1초
-        VibrationProvider.vibrate(1000);
+    const handlePrevStepClick = useTapEvents({
+        onSingleTouch: () => {
+            // 진동 1초
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("더블 터치하면 정류장 선택 페이지로 돌아갑니다");
+        },
+        onDoubleTouch: () => {
+            // 더블 터치 진동
+            VibrationProvider.repeatVibrate(500, 200, 2);
 
-        // 선택한 버스 삭제
-        setWishBus(null);
+            // 선택한 버스 삭제
+            setWishBus(null);
 
-        // 이전 상태로 이동
-        setPageState("selectingStation");
-    };
+            // 이전 상태로 이동
+            setPageState("selectingStation");
+        }
+    });
 
 
 
     /** 다음 단계로 이동: 선택한 버스를 예약 등록을 함 */
-    const onNextStep = async () => {
-        // 진동 1초
-        VibrationProvider.vibrate(1000);
+    const onNextStep = useTapEvents({
+        onSingleTouch: () => {
+            // 진동 1초
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("더블 터치하면 버스를 예약할 수 있습니다.");
+        },
+        onDoubleTouch: async () => {
+            // 더블 터치 진동
+            VibrationProvider.repeatVibrate(500, 200, 2);
 
-        // 로딩 모션 on
-        setIsLoading(true);
+            // 로딩 모션 on
+            setIsLoading(true);
 
-        // 버스 예약
-        setTimeout(async () => {
-            const reserveResult = await reserveBus(userRole, busList[busListIndexRef.current]);
+            // 버스 예약
+            setTimeout(async () => {
+                const reserveResult = await reserveBus(userRole, busList[busListIndexRef.current]);
 
-            if (reserveResult) {
-                SpeechOutputProvider.speak(`버스를 예약하였습니다`);
-                setWishBus(busList[busListIndexRef.current]);
-                setIsLoading(false);    // 로딩 모션 off
-                setPageState("waitingBus");
-            } else {
-                SpeechOutputProvider.speak(`버스를 예약하는데 실패했습니다`);
-                setIsLoading(false);    // 로딩 모션 off
-            }
-        }, 500);
-    }
+                if (reserveResult) {
+                    SpeechOutputProvider.speak(`버스를 예약하였습니다`);
+                    setWishBus(busList[busListIndexRef.current]);
+                    setIsLoading(false);    // 로딩 모션 off
+                    setPageState("waitingBus");
+                } else {
+                    SpeechOutputProvider.speak(`버스를 예약하는데 실패했습니다`);
+                    setIsLoading(false);    // 로딩 모션 off
+                }
+            }, 500);
+        }
+    });
+
+
+
 
 
 
@@ -161,7 +178,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
         <div className={style.ClientSelectingBus}>
             <LoadingAnimation active={isLoading} />
 
-            <button className={style.button_movePrev} type="button" onClick={onPrevStep}>
+            <button className={style.button_movePrev} type="button" onClick={handlePrevStepClick}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20,15 L10,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
                     <path d="M35,15 L25,30 L35,45" fill="none" stroke="black" strokeWidth="2" />

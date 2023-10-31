@@ -40,7 +40,7 @@ export default function Client({ userRole }: ClientProps) {
             SpeechOutputProvider.speak("더블터치하면 홈으로 이동합니다");
         },
         onDoubleTouch: () => {
-            VibrationProvider.patternVibrate([500, 500]);
+            VibrationProvider.repeatVibrate(500, 200, 2);
             moveToClient();
         }
     })
