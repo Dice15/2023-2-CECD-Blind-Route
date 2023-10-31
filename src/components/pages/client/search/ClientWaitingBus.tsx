@@ -13,7 +13,7 @@ import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders
 export interface ClientWaitingBusProps {
     userRole: UserRole;
     setPageState: React.Dispatch<React.SetStateAction<ClientSearchState>>;
-    wishBus: Bus;
+    wishBus: Bus | null;
     setWishBus: React.Dispatch<React.SetStateAction<Bus | null>>;
 }
 
@@ -43,18 +43,20 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
 
         // 버스 검색
         setTimeout(async () => {
-            const unreserveResult = await unreserveBus(userRole, wishBus);
+            if (wishBus) {
+                const unreserveResult = await unreserveBus(userRole, wishBus);
 
-            if (unreserveResult) {
-                SpeechOutputProvider.speak(`버스 예약을 취소하였습니다`);
-                setWishBus(null);
-                setTimeout(() => {
+                if (unreserveResult) {
+                    SpeechOutputProvider.speak(`버스 예약을 취소하였습니다`);
+                    setWishBus(null);
+                    setTimeout(() => {
+                        setIsLoading(false);    // 로딩 모션 off
+                        setPageState("selectingBus");
+                    }, 2000);
+                } else {
+                    SpeechOutputProvider.speak(`버스를 취소하는데 실패했습니다`);
                     setIsLoading(false);    // 로딩 모션 off
-                    setPageState("selectingBus");
-                }, 2000);
-            } else {
-                SpeechOutputProvider.speak(`버스를 취소하는데 실패했습니다`);
-                setIsLoading(false);    // 로딩 모션 off
+                }
             }
         }, 500);
     };
@@ -82,11 +84,13 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
     /** 예약한 버스가 도착했는지 2초마다 확인함 */
     useEffect(() => {
         refreshTaskRef.current = setInterval(async () => {
-            const isWishBusArrived = await checkBusArrival(userRole, wishBus);
+            if (wishBus) {
+                const isWishBusArrived = await checkBusArrival(userRole, wishBus);
 
-            if (isWishBusArrived) {
-                SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스가 도착했습니다`);
-                setPageState("arrivedBus");
+                if (isWishBusArrived) {
+                    SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스가 도착했습니다`);
+                    setPageState("arrivedBus");
+                }
             }
         }, 2000);
 
@@ -113,10 +117,10 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
 
             <div className={style.wishBusInfo}
                 onClick={() => {
-                    SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 대기중입니다`);
+                    wishBus && SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 대기중입니다`);
                 }}
             >
-                <h1>{wishBus.busRouteAbbreviation}</h1>
+                <h1>{wishBus && wishBus.busRouteAbbreviation}</h1>
                 <h3>{waitingMessage}</h3>
             </div>
 
