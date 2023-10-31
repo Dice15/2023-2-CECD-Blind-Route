@@ -46,7 +46,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
         onSingleTouch: () => {
             // 진동 1초
             VibrationProvider.vibrate(1000);
-            SpeechOutputProvider.speak("더블 터치하면 홈페이지로 이동합니다");
+            SpeechOutputProvider.speak("더블 터치하면 홈으로 돌아갑니다.");
         },
         onDoubleTouch: () => {
             // 더블 터치 진동
