@@ -6,6 +6,7 @@ import Bus from "../../../../cores/types/Bus";
 import { checkBusArrival, unreserveBus } from "../../../../cores/api/blindrouteApi";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
+import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
 
 
 
@@ -36,7 +37,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
     /** 이전 단계로 이동: 예약한 버스를 취소하고 이동 */
     const onPrevStep = async () => {
         // 진동 1초
-        window.navigator.vibrate(1000);
+        VibrationProvider.vibrate(1000);
 
         // 로딩 모션 On
         setIsLoading(true);

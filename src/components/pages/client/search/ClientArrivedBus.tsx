@@ -2,6 +2,7 @@ import Bus from "../../../../cores/types/Bus";
 import { useNavigate } from "react-router-dom";
 import style from "./ClientArrivedBus.module.css";
 import { useEffect, useRef } from "react";
+import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
 
 
 
@@ -36,7 +37,7 @@ export default function ClientArrivedBus({ wishBus, setWishBus }: ClientArrivedB
 
     // Effects
     useEffect(() => {
-        window.navigator.vibrate(5000);
+        VibrationProvider.vibrate(5000);
 
         setPageStateTaskRef.current = setInterval(() => {
             setWishBus(null);

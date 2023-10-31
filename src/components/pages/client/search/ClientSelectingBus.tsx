@@ -10,6 +10,7 @@ import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import useTapEvents from "../../../../hooks/useTapEvents";
+import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -46,7 +47,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
     /** 이전 단계로 이동: 선택한 버스를 제거하고 이전 단계로 이동 */
     const onPrevStep = () => {
         // 진동 1초
-        window.navigator.vibrate(1000);
+        VibrationProvider.vibrate(1000);
 
         // 선택한 버스 삭제
         setWishBus(null);
@@ -60,7 +61,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
     /** 다음 단계로 이동: 선택한 버스를 예약 등록을 함 */
     const onNextStep = async () => {
         // 진동 1초
-        window.navigator.vibrate(1000);
+        VibrationProvider.vibrate(1000);
 
         // 로딩 모션 on
         setIsLoading(true);
@@ -171,7 +172,11 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
                 <Swiper
                     slidesPerView={1}
                     spaceBetween={50}
-                    onSlideChange={(swiper: any) => { setBusListIndex(swiper.realIndex); }}
+                    onSlideChange={(swiper: any) => {
+                        setBusListIndex(swiper.realIndex);
+                        VibrationProvider.vibrate(200);  // 0.2초 동안 진동 생성
+                        handleBusInfoClick();  // handleBusInfoClick의 onSingleTouch 메서드 호출
+                    }}
                     loop={true}
                 >
                     {busList.map((bus, index) => (

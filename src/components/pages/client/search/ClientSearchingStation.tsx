@@ -7,6 +7,7 @@ import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { useNavigate } from "react-router-dom";
 import { SpeechOutputProvider, SpeechInputProvider } from "../../../../modules/speech/SpeechProviders";
 import { ClientSearchState } from "./ClientSearch";
+import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
 
 
 
@@ -42,7 +43,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
     /** 이전 단계로 이동: 홈페이지로 이동 */
     const onPrevStep = () => {
         // 진동 1초
-        window.navigator.vibrate(1000);
+        VibrationProvider.vibrate(1000);
 
         // client 페이지로 이동
         history(`/client`);
@@ -56,7 +57,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
         SpeechInputProvider.stopRecognition();
 
         // 진동 1초
-        window.navigator.vibrate(1000);
+        VibrationProvider.vibrate(1000);
 
         // 로딩 모션 on
         setIsLoading(true);
@@ -70,16 +71,14 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 if (responsedStationList.length > 0) {
                     //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
                     setStationList(responsedStationList);
-                    setTimeout(() => {
-                        setIsLoading(false);    // 로딩 모션 off
-                        setPageState("selectingStation");
-                    }, 500);
+                    setIsLoading(false);    // 로딩 모션 off
+                    setPageState("selectingStation");
                 } else {
                     SpeechOutputProvider.speak("검색된 정류장이 없습니다");
                     setIsLoading(false);    // 로딩 모션 off
                 }
             }
-        }, 1500);
+        }, 1000);
     };
 
 

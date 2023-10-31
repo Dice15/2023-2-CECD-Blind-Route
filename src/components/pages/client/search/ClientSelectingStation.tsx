@@ -12,6 +12,8 @@ import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
+import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
+import useTapEvents from "../../../../hooks/useTapEvents";
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -42,7 +44,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
     /** 이전 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onPrevStep = () => {
         // 진동 1초
-        window.navigator.vibrate(1000);
+        VibrationProvider.vibrate(1000);
 
         // 버스 리스트 비우기
         setBusList([]);
@@ -56,7 +58,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
     /** 다음 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onNextStep = async () => {
         // 진동 1초
-        window.navigator.vibrate(1000);
+        VibrationProvider.vibrate(1000);
 
         // 로딩 모션 On
         setIsLoading(true);
@@ -78,6 +80,17 @@ export default function ClientSelectingStation({ userRole, setPageState, station
             }
         }, 500);
     }
+
+
+
+    /** 버스 정보 클릭 이벤트 */
+    const handleBusInfoClick = useTapEvents({
+        onSingleTouch: () => {
+            const station = stationList[stationListIndex];
+            SpeechOutputProvider.speak(`${station.stationName}`);
+        },
+    });
+
 
 
     // Effects
@@ -103,15 +116,18 @@ export default function ClientSelectingStation({ userRole, setPageState, station
                 <Swiper
                     slidesPerView={1}
                     spaceBetween={50}
-                    onSlideChange={(swiper: any) => { setStationListIndex(swiper.realIndex); }}
+                    onSlideChange={(swiper: any) => {
+                        setStationListIndex(swiper.realIndex);
+                        VibrationProvider.vibrate(200);  // 0.2초 동안 진동 생성
+                        handleBusInfoClick();
+                    }}
                     loop={true}
                 >
                     {stationList.map((station, index) => (
                         <SwiperSlide key={index}>
-                            <div className={style.stationInfo} style={{ height: `${stationInfoContainerHeight}px` }}
-                                onClick={() => {
-                                    SpeechOutputProvider.speak(`${station.stationName}`);
-                                }}
+                            <div className={style.stationInfo}
+                                style={{ height: `${stationInfoContainerHeight}px` }}
+                                onClick={handleBusInfoClick}
                             >
                                 <h1>{station.stationName}</h1>
                             </div>
