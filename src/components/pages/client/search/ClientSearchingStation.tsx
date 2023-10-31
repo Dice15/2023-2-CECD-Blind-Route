@@ -59,6 +59,9 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
         // 진동 1초
         VibrationProvider.vibrate(1000);
 
+        // 음성 출력
+        SpeechOutputProvider.speak("정류장을 검색합니다");
+
         // 로딩 모션 on
         setIsLoading(true);
 

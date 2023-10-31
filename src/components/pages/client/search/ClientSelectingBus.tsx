@@ -135,7 +135,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
     const handleBusInfoClick = useTapEvents({
         onSingleTouch: () => {
             const bus = busList[busListIndexRef.current];
-            SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
+            SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}`);
         },
         onDoubleTouch: () => {
             const bus = busList[busListIndexRef.current];
@@ -149,9 +149,10 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
     useEffect(() => {
         (async () => {
             await loadBookmark();
-            SpeechOutputProvider.speak("버스를 선택하세요");
+            const bus = busList[busListIndexRef.current];
+            SpeechOutputProvider.speak(`버스를 선택하세요, ${bus}`);
         })();
-    }, [loadBookmark]);
+    }, [loadBookmark, busList]);
 
 
 

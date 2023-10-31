@@ -101,8 +101,9 @@ export default function ClientSelectingStation({ userRole, setPageState, station
 
     // Effects
     useEffect(() => {
-        SpeechOutputProvider.speak("정류장을 선택하세요");
-    }, []);
+        const station = stationList[stationListIndexRef.current];
+        SpeechOutputProvider.speak(`정류장을 선택하세요, ${station.stationName}`);
+    }, [stationList]);
 
 
 
@@ -125,6 +126,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
                     onSlideChange={(swiper: any) => {
                         stationListIndexRef.current = swiper.realIndex;
                         VibrationProvider.vibrate(200);
+                        handleBusInfoClick();
                     }}
                     loop={true}
                 >

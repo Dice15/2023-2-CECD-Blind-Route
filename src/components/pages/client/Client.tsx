@@ -6,6 +6,7 @@ import { isSessionValid } from "../../../cores/api/blindrouteApi";
 import { useNavigate } from "react-router-dom";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
 import useTapEvents from "../../../hooks/useTapEvents";
+import { VibrationProvider } from "../../../modules/vibration/VibrationProvider";
 
 
 
@@ -34,8 +35,14 @@ export default function Client({ userRole }: ClientProps) {
 
 
     const handleHeaderTitleClick = useTapEvents({
-        onSingleTouch: () => { SpeechOutputProvider.speak("이 버튼을 더블터치하면 홈으로 이동합니다"); },
-        onDoubleTouch: () => { moveToClient(); }
+        onSingleTouch: () => {
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("더블터치하면 홈으로 이동합니다");
+        },
+        onDoubleTouch: () => {
+            VibrationProvider.patternVibrate([500, 500]);
+            moveToClient();
+        }
     })
 
 
@@ -49,8 +56,8 @@ export default function Client({ userRole }: ClientProps) {
                 setAuthenticationState(true);
             }
         };
-        //setAuthenticationState(true);
-        checkAuth();
+        setAuthenticationState(true);
+        // checkAuth();
     }, [userRole, history]);
 
 

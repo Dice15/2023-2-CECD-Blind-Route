@@ -5,6 +5,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import ClientActionForm, { ClientAction } from "./action/ClientActionForm";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
 import useTapEvents from "../../../hooks/useTapEvents";
+import { VibrationProvider } from "../../../modules/vibration/VibrationProvider";
 
 
 
@@ -51,8 +52,8 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                     <div className={style.selectAction}>
                         <button type="button"
                             onClick={useTapEvents({
-                                onSingleTouch: () => { SpeechOutputProvider.speak("버스 검색하기"); },
-                                onDoubleTouch: () => { moveToAction("search"); }
+                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("버스 검색"); },
+                                onDoubleTouch: () => { VibrationProvider.patternVibrate([500, 500]); moveToAction("search"); }
                             })}
                         >
                             검색하기
@@ -60,8 +61,8 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
 
                         <button type="button"
                             onClick={useTapEvents({
-                                onSingleTouch: () => { SpeechOutputProvider.speak("즐겨찾는 버스 조회"); },
-                                onDoubleTouch: () => { moveToAction("bookmark"); }
+                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("즐겨찾는 버스 조회"); },
+                                onDoubleTouch: () => { VibrationProvider.patternVibrate([500, 500]); moveToAction("bookmark"); }
                             })}
                         >
                             즐겨찾기
@@ -69,8 +70,8 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
 
                         <button type="button"
                             onClick={useTapEvents({
-                                onSingleTouch: () => { SpeechOutputProvider.speak("즐겨찾기 초기화"); },
-                                onDoubleTouch: () => { moveToAction("resetBookmark"); }
+                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("즐겨찾는 버스 초기화"); },
+                                onDoubleTouch: () => { VibrationProvider.patternVibrate([500, 500]); moveToAction("resetBookmark"); }
                             })}
                         >
                             즐겨찾기 초기화
