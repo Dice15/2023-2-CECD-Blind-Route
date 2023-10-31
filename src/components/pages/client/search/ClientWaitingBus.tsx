@@ -36,7 +36,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
     /** 이전 단계로 이동: 예약한 버스를 취소하고 이동 */
     const onPrevStep = async () => {
         // 진동 1초
-        navigator.vibrate(100);
+        window.navigator.vibrate(1000);
 
         // 로딩 모션 On
         setIsLoading(true);

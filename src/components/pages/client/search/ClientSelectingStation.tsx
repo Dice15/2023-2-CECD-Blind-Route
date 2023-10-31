@@ -42,7 +42,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
     /** 이전 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onPrevStep = () => {
         // 진동 1초
-        navigator.vibrate(1000);
+        window.navigator.vibrate(1000);
 
         // 버스 리스트 비우기
         setBusList([]);
@@ -56,7 +56,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
     /** 다음 단계로 이동: 선택한 정류장의 버스 리스트를 불러오고 페이지 상태 업데이트 */
     const onNextStep = async () => {
         // 진동 1초
-        navigator.vibrate(1000);
+        window.navigator.vibrate(1000);
 
         // 로딩 모션 On
         setIsLoading(true);

@@ -42,7 +42,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
     /** 이전 단계로 이동: 홈페이지로 이동 */
     const onPrevStep = () => {
         // 진동 1초
-        navigator.vibrate(1000);
+        window.navigator.vibrate(1000);
 
         // client 페이지로 이동
         history(`/client`);
@@ -56,7 +56,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
         SpeechInputProvider.stopRecognition();
 
         // 진동 1초
-        navigator.vibrate(1000);
+        window.navigator.vibrate(1000);
 
         // 로딩 모션 on
         setIsLoading(true);

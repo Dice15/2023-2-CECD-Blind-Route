@@ -36,7 +36,7 @@ export default function ClientArrivedBus({ wishBus, setWishBus }: ClientArrivedB
 
     // Effects
     useEffect(() => {
-        navigator.vibrate(5000);
+        window.navigator.vibrate(5000);
 
         setPageStateTaskRef.current = setInterval(() => {
             setWishBus(null);
