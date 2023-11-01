@@ -29,12 +29,12 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
 
     // Refs
     const textbox_stationName = useRef<HTMLInputElement>(null);
+    const timeoutId = useRef<NodeJS.Timeout | null>(null);
 
 
     // States
     const [isLoading, setIsLoading] = useState(false);
     const [isListening, setIsListening] = useState(false);
-    const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
 
 
@@ -67,8 +67,10 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
             SpeechOutputProvider.speak("더블 터치하면 정류장을 검색합니다.");
         },
         onDoubleTouch: async () => {
-            // 음성인식 중지
-            SpeechInputProvider.stopRecognition();
+            // 음성인식이 진행 중이라면 중지
+            if (isListening) {
+                SpeechInputProvider.stopRecognition();
+            }
 
             // 더블 터치 진동
             VibrationProvider.repeatVibrate(500, 200, 2);
@@ -99,31 +101,48 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
         }
     });
 
-
+    ////import ClientArrivedBus from "./../../../../sounds/voice_recognition";
 
     /** 음성 인식 시작 및 종료 */
-    const toggleListening = () => {
-        if (isListening) {
-            // 음성 인식 중지
-            SpeechInputProvider.stopRecognition();
-            if (timeoutId) clearTimeout(timeoutId);
-        } else {
-            // 음성 인식 시작
-            SpeechOutputProvider.clearSpeak();
-            SpeechInputProvider.startRecognition((result: string) => {
-                if (textbox_stationName.current) {
-                    textbox_stationName.current.value = result;
-                }
-            });
-            // 20초 후에 음성 인식 중지
-            const id = setTimeout(() => {
+    const handleVoiceRecognition = useTapEvents({
+        onDoubleTouch: () => {
+            // 효과음 파일 경로
+            const audioSound = new Audio('../../../../sounds/voice_recognition.mp3');
+
+            if (isListening) {
+                // 음성 인식 중지
                 SpeechInputProvider.stopRecognition();
-                setIsListening(false);
-            }, 20000);
-            setTimeoutId(id);
+                VibrationProvider.vibrate(1000);
+                audioSound.play();  // 효과음 재생 - 음성 인식 종료
+
+                if (timeoutId.current) {
+                    clearTimeout(timeoutId.current);
+                    timeoutId.current = null;
+                }
+            } else {
+                // 음성 인식 시작
+                SpeechOutputProvider.clearSpeak();
+                VibrationProvider.vibrate(1000);
+                audioSound.play();  // 효과음 재생 - 음성 인식 시작
+
+                SpeechInputProvider.startRecognition((result: string) => {
+                    if (textbox_stationName.current) {
+                        textbox_stationName.current.value = result;
+                    }
+                });
+
+                // 20초 후에 음성 인식 중지
+                timeoutId.current = setTimeout(() => {
+                    SpeechInputProvider.stopRecognition();
+                    VibrationProvider.vibrate(1000);
+                    audioSound.play();  // 효과음 재생 - 음성 인식 종료
+                    setIsListening(false);
+                }, 20000);
+            }
+            setIsListening(!isListening);
         }
-        setIsListening(!isListening);
-    };
+    });
+
 
 
 
@@ -131,12 +150,14 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
     // 컴포넌트 언마운트 시 타이머 및 음성 인식 중지
     useEffect(() => {
         return () => {
-            if (timeoutId) clearTimeout(timeoutId);
+            if (timeoutId.current) {
+                clearTimeout(timeoutId.current);
+            }
             if (isListening) {
                 SpeechInputProvider.stopRecognition();
             }
         };
-    }, [isListening, timeoutId]);
+    }, [isListening]);
 
 
 
@@ -159,7 +180,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 </svg>
             </button>
 
-            <div className={style.stationNameContainer} onDoubleClick={toggleListening}>
+            <div className={style.stationNameContainer} onClick={handleVoiceRecognition}>
                 <input className={style.textbox_stationName} type="text" placeholder="정류장 입력" ref={textbox_stationName} />
             </div>
 
