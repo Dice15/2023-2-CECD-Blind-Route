@@ -101,24 +101,43 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
         }
     });
 
-    ////import ClientArrivedBus from "./../../../../sounds/voice_recognition";
+
 
     /** 음성 인식 시작 및 종료 */
     const handleVoiceRecognition = useTapEvents({
         onDoubleTouch: () => {
-            // 효과음 파일 경로
-            const audioSound = new Audio('/sounds/voice_recognition.mp3');
-
             if (isListening) {
                 // 음성 인식 중지
                 SpeechInputProvider.stopRecognition();
                 VibrationProvider.vibrate(1000);
-                audioSound.play();  // 효과음 재생 - 음성 인식 종료
+                const audioSound = new Audio('/sounds/voice_recognition.mp3');
+                audioSound.play();
 
                 if (timeoutId.current) {
                     clearTimeout(timeoutId.current);
                     timeoutId.current = null;
                 }
+
+                // 로딩 모션 on
+                setIsLoading(true);
+
+                // 1초후 정류장 검색 시작
+                setTimeout(async () => {
+                    if (textbox_stationName.current) {
+                        const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
+                        setIsLoading(false);    // 로딩 모션 off
+
+                        if (responsedStationList.length > 0) {
+                            //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
+                            setStationList(responsedStationList);
+                            setIsLoading(false);    // 로딩 모션 off
+                            setPageState("selectingStation");
+                        } else {
+                            SpeechOutputProvider.speak(`'${textbox_stationName.current.value}'가 이름에 포함된 정류장이 없습니다`);
+                            setIsLoading(false);    // 로딩 모션 off
+                        }
+                    }
+                }, 1000);
             } else {
                 // 검색 박스 초기화
                 if (textbox_stationName.current) {
@@ -128,7 +147,8 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 // 음성 인식 시작
                 SpeechOutputProvider.clearSpeak();
                 VibrationProvider.vibrate(1000);
-                audioSound.play();  // 효과음 재생 - 음성 인식 시작
+                const audioSound = new Audio('/sounds/voice_recognition.mp3');
+                audioSound.play();
 
                 SpeechInputProvider.startRecognition((result: string) => {
                     if (textbox_stationName.current) {
@@ -136,11 +156,10 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                     }
                 });
 
-                // 20초 후에 음성 인식 중지
+                // 60초 후에 음성 인식 중지
                 timeoutId.current = setTimeout(() => {
                     SpeechInputProvider.stopRecognition();
                     VibrationProvider.vibrate(1000);
-                    audioSound.play();  // 효과음 재생 - 음성 인식 종료
                     setIsListening(false);
                 }, 60000);
             }
