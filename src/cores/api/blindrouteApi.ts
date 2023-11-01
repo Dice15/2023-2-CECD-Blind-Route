@@ -91,7 +91,7 @@ interface IResponseStationList {
         arsId?: string;
         stId?: string;
         stNm?: string;
-    }[];
+    }[] | null;
 }
 
 /**
@@ -118,7 +118,7 @@ export async function getStationList(userRole: UserRole, searchKeyword: string):
     } catch (error) {
         console.error("정류장 검색 요청 실패:", error);
     }
-    return stationListData.busStations.map(station => new Station(station.arsId, station.stId, station.stNm));
+    return (stationListData.busStations || []).map(station => new Station(station.arsId, station.stId, station.stNm));
 }
 
 

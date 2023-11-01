@@ -93,7 +93,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                         setIsLoading(false);    // 로딩 모션 off
                         setPageState("selectingStation");
                     } else {
-                        SpeechOutputProvider.speak("검색된 정류장이 없습니다");
+                        SpeechOutputProvider.speak(`'${textbox_stationName.current.value}'가 이름에 포함된 정류장이 없습니다`);
                         setIsLoading(false);    // 로딩 모션 off
                     }
                 }
@@ -107,7 +107,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
     const handleVoiceRecognition = useTapEvents({
         onDoubleTouch: () => {
             // 효과음 파일 경로
-            const audioSound = new Audio('../../../../sounds/voice_recognition.mp3');
+            const audioSound = new Audio('/sounds/voice_recognition.mp3');
 
             if (isListening) {
                 // 음성 인식 중지
@@ -120,6 +120,11 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                     timeoutId.current = null;
                 }
             } else {
+                // 검색 박스 초기화
+                if (textbox_stationName.current) {
+                    textbox_stationName.current.value = "";
+                }
+
                 // 음성 인식 시작
                 SpeechOutputProvider.clearSpeak();
                 VibrationProvider.vibrate(1000);
@@ -137,7 +142,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                     VibrationProvider.vibrate(1000);
                     audioSound.play();  // 효과음 재생 - 음성 인식 종료
                     setIsListening(false);
-                }, 20000);
+                }, 60000);
             }
             setIsListening(!isListening);
         }
@@ -163,7 +168,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
 
     // Effects
     useEffect(() => {
-        SpeechOutputProvider.speak("정류장을 입력하세요. 더블 터치를 하면 음성인식이 시작됩니다");
+        SpeechOutputProvider.speak("더블 터치를 하면 음성인식이 시작됩니다. 음성 입력을 완료 후 더블 터치하여 음성인식을 종료하면 정류장 검색을 시작합니다.");
     }, []);
 
 
