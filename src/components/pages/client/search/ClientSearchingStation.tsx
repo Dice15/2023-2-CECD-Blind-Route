@@ -88,18 +88,16 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 if (textbox_stationName.current) {
                     if (textbox_stationName.current.value === "") {
                         SpeechOutputProvider.speak("정류장 키워드를 음성인식 또는 직접 입력을 해주세요");
+                        setIsLoading(false);    // 로딩 모션 off
                     } else {
                         const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
                         setIsLoading(false);    // 로딩 모션 off
 
                         if (responsedStationList.length > 0) {
-                            //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
                             setStationList(responsedStationList);
-                            setIsLoading(false);    // 로딩 모션 off
                             setPageState("selectingStation");
                         } else {
                             SpeechOutputProvider.speak(`'${textbox_stationName.current.value}'가 이름에 포함된 정류장이 없습니다`);
-                            setIsLoading(false);    // 로딩 모션 off
                         }
                     }
                 }
@@ -143,13 +141,12 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
     /** 음성 인식 시작 및 종료 */
     const handleVoiceRecognition = useTapEvents({
         onDoubleTouch: () => {
-            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.clearSpeak();
+            SpeechInputProvider.stopRecognition();
             playVoiceRecognitionAudio();
+            VibrationProvider.vibrate(1000);
 
             if (isListening) {
-                // 음성 인식 중지
-                SpeechInputProvider.stopRecognition();
-
                 if (voiceRecognitionTimeoutId.current) {
                     clearTimeout(voiceRecognitionTimeoutId.current);
                     voiceRecognitionTimeoutId.current = null;
@@ -163,18 +160,16 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                     if (textbox_stationName.current) {
                         if (textbox_stationName.current.value === "") {
                             SpeechOutputProvider.speak("인식된 단어가 없습니다. 다시 시도해주세요.");
+                            setIsLoading(false);    // 로딩 모션 off
                         } else {
                             const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
                             setIsLoading(false);    // 로딩 모션 off
 
                             if (responsedStationList.length > 0) {
-                                //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
                                 setStationList(responsedStationList);
-                                setIsLoading(false);    // 로딩 모션 off
                                 setPageState("selectingStation");
                             } else {
                                 SpeechOutputProvider.speak(`'${textbox_stationName.current.value}'가 이름에 포함된 정류장이 없습니다`);
-                                setIsLoading(false);    // 로딩 모션 off
                             }
                         }
                     }
@@ -184,9 +179,6 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 if (textbox_stationName.current) {
                     textbox_stationName.current.value = "";
                 }
-
-                // 출력중이던 음성 모두 제거
-                SpeechOutputProvider.clearSpeak();
 
                 // 음성 인식 시작
                 SpeechInputProvider.startRecognition((result: string) => {
