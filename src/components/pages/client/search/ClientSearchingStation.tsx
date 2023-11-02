@@ -30,6 +30,8 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
     // Refs
     const textbox_stationName = useRef<HTMLInputElement>(null);
     const timeoutId = useRef<NodeJS.Timeout | null>(null);
+    const audioContainer = useRef<HTMLAudioElement>(null);
+    const audioSource = useRef<HTMLSourceElement>(null);
 
 
     // States
@@ -103,6 +105,28 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
 
 
 
+    /** 음성 인식 시작 효과음 시작 */
+    const playVoiceRecognitionStartAudio = () => {
+        if (audioContainer.current && audioSource.current) {
+            audioSource.current.src = `/sounds/voice_recognition.mp3`;
+            audioContainer.current.load();
+            audioContainer.current.volume = 0.5;
+            audioContainer.current.loop = false;
+            audioContainer.current.play();
+        }
+    };
+
+
+
+    /** 음성 인식 시작 효과음 종료 */
+    const stopVoiceRecognitionStartAudio = () => {
+        if (audioContainer.current) {
+            audioContainer.current.pause();
+        }
+    };
+
+
+
     /** 음성 인식 시작 및 종료 */
     const handleVoiceRecognition = useTapEvents({
         onDoubleTouch: () => {
@@ -110,8 +134,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 // 음성 인식 중지
                 SpeechInputProvider.stopRecognition();
                 VibrationProvider.vibrate(1000);
-                const audioSound = new Audio('/sounds/voice_recognition.mp3');
-                audioSound.play();
+                stopVoiceRecognitionStartAudio();
 
                 if (timeoutId.current) {
                     clearTimeout(timeoutId.current);
@@ -147,8 +170,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 // 음성 인식 시작
                 SpeechOutputProvider.clearSpeak();
                 VibrationProvider.vibrate(1000);
-                const audioSound = new Audio('/sounds/voice_recognition.mp3');
-                audioSound.play();
+                playVoiceRecognitionStartAudio();
 
                 SpeechInputProvider.startRecognition((result: string) => {
                     if (textbox_stationName.current) {
@@ -160,6 +182,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 timeoutId.current = setTimeout(() => {
                     SpeechInputProvider.stopRecognition();
                     VibrationProvider.vibrate(1000);
+                    playVoiceRecognitionStartAudio();
                     setIsListening(false);
                 }, 60000);
             }
@@ -196,6 +219,10 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
     return (
         <div className={style.ClientSearchingStation} >
             <LoadingAnimation active={isLoading} />
+
+            <audio ref={audioContainer}>
+                <source ref={audioSource} />
+            </audio>
 
             <button className={style.button_movePrev} type="button" onClick={handlePrevStepClick}>
                 <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
