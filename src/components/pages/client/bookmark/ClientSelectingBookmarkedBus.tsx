@@ -13,7 +13,6 @@ import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { useNavigate } from "react-router-dom";
-import { useGesture } from "@use-gesture/react";
 import useTapEvents from "../../../../hooks/useTapEvents";
 import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
 

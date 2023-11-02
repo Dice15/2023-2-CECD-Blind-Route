@@ -29,7 +29,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
 
     // Refs
     const textbox_stationName = useRef<HTMLInputElement>(null);
-    const timeoutId = useRef<NodeJS.Timeout | null>(null);
+    const voiceRecognitionTimeoutId = useRef<NodeJS.Timeout | null>(null);
     const audioContainer = useRef<HTMLAudioElement>(null);
     const audioSource = useRef<HTMLSourceElement>(null);
 
@@ -83,70 +83,12 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
             // 로딩 모션 on
             setIsLoading(true);
 
-            // 1.5초후 정류장 검색 시작
+            // 1초후 정류장 검색 시작
             setTimeout(async () => {
                 if (textbox_stationName.current) {
-                    const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
-                    setIsLoading(false);    // 로딩 모션 off
-
-                    if (responsedStationList.length > 0) {
-                        //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
-                        setStationList(responsedStationList);
-                        setIsLoading(false);    // 로딩 모션 off
-                        setPageState("selectingStation");
+                    if (textbox_stationName.current.value === "") {
+                        SpeechOutputProvider.speak("정류장 키워드를 음성인식 또는 직접 입력을 해주세요");
                     } else {
-                        SpeechOutputProvider.speak(`'${textbox_stationName.current.value}'가 이름에 포함된 정류장이 없습니다`);
-                        setIsLoading(false);    // 로딩 모션 off
-                    }
-                }
-            }, 1000);
-        }
-    });
-
-
-
-    /** 음성 인식 시작 효과음 시작 */
-    const playVoiceRecognitionStartAudio = () => {
-        if (audioContainer.current && audioSource.current) {
-            audioSource.current.src = `/sounds/voice_recognition.mp3`;
-            audioContainer.current.load();
-            audioContainer.current.volume = 0.5;
-            audioContainer.current.loop = false;
-            audioContainer.current.play();
-        }
-    };
-
-
-
-    /** 음성 인식 시작 효과음 종료 */
-    const stopVoiceRecognitionStartAudio = () => {
-        if (audioContainer.current) {
-            audioContainer.current.pause();
-        }
-    };
-
-
-
-    /** 음성 인식 시작 및 종료 */
-    const handleVoiceRecognition = useTapEvents({
-        onDoubleTouch: () => {
-            if (isListening) {
-                // 음성 인식 중지
-                SpeechInputProvider.stopRecognition();
-                VibrationProvider.vibrate(1000);
-                stopVoiceRecognitionStartAudio();
-
-                if (timeoutId.current) {
-                    clearTimeout(timeoutId.current);
-                    timeoutId.current = null;
-                }
-
-                // 로딩 모션 on
-                setIsLoading(true);
-
-                // 1초후 정류장 검색 시작
-                setTimeout(async () => {
-                    if (textbox_stationName.current) {
                         const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
                         setIsLoading(false);    // 로딩 모션 off
 
@@ -160,6 +102,82 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                             setIsLoading(false);    // 로딩 모션 off
                         }
                     }
+                }
+            }, 1000);
+        }
+    });
+
+
+
+    /** 음성 인식 효과음 */
+    const playVoiceRecognitionAudio = () => {
+        if (audioContainer.current && audioSource.current) {
+            audioContainer.current.pause();
+            audioSource.current.src = `/sounds/voice_recognition.mp3`;
+            audioContainer.current.load();
+            audioContainer.current.volume = 0.5;
+            audioContainer.current.loop = false;
+            audioContainer.current.play();
+        }
+    };
+
+
+
+    /** 타이머 재설정 함수 */
+    const resetVoiceRecognitionTimeout = () => {
+        if (voiceRecognitionTimeoutId.current) {
+            clearTimeout(voiceRecognitionTimeoutId.current);
+        }
+
+        // 30초 후에 음성 인식 중지
+        voiceRecognitionTimeoutId.current = setTimeout(() => {
+            SpeechInputProvider.stopRecognition();
+            VibrationProvider.vibrate(1000);
+            playVoiceRecognitionAudio();
+            setIsListening(false);
+        }, 30000);
+    };
+
+
+
+    /** 음성 인식 시작 및 종료 */
+    const handleVoiceRecognition = useTapEvents({
+        onDoubleTouch: () => {
+            VibrationProvider.vibrate(1000);
+            playVoiceRecognitionAudio();
+
+            if (isListening) {
+                // 음성 인식 중지
+                SpeechInputProvider.stopRecognition();
+
+                if (voiceRecognitionTimeoutId.current) {
+                    clearTimeout(voiceRecognitionTimeoutId.current);
+                    voiceRecognitionTimeoutId.current = null;
+                }
+
+                // 로딩 모션 on
+                setIsLoading(true);
+
+                // 1초후 정류장 검색 시작
+                setTimeout(async () => {
+                    if (textbox_stationName.current) {
+                        if (textbox_stationName.current.value === "") {
+                            SpeechOutputProvider.speak("인식된 단어가 없습니다. 다시 시도해주세요.");
+                        } else {
+                            const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
+                            setIsLoading(false);    // 로딩 모션 off
+
+                            if (responsedStationList.length > 0) {
+                                //setStationList([new Station("111111", "111111", "창동역"), new Station("222222", "222222", "노원역")]);
+                                setStationList(responsedStationList);
+                                setIsLoading(false);    // 로딩 모션 off
+                                setPageState("selectingStation");
+                            } else {
+                                SpeechOutputProvider.speak(`'${textbox_stationName.current.value}'가 이름에 포함된 정류장이 없습니다`);
+                                setIsLoading(false);    // 로딩 모션 off
+                            }
+                        }
+                    }
                 }, 1000);
             } else {
                 // 검색 박스 초기화
@@ -167,13 +185,13 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                     textbox_stationName.current.value = "";
                 }
 
-                // 음성 인식 시작
+                // 출력중이던 음성 모두 제거
                 SpeechOutputProvider.clearSpeak();
-                VibrationProvider.vibrate(1000);
-                playVoiceRecognitionStartAudio();
 
-                // 음성 인식 결과 저장
+                // 음성 인식 시작
                 SpeechInputProvider.startRecognition((result: string) => {
+                    resetVoiceRecognitionTimeout();  // 음성이 인식될 때마다 타이머를 재설정
+
                     if (textbox_stationName.current) {
                         const maxLength = 30;
                         const trimmedResult = Array.from(result).slice(0, maxLength).join('');
@@ -181,13 +199,8 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                     }
                 });
 
-                // 60초 후에 음성 인식 중지
-                timeoutId.current = setTimeout(() => {
-                    SpeechInputProvider.stopRecognition();
-                    VibrationProvider.vibrate(1000);
-                    playVoiceRecognitionStartAudio();
-                    setIsListening(false);
-                }, 60000);
+                // 타이머 설정
+                resetVoiceRecognitionTimeout();
             }
             setIsListening(!isListening);
         }
@@ -200,8 +213,8 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
     // 컴포넌트 언마운트 시 타이머 및 음성 인식 중지
     useEffect(() => {
         return () => {
-            if (timeoutId.current) {
-                clearTimeout(timeoutId.current);
+            if (voiceRecognitionTimeoutId.current) {
+                clearTimeout(voiceRecognitionTimeoutId.current);
             }
             if (isListening) {
                 SpeechInputProvider.stopRecognition();
