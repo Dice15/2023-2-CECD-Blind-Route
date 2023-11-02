@@ -47,7 +47,6 @@ export default function Home({ setUserRole, authenticationAction, setAuthenticat
 
 
     const handleAuthenticationClick = useTapEvents({
-        onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("더블 터치하면 로그인을 합니다"); },
         onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); onAuthentication("login"); }
     });
 
@@ -83,6 +82,13 @@ export default function Home({ setUserRole, authenticationAction, setAuthenticat
 
 
 
+    // Effects
+    useEffect(() => {
+        SpeechOutputProvider.speak("로그인 페이지 입니다. 더블 터치하면 로그인을 합니다");
+    }, []);
+
+
+
     return (
         <div className={style.Home}>
             <div className={style.header}>
@@ -90,12 +96,7 @@ export default function Home({ setUserRole, authenticationAction, setAuthenticat
             </div>
             <div className={style.body}>
                 <div className={style.authentication}>
-                    {authenticationState !== undefined && authenticationState === false &&
-                        (<>
-                            <button type="button" onClick={handleAuthenticationClick}>로그인</button>
-                            <button type="button" onClick={() => { }}>회원가입</button>
-                        </>)
-                    }
+                    {authenticationState !== undefined && authenticationState === false && <button type="button" onClick={handleAuthenticationClick}>로그인</button>}
                 </div>
             </div>
         </div>

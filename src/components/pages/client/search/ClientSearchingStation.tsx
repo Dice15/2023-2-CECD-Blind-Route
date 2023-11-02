@@ -172,9 +172,12 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 VibrationProvider.vibrate(1000);
                 playVoiceRecognitionStartAudio();
 
+                // 음성 인식 결과 저장
                 SpeechInputProvider.startRecognition((result: string) => {
                     if (textbox_stationName.current) {
-                        textbox_stationName.current.value = result;
+                        const maxLength = 30;
+                        const trimmedResult = Array.from(result).slice(0, maxLength).join('');
+                        textbox_stationName.current.value = trimmedResult;
                     }
                 });
 
@@ -232,7 +235,7 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
             </button>
 
             <div className={style.stationNameContainer} onClick={handleVoiceRecognition}>
-                <input className={style.textbox_stationName} type="text" placeholder="정류장 입력" ref={textbox_stationName} />
+                <input className={style.textbox_stationName} type="text" placeholder="정류장 입력" ref={textbox_stationName} maxLength={30} />
             </div>
 
             <button className={style.button_moveNext} type="button" onClick={handleNextStepClick}>
