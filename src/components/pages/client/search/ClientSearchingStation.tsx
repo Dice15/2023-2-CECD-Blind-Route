@@ -181,18 +181,20 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
                 }
 
                 // 음성 인식 시작
-                SpeechInputProvider.startRecognition((result: string) => {
-                    resetVoiceRecognitionTimeout();  // 음성이 인식될 때마다 타이머를 재설정
+                setTimeout(() => {
+                    SpeechInputProvider.startRecognition((result: string) => {
+                        resetVoiceRecognitionTimeout();  // 음성이 인식될 때마다 타이머를 재설정
 
-                    if (textbox_stationName.current) {
-                        const maxLength = 30;
-                        const trimmedResult = Array.from(result).slice(0, maxLength).join('');
-                        textbox_stationName.current.value = trimmedResult;
-                    }
-                });
+                        if (textbox_stationName.current) {
+                            const maxLength = 30;
+                            const trimmedResult = Array.from(result).slice(0, maxLength).join('');
+                            textbox_stationName.current.value = trimmedResult;
+                        }
+                    });
 
-                // 타이머 설정
-                resetVoiceRecognitionTimeout();
+                    // 타이머 설정
+                    resetVoiceRecognitionTimeout();
+                }, 1000);
             }
             setIsListening(!isListening);
         }
