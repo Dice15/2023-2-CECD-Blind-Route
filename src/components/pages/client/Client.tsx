@@ -37,10 +37,11 @@ export default function Client({ userRole }: ClientProps) {
     const handleHeaderTitleClick = useTapEvents({
         onSingleTouch: () => {
             VibrationProvider.vibrate(1000);
-            SpeechOutputProvider.speak("더블터치하면 홈으로 이동합니다");
+            SpeechOutputProvider.speak("상단바를 두번 터치하면 홈으로 이동합니다");
         },
         onDoubleTouch: () => {
             VibrationProvider.repeatVibrate(500, 200, 2);
+            SpeechOutputProvider.speak("홈으로 이동합니다");
             moveToClient();
         }
     })

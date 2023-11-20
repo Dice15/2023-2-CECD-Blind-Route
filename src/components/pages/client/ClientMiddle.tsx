@@ -36,7 +36,8 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
 
     // Effects
     useEffect(() => {
-        SpeechOutputProvider.speak("원하는 기능을 더블터치 하세요. 버튼을 터치하여 기능을 확인할 수 있습니다.");
+        SpeechOutputProvider.speak("화면 중앙을 두번 터치하면 버스 검색하기, 세번 터치하면 즐겨찾기로 이동합니다.");
+        SpeechOutputProvider.speak("상단바를 두번 터치하면 홈으로 이동합니다");
     }, []);
 
 
@@ -51,6 +52,26 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                 <Route path="/" element={
                     <div className={style.selectAction}>
                         <button type="button"
+                            onClick={useTapEvents({
+                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("두번 터치하면 버스 검색하기, 세번 터치하면 즐겨찾기로 이동합니다."); },
+                                onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); moveToAction("search"); },
+                                onTripleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 3); moveToAction("bookmark"); }
+                            })}
+                        >
+                            버스 예약하기
+                        </button>
+                    </div>
+                } />
+            </Routes>
+        </div>
+    );
+}
+
+
+
+/*
+
+ <button type="button"
                             onClick={useTapEvents({
                                 onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("더블 터치하면 버스 검색을 시작합니다"); },
                                 onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); moveToAction("search"); }
@@ -76,9 +97,4 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                         >
                             즐겨찾기 초기화
                         </button>
-                    </div>
-                } />
-            </Routes>
-        </div>
-    );
-}
+*/

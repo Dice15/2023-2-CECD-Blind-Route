@@ -8,8 +8,8 @@
 
 /* ClientSearchStation's children elements */
 .stationInfoContainer {
-    height: 70%;
-    width: 70%;
+    height: 90%;
+    width: 90%;
     margin-bottom: 10%;
     border-radius: 8px;
     border: 1px solid var(--button-border--color);

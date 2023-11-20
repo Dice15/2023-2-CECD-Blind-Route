@@ -32,20 +32,17 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
     const [isLoading, setIsLoading] = useState(false);
 
 
-    /**
-     * Handler functions
-     */
-    /** 이전 단계로 이동: 예약한 버스를 취소하고 이동 */
-    const handlePrevStepClick = useTapEvents({
+    // Handler
+    const handleBusInfoClick = useTapEvents({
         onSingleTouch: () => {
-            // 진동 1초
             VibrationProvider.vibrate(1000);
-            SpeechOutputProvider.speak("더블 터치하면 예약을 취소합니다.");
+            wishBus && SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 대기중입니다. 세번 터치를 하면 예약을 취소합니다`);
         },
-        onDoubleTouch: async () => {
-            // 진동 1초
-            VibrationProvider.vibrate(1000);
-
+        onDoubleTouch: () => {
+            VibrationProvider.repeatVibrate(500, 200, 2);
+        },
+        onTripleTouch: () => {
+            VibrationProvider.repeatVibrate(500, 200, 3);
             // 로딩 모션 On
             setIsLoading(true);
 
@@ -69,7 +66,6 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
             }, 500);
         }
     });
-
 
 
     // Effects
@@ -117,23 +113,13 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
         <div className={style.ClientWaitingBus}>
             <LoadingAnimation active={isLoading} />
 
-            <button className={style.button_movePrev} type="button" onClick={handlePrevStepClick}>
-                <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20,15 L10,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
-                    <path d="M35,15 L25,30 L35,45" fill="none" stroke="black" strokeWidth="2" />
-                </svg>
-            </button>
-
             <div className={style.wishBusInfo}
-                onClick={() => {
-                    wishBus && SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 대기중입니다`);
-                }}
+                onClick={handleBusInfoClick}
             >
                 <h1>{wishBus && wishBus.busRouteAbbreviation}</h1>
                 <h3>{waitingMessage}</h3>
             </div>
 
-            <button className={style.button_moveNext} type="button" onClick={() => { }}></button>
         </div>
     );
 }

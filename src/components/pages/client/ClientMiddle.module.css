@@ -19,12 +19,12 @@
 /* authentication's children elements */
 .selectAction button {
     width: 80%;
-    height: 25%;
+    height: 90%;
     border-radius: 8px;
     border: 1px solid var(--button-border--color);
     background-color: var(--button-color);
     color: var(--button-text-color);
-    font-size: 1.2rem;
+    font-size: 1.8rem;
     font-weight: 550;
     cursor: pointer;
     user-select: none;

@@ -8,8 +8,8 @@
 
 /* ClientSearchStation's children elements */
 .wishBusInfo {
-    width: 70%;
-    height: 70%;
+    width: 90%;
+    height: 90%;
     margin-bottom: 10%;
     border-radius: 8px;
     border: 1px solid var(--button-border--color);
