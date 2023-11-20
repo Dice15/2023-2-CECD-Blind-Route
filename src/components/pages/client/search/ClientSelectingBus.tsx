@@ -90,7 +90,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
         onSingleTouch: () => {
             VibrationProvider.vibrate(1000);
             const bus = busList[busListIndexRef.current];
-            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}" 입니다. 세번 터치하면 버스를 예약합니다.`);
+            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}" 세번 터치하면 버스를 예약합니다.`);
         },
         onDoubleTouch: () => {
             VibrationProvider.repeatVibrate(500, 200, 2);
@@ -125,7 +125,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
         (async () => {
             await loadBookmark();
             const bus = busList[busListIndexRef.current];
-            SpeechOutputProvider.speak(`버스를 선택하세요. 두번 터치하면 즐겨찾기에 등록됩니다. ${bus.busRouteAbbreviation}`);
+            SpeechOutputProvider.speak(`버스를 선택하세요. 두번 터치하면 즐겨찾기에 등록됩니다. "${bus.busRouteAbbreviation}" 세번 터치하면 버스를 예약합니다.`);
         })();
     }, [loadBookmark, busList]);
 

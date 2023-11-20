@@ -511,7 +511,9 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
         (async () => {
             if (await loadBookmark()) {
                 const bus = bookmarkList[busListIndexRef.current];
-                SpeechOutputProvider.speak(`버스를 선택하세요, ${bus.busRouteAbbreviation}`);
+                setTimeout(() => {
+                    SpeechOutputProvider.speak(`버스를 선택하세요, ${bus.busRouteAbbreviation}`);
+                }, 1000);
             } else {
                 SpeechOutputProvider.speak("즐겨찾기에 등록된 버스가 없습니다");
                 history(`/client`);
