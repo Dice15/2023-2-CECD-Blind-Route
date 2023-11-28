@@ -87,13 +87,13 @@ export async function getReservedBusList(userRole: UserRole, params: { arsId: st
  */
 
 /** 서버에서 받은 이미지를 리턴해줌 */
-interface ISendCapturedImage {
-    data?: Blob;
+interface IExtractedBusNumber {
+    busRouteNm: number;
 }
 
 /** 전광판에서 캡쳐한 이미지를 서버로 보냄 */
-export async function sendCapturedImage(userRole: UserRole, params: { arsId: string, image: Blob }) {
-    let result: ISendCapturedImage = { data: undefined };
+export async function extractBusNumberFromImage(userRole: UserRole, params: { arsId: string, image: Blob }) {
+    let result: IExtractedBusNumber = { busRouteNm: 0 };
 
     const formData = new FormData();
     formData.append('image', params.image, 'photo.jpeg');
@@ -104,26 +104,18 @@ export async function sendCapturedImage(userRole: UserRole, params: { arsId: str
             formData,
             {
                 headers: {
-                    "Content-Type": "multipart/form-data",
+                    "Content-Type": "application/x-www-form-urlencoded"
                 },
-                withCredentials: true,
-                //responseType: 'blob' // Important: to receive blob data
+                withCredentials: true
             }
         );
+        result.busRouteNm = response.data;
 
-        const contentType = response.headers['content-type'];
-
-        console.log("sendTest: ", response.data);
-        if (contentType.includes('image')) {
-            result.data = new Blob([response.data], { type: contentType });
-        } else {
-            console.error("Received data is not of image type:", contentType);
-        }
     } catch (error) {
         console.error("Image upload failed:", error);
     }
 
-    return result.data;
+    return result;
 }
 
 

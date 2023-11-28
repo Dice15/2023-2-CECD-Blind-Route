@@ -25,7 +25,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
 
 
     // state
-    const [busList, setBusList] = useState<Bus[] | null>(null);
+    const [busList, setBusList] = useState<Bus[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
 
@@ -43,12 +43,9 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
     /** 정류장에 예약된 버스 리스트를 주기적으로 갱신함 */
     useEffect(() => {
         refreshTaskRef.current = setInterval(async () => {
-            setIsLoading(!busList && true);
             const reponsedReservedBusList = await getReservedBusList(userRole, { arsId: wishStation.arsId });
-            setIsLoading(!busList && false);
             setBusList(reponsedReservedBusList);
         }, 2000);
-
 
         return () => {
             if (refreshTaskRef.current) {
@@ -56,67 +53,63 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 setBusList([]);
             }
         };
-    }, [userRole, wishStation, busList]);
+    }, [userRole, wishStation]);
 
 
     // Render
     return (<div className={style.PanelReservedBus} ref={reservedBusTableRef}>
         <LoadingAnimation active={isLoading} />
+        <VirtualizedTable
+            windowHeight={reservedBusTableHeight - 4}
+            tableStyles={{
+                height: "calc(100% - 4px)",
+                width: "calc(100% - 4px)",
+                overflow: "hidden",
+                borderRadius: "10px",
+                border: "2px solid var(--main-border-color)"
+            }}
+            numColumns={tableColumns.length}
+            columnHeight={50}
+            columnWidths={tableColumns.map((column) => column.style)}
+            columnStyles={{
+                userSelect: "none",
+                backgroundColor: "var(--main-background-color)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: "20px",
+                fontWeight: "600"
+            }}
+            renderColumns={({ index, columnClassName, columnStyle }) => {
+                return (
+                    <div key={index} className={columnClassName} style={columnStyle}>
+                        {tableColumns[index].name}
+                    </div>
+                );
+            }}
 
-        {busList &&
-            <VirtualizedTable
-                windowHeight={reservedBusTableHeight - 4}
-                tableStyles={{
-                    height: "calc(100% - 4px)",
-                    width: "calc(100% - 4px)",
-                    overflow: "hidden",
-                    borderRadius: "10px",
-                    border: "2px solid var(--main-border-color)"
-                }}
-                numColumns={tableColumns.length}
-                columnHeight={50}
-                columnWidths={tableColumns.map((column) => column.style)}
-                columnStyles={{
+            numRows={busList.length}
+            rowHeight={50}
+            rowStyles={{
+                default: {
                     userSelect: "none",
-                    backgroundColor: "var(--main-background-color)",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
                     fontSize: "20px",
-                    fontWeight: "600"
-                }}
-                renderColumns={({ index, columnClassName, columnStyle }) => {
-                    return (
-                        <div key={index} className={columnClassName} style={columnStyle}>
-                            {tableColumns[index].name}
-                        </div>
-                    );
-                }}
-
-                numRows={busList.length}
-                rowHeight={50}
-                rowStyles={{
-                    default: {
-                        userSelect: "none",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        fontSize: "20px",
-                        cursor: "pointer",
-                        backgroundColor: "var(--main-background-color)"
-                    }
-                }}
-                renderRows={({ index, rowClassName, rowStyle, itemClassName, itemStyles }) => {
-                    const busInfo = busList[index].print();
-                    return (
-                        <div key={index} id={`${index}`} className={rowClassName} style={rowStyle}>
-                            <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
-                            <div className={itemClassName} style={itemStyles[1]}>{busInfo.busRouteAbbreviation}</div>
-                        </div>
-                    );
-                }}
-            />
-        }
-
+                    cursor: "pointer",
+                    backgroundColor: "var(--main-background-color)"
+                }
+            }}
+            renderRows={({ index, rowClassName, rowStyle, itemClassName, itemStyles }) => {
+                const busInfo = busList[index].print();
+                return (
+                    <div key={index} id={`${index}`} className={rowClassName} style={rowStyle}>
+                        <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
+                        <div className={itemClassName} style={itemStyles[1]}>{busInfo.busRouteAbbreviation}</div>
+                    </div>
+                );
+            }}
+        />
     </div>);
 }

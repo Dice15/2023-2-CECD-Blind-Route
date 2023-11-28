@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import style from "./PanelCameraCapture.module.css"
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import { UserRole } from "../../../../cores/types/UserRole";
-import { detectedTest, sendCapturedImage } from "../../../../cores/api/blindroutePanel";
+import { detectedTest, extractBusNumberFromImage } from "../../../../cores/api/blindroutePanel";
 import Bus from "../../../../cores/types/Bus";
 import Station from "../../../../cores/types/Station";
 import { getBusList } from "../../../../cores/api/blindrouteApi";
@@ -35,7 +35,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     // States
     const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
     const [busList, setBusList] = useState<Bus[]>([]);
-    const [detectedBus, setDetectedBus] = useState<Bus | null>(null);
+    const [detectedBus, setDetectedBus] = useState<number>(-1);
     const [frameCount, setFrameCount] = useState<number>(0);
     const [framesPerSecond, setFramesPerSecond] = useState<number>(0);  // 초당 프레임 상태 추가
 
@@ -173,7 +173,8 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     useEffect(() => {
         const sendImage = async () => {
             if (capturedImage) {
-                await sendCapturedImage(userRole, { arsId: arsId, image: capturedImage });
+                const result = await extractBusNumberFromImage(userRole, { arsId: arsId, image: capturedImage });
+                setDetectedBus(result.busRouteNm);
             }
         }
         sendImage();
@@ -194,14 +195,29 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     }, [updateFrameCount]);
 
 
+    // Render
+    return (
+        <div className={style.PanelCameraCapture} >
+            <div className={style.detected_bus}>
+                <h3>{detectedBus && `도착한 버스: ${detectedBus === -1 ? "도착한 버스가 없습니다" : detectedBus}`}</h3>
+            </div>
+            <div className={style.captured_image} ref={displayCameraRef}>
+                <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef}></video>
+                <canvas style={{ display: "none" }} ref={canvasRef} ></canvas>
+            </div>
+        </div>
+    );
+}
+
+
 
     /** Test Code : 버스 도착 테스트 */
-    useEffect(() => {
+    /*useEffect(() => {
         let index = 0;
 
         const intervalId = setInterval(async () => {
             const bus = busList[index];
-            setDetectedBus(bus);
+           
 
             try {
                 const res = await detectedTest(userRole, {
@@ -220,20 +236,5 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
 
         return () => clearInterval(intervalId);
 
-    }, [userRole, busList, setDetectedBus]);
+    }, [userRole, busList, setDetectedBus]);*/
 
-
-
-    // Render
-    return (
-        <div className={style.PanelCameraCapture} >
-            <div className={style.detected_bus}>
-                <h3>{detectedBus && `도착한 버스: ${detectedBus.busRouteAbbreviation}`}</h3>
-            </div>
-            <div className={style.captured_image} ref={displayCameraRef}>
-                <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef}></video>
-                <canvas style={{ display: "none" }} ref={canvasRef} ></canvas>
-            </div>
-        </div>
-    );
-}
