@@ -35,7 +35,7 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
 
     // Effects
     useEffect(() => {
-        SpeechOutputProvider.speak("화면 중앙을 두번 터치하면 버스 검색하기, 세번 터치하면 즐겨찾기로 이동합니다.");
+        SpeechOutputProvider.speak("화면을 두번 터치하면 버스 검색하기, 세번 터치하면 즐겨찾기로 이동합니다.");
     }, []);
 
 
@@ -50,7 +50,7 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                     <div className={style.selectAction}>
                         <button type="button"
                             onClick={useTapEvents({
-                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("두번 터치하면 버스 검색하기, 세번 터치하면 즐겨찾기로 이동합니다."); },
+                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("화면을 두번 터치하면 버스 검색하기, 세번 터치하면 즐겨찾기로 이동합니다."); },
                                 onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); moveToAction("search"); },
                                 onTripleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 3); moveToAction("bookmark"); }
                             })}

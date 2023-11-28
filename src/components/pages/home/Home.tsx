@@ -47,7 +47,7 @@ export default function Home({ setUserRole, authenticationAction, setAuthenticat
 
 
     const handleAuthenticationClick = useTapEvents({
-        onSingleTouch: () => { SpeechOutputProvider.speak("더블 터치하면 로그인을 합니다"); },
+        onSingleTouch: () => { SpeechOutputProvider.speak("화면을 두번 터치하면 로그인을 합니다."); },
         onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); onAuthentication("login"); }
     });
 
@@ -85,7 +85,7 @@ export default function Home({ setUserRole, authenticationAction, setAuthenticat
 
     // Effects
     useEffect(() => {
-        SpeechOutputProvider.speak("로그인 페이지 입니다. 더블 터치하면 로그인을 합니다");
+        SpeechOutputProvider.speak("로그인 페이지 입니다. 화면을 두번 터치하면 로그인을 합니다.");
     }, []);
 
 

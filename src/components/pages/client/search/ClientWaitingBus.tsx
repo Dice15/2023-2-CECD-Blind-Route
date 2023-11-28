@@ -84,7 +84,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
 
         wishBus && SpeechOutputProvider.speak(`"${wishBus.busRouteAbbreviation}", 버스를 대기중입니다. 화면을 두번 터치를 하면 예약을 취소합니다`);
         return () => clearInterval(intervalId);
-    }, []);
+    }, [wishBus]);
 
 
 
