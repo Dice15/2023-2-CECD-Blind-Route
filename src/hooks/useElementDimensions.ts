@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-
-
 /*****************************************************************
  * HTML 요소의 dimensions (width와 height)를 관리하는 React Hook입니다.
  *****************************************************************/
@@ -12,32 +10,35 @@ interface HtmlElementDimensions {
     height: number;
 }
 
-
 /**
  * useElementDimensions Hook은 HTML 요소의 dimensions (width와 height)를 반환합니다.
  *
- * 이 Hook은 "Default" 또는 "Pure" dimension type을 받아, 
- * 각각 padding과 border를 포함하거나 포함하지 않는 dimensions을 반환합니다.
+ * 이 Hook은 dimensionType에 따라 요소의 dimensions을 계산합니다.
+ * "Default"는 padding과 border를 포함한 dimensions을,
+ * "Pure"는 padding과 border를 제외한 순수한 dimensions을 반환합니다.
  *
  * @param {React.RefObject<T>} htmlElement - dimensions을 가져올 HTML 요소의 참조입니다.
- * @param {"Default" | "Pure"} dimensionType - dimensions 타입입니다. 
- *        "Default"는 padding과 border를 포함, "Pure"는 padding과 border를 제외합니다.
+ * @param {"Default" | "Pure"} dimensionType - dimensions 계산 방식을 지정합니다.
+ *        "Default"는 padding과 border를 포함, "Pure"는 이들을 제외합니다.
  * @returns {[number, number]} HTML 요소의 width와 height를 반환합니다.
  */
-export default function useElementDimensions<T extends HTMLElement>(
-    htmlElement: React.RefObject<T>,
-    dimensionType: "Default" | "Pure"
-): [number, number] {
+export default function useElementDimensions<T extends HTMLElement>(htmlElement: React.RefObject<T>, dimensionType: "Default" | "Pure"): [number, number] {
+    // HTML 요소의 현재 dimensions를 상태로 관리
     const [dimensions, setDimensions] = useState<HtmlElementDimensions>({ width: 0, height: 0 });
+
+    // dimensions 타입에 따라 적절한 함수 선택
     const getDimensions = dimensionType === "Default" ? getDefaultDimensions : getPureDimensions;
 
     useEffect(() => {
+        // 관찰 대상 요소
         const currentElement = htmlElement.current;
         let frameId: number | null = null;
 
+        // ResizeObserver 콜백, 요소의 크기 변화 감지
         const observerCallback = () => {
             const newDimensions: HtmlElementDimensions = getDimensions(htmlElement);
 
+            // 크기가 변경된 경우 상태 업데이트
             if (
                 dimensions.width !== newDimensions.width ||
                 dimensions.height !== newDimensions.height
@@ -51,12 +52,14 @@ export default function useElementDimensions<T extends HTMLElement>(
             }
         };
 
+        // ResizeObserver 설정 및 실행
         const observer = new ResizeObserver(observerCallback);
 
         if (currentElement) {
             observer.observe(currentElement);
         }
 
+        // 정리 작업
         return () => {
             if (currentElement) {
                 observer.unobserve(currentElement);
@@ -71,11 +74,11 @@ export default function useElementDimensions<T extends HTMLElement>(
 }
 
 /**
- * getDefaultDimensions 함수는 요소의 dimensions을 가져옵니다. 
- * 이 dimensions은 padding과 border를 포함합니다.
+ * getDefaultDimensions 함수는 요소의 dimensions을 가져옵니다.
+ * 이 dimensions은 padding과 border를 포함한 값입니다.
  *
  * @param {React.RefObject<HTMLElement>} htmlElement - dimensions을 가져올 HTML 요소의 참조입니다.
- * @returns {HtmlElementDimensions} HTML 요소의 dimensions을 반환합니다.
+ * @returns {HtmlElementDimensions} 요소의 dimensions을 반환합니다.
  */
 function getDefaultDimensions(htmlElement: React.RefObject<HTMLElement>): HtmlElementDimensions {
     if (htmlElement.current) {
@@ -88,11 +91,11 @@ function getDefaultDimensions(htmlElement: React.RefObject<HTMLElement>): HtmlEl
 }
 
 /**
- * getPureDimensions 함수는 요소의 순수 dimensions만을 가져옵니다.
- * 이 dimensions은 padding과 border를 제외합니다.
+ * getPureDimensions 함수는 요소의 순수한 dimensions만을 가져옵니다.
+ * 이 dimensions은 padding과 border를 제외한 순수한 값입니다.
  *
  * @param {React.RefObject<HTMLElement>} htmlElement - dimensions을 가져올 HTML 요소의 참조입니다.
- * @returns {HtmlElementDimensions} HTML 요소의 dimensions을 반환합니다.
+ * @returns {HtmlElementDimensions} 요소의 순수한 dimensions을 반환합니다.
  */
 function getPureDimensions(htmlElement: React.RefObject<HTMLElement>): HtmlElementDimensions {
     if (htmlElement.current) {
@@ -108,8 +111,8 @@ function getPureDimensions(htmlElement: React.RefObject<HTMLElement>): HtmlEleme
         const borderY = parseFloat(styles.borderTopWidth) + parseFloat(styles.borderBottomWidth);
 
         return {
-            width: width - (paddingX + borderX),
-            height: height - (paddingY + borderY),
+            width: width - (paddingX + borderX), // padding과 border를 제외한 너비
+            height: height - (paddingY + borderY), // padding과 border를 제외한 높이
         };
     }
     return { width: 0, height: 0 };
