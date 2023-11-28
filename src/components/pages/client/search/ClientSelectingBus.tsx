@@ -88,14 +88,13 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
 
     /* 누르고 있으면 즐겨찾기에 추가 */
     const handleBookmark = useTouchHoldEvents({
-        onTouchStart: {
-            event: () => {
-                VibrationProvider.vibrate(1000);
-                const bus = busList[busListIndexRef.current];
-                isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
-            },
-            duration: 2000
-        }
+        onTouchStart: () => {
+            VibrationProvider.vibrate(1000);
+            const bus = busList[busListIndexRef.current];
+            isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
+        },
+        touchDuration: 2000
+
     });
 
 
@@ -161,6 +160,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
                                 style={{ height: `${busInfoContainerHeight}px` }}
                                 onClick={handleBusInfoClick}
                                 onTouchStart={handleBookmark.handleTouchStart}
+                                onTouchEnd={handleBookmark.handleTouchEnd}
                             >
                                 <h1>{bus.busRouteAbbreviation}</h1>
                                 <h3>{bus.stationName}</h3>

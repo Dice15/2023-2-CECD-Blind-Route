@@ -54,61 +54,56 @@ export default function ClientSearchingStation({ userRole, setPageState, setStat
 
     /** 음성 인식 시작 및 종료 */
     const handleVoiceRecognition = useTouchHoldEvents({
-        onTouchStart: {
-            event: () => {
-                SpeechOutputProvider.clearSpeak();
-                playVoiceRecognitionAudio();
-                VibrationProvider.vibrate(1000);
+        onTouchStart: () => {
+            SpeechOutputProvider.clearSpeak();
+            playVoiceRecognitionAudio();
+            VibrationProvider.vibrate(1000);
 
-                // 검색 박스 초기화
-                if (textbox_stationName.current) {
-                    textbox_stationName.current.value = "";
-                }
+            // 검색 박스 초기화
+            if (textbox_stationName.current) {
+                textbox_stationName.current.value = "";
+            }
 
-                // 음성 인식 시작
-                setTimeout(() => {
-                    SpeechInputProvider.startRecognition((result: string) => {
-                        if (textbox_stationName.current) {
-                            const maxLength = 30;
-                            const trimmedResult = Array.from(result).slice(0, maxLength).join('');
-                            textbox_stationName.current.value = trimmedResult;
-                        }
-                    });
-                }, 1000);
-            },
-            duration: 2000
-        },
-        onTouchEnd: {
-            event: () => {
-                playVoiceRecognitionAudio();
-                VibrationProvider.vibrate(1000);
-                SpeechInputProvider.stopRecognition();
-
-                // 로딩 모션 on
-                setIsLoading(true);
-
-                // 1초후 정류장 검색 시작
-                setTimeout(async () => {
+            // 음성 인식 시작
+            setTimeout(() => {
+                SpeechInputProvider.startRecognition((result: string) => {
                     if (textbox_stationName.current) {
-                        if (textbox_stationName.current.value === "") {
-                            SpeechOutputProvider.speak("인식된 단어가 없습니다. 다시 시도해주세요.");
-                            setIsLoading(false);    // 로딩 모션 off
-                        } else {
-                            const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
-                            setIsLoading(false);    // 로딩 모션 off
+                        const maxLength = 30;
+                        const trimmedResult = Array.from(result).slice(0, maxLength).join('');
+                        textbox_stationName.current.value = trimmedResult;
+                    }
+                });
+            }, 1000);
+        },
+        onTouchEnd: () => {
+            playVoiceRecognitionAudio();
+            VibrationProvider.vibrate(1000);
+            SpeechInputProvider.stopRecognition();
 
-                            if (responsedStationList.length > 0) {
-                                setStationList(responsedStationList);
-                                setPageState("selectingStation");
-                            } else {
-                                SpeechOutputProvider.speak(`'${textbox_stationName.current.value}'가 이름에 포함된 정류장이 없습니다`);
-                            }
+            // 로딩 모션 on
+            setIsLoading(true);
+
+            // 1초후 정류장 검색 시작
+            setTimeout(async () => {
+                if (textbox_stationName.current) {
+                    if (textbox_stationName.current.value === "") {
+                        SpeechOutputProvider.speak("인식된 단어가 없습니다. 다시 시도해주세요.");
+                        setIsLoading(false);    // 로딩 모션 off
+                    } else {
+                        const responsedStationList = await getStationList(userRole, textbox_stationName.current.value);
+                        setIsLoading(false);    // 로딩 모션 off
+
+                        if (responsedStationList.length > 0) {
+                            setStationList(responsedStationList);
+                            setPageState("selectingStation");
+                        } else {
+                            SpeechOutputProvider.speak(`'${textbox_stationName.current.value}'가 이름에 포함된 정류장이 없습니다`);
                         }
                     }
-                }, 1000);
-            },
-            duration: 500
-        }
+                }
+            }, 1000);
+        },
+        touchDuration: 2000
     });
 
     const handleSearchStation = useTouchEvents({

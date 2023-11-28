@@ -1,32 +1,30 @@
-import { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 
+// Hook 정의
 export default function useTouchHoldEvents(
-    { onTouchStart, onTouchEnd }: { 
-        onTouchStart?: { event: () => void, duration: number }, 
-        onTouchEnd?: { event: () => void, duration: number } 
-    }
+    { onTouchStart, onTouchEnd, touchDuration }: { onTouchStart: () => void, onTouchEnd?: () => void, touchDuration: number }
 ) {
-    const touchTimer = useRef<NodeJS.Timeout | null>(null);
-    const touchEndTimer = useRef<NodeJS.Timeout | null>(null);
+    const timer = useRef<NodeJS.Timeout | null>(null);
+    const durationReached = useRef<boolean>(false);
 
-    const handleTouchStart = useCallback(() => {
-        touchTimer.current = setTimeout(() => {
-            onTouchStart?.event();
-        }, onTouchStart?.duration);
-    }, [onTouchStart]);
+    const handleTouchStart = () => {
+        durationReached.current = false;
+        const newTimer = setTimeout(() => {
+            onTouchStart();
+            durationReached.current = true;
+        }, touchDuration + 500);
+        timer.current = newTimer;
+    };
 
-    const handleTouchEnd = useCallback(() => {
-        clearTimeout(touchTimer.current as NodeJS.Timeout);
+    const handleTouchEnd = () => {
+        if (timer.current) {
+            clearTimeout(timer.current);
+            timer.current = null;
+        }
+        if (durationReached.current) {
+            onTouchEnd && onTouchEnd();
+        }
+    };
 
-        touchEndTimer.current = setTimeout(() => {
-            onTouchEnd?.event();
-        }, onTouchEnd?.duration);
-    }, [onTouchEnd]);
-
-    const handleTouchCancel = useCallback(() => {
-        clearTimeout(touchTimer.current as NodeJS.Timeout);
-        clearTimeout(touchEndTimer.current as NodeJS.Timeout);
-    }, []);
-
-    return { handleTouchStart, handleTouchEnd, handleTouchCancel };
+    return { handleTouchStart, handleTouchEnd };
 }

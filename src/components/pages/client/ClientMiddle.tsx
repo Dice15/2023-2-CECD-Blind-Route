@@ -33,6 +33,26 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
         history(`/client/action`);
     };
 
+    const touchEvents = useTouchEvents({
+        onSingleTouch: () => {
+            VibrationProvider.vibrate(1000);
+            SpeechOutputProvider.speak("화면을 두번 터치하면 버스 검색하기, 2초간 누르면 즐겨찾기로 이동합니다.");
+        },
+        onDoubleTouch: () => {
+            VibrationProvider.repeatVibrate(500, 200, 2);
+            moveToAction("search");
+        }
+    });
+
+    const touchHoldEvents = useTouchHoldEvents({
+        onTouchStart: () => {
+            VibrationProvider.vibrate(1000);
+            moveToAction("bookmark");
+        },
+        touchDuration: 2000
+
+    });
+
 
     // Effects
     useEffect(() => {
@@ -50,13 +70,9 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                 <Route path="/" element={
                     <div className={style.selectAction}>
                         <button type="button"
-                            onClick={useTouchEvents({
-                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("화면을 두번 터치하면 버스 검색하기, 2초간 누르면 즐겨찾기로 이동합니다."); },
-                                onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); moveToAction("search"); },
-                            })}
-                            onTouchStart={useTouchHoldEvents({
-                                onTouchStart: { event: () => { VibrationProvider.vibrate(1000); moveToAction("bookmark"); }, duration: 2000 }
-                            }).handleTouchStart}
+                            onClick={touchEvents}
+                            onTouchStart={touchHoldEvents.handleTouchStart}
+                            onTouchEnd={touchHoldEvents.handleTouchEnd}
                         >
                             버스 예약하기
                         </button>
