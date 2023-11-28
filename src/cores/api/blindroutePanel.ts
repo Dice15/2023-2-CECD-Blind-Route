@@ -130,12 +130,12 @@ export async function sendCapturedImage(userRole: UserRole, params: { arsId: str
 
 /** test */
 export interface IDetectedTestApi {
-    result: boolean;
+    result: number;
 };
 
 
 export async function detectedTest(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }): Promise<IDetectedTestApi> {
-    let data: boolean = false;
+    let data: number = -1;
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
@@ -148,6 +148,7 @@ export async function detectedTest(userRole: UserRole, params: { arsId: string, 
                 withCredentials: true
             }
         );
+        console.log(response.data, typeof response.data);
         data = response.data;
     }
     catch (error) {

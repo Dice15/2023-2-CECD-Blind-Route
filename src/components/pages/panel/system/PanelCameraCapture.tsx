@@ -135,7 +135,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
         const videoElement = videoRef.current;
         const canvasElement = canvasRef.current;
         const taskRef = captureTaskRef;
-        const taskInterval = 1000;
+        const taskInterval = 2000;
 
         const startCapture = async (video: HTMLVideoElement, canvas: HTMLCanvasElement, task: React.MutableRefObject<NodeJS.Timeout | null>) => {
             if (task && !task.current) {

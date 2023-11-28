@@ -47,7 +47,7 @@ export default function Home({ setUserRole, authenticationAction, setAuthenticat
 
 
     const handleAuthenticationClick = useTapEvents({
-        onSingleTouch: () => { SpeechOutputProvider.speak("화면을 두번 터치하면 로그인을 합니다."); },
+        onSingleTouch: () => {  VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("화면을 두번 터치하면 로그인을 합니다."); },
         onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); onAuthentication("login"); }
     });
 

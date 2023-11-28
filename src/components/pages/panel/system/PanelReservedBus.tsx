@@ -35,7 +35,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
 
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [
-        { name: "", style: { width: "50px", minWidth: "50px", maxWidth: "50px" } },
+        { name: "", style: { width: "50px" } },
         { name: "예약된 버스", style: { width: "calc(100% - 50px)" } },
     ];
 
@@ -65,11 +65,26 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
 
         {busList &&
             <VirtualizedTable
-                windowHeight={reservedBusTableHeight}
-
+                windowHeight={reservedBusTableHeight - 4}
+                tableStyles={{
+                    height: "calc(100% - 4px)",
+                    width: "calc(100% - 4px)",
+                    overflow: "hidden",
+                    borderRadius: "10px",
+                    border: "2px solid var(--main-border-color)"
+                }}
                 numColumns={tableColumns.length}
                 columnHeight={50}
                 columnWidths={tableColumns.map((column) => column.style)}
+                columnStyles={{
+                    userSelect: "none",
+                    backgroundColor: "var(--main-background-color)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    fontSize: "20px",
+                    fontWeight: "600"
+                }}
                 renderColumns={({ index, columnClassName, columnStyle }) => {
                     return (
                         <div key={index} className={columnClassName} style={columnStyle}>
@@ -79,7 +94,18 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 }}
 
                 numRows={busList.length}
-                rowHeight={40}
+                rowHeight={50}
+                rowStyles={{
+                    default: {
+                        userSelect: "none",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        fontSize: "20px",
+                        cursor: "pointer",
+                        backgroundColor: "var(--main-background-color)"
+                    }
+                }}
                 renderRows={({ index, rowClassName, rowStyle, itemClassName, itemStyles }) => {
                     const busInfo = busList[index].print();
                     return (
