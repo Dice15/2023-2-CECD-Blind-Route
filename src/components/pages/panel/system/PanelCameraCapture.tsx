@@ -234,9 +234,6 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                 <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef}></video>
                 <canvas style={{ display: "none" }} ref={canvasRef} ></canvas>
             </div>
-            <div className={style.frame_count}>
-                <p>FPS: {framesPerSecond.toFixed(2)}</p>
-            </div>
         </div>
     );
 }

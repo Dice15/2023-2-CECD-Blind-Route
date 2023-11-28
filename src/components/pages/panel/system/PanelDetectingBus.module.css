@@ -14,16 +14,6 @@
     display: flex;
 }
 
-.reserved_bus {
-    flex-grow: 1;
-    margin-right: 3%;
-}
-
-.detected_bus {
-    flex-grow: 1;
-    margin-left: 3%;
-}
-
 .button_movePrev,
 .button_moveNext {
     height: 80%;
@@ -49,12 +39,14 @@
 
 /* busTable's children elements */
 .reserved_bus {
-    flex: 48 0 calc(50% - 5px - 5px - 1px);
+    flex: 48 0 calc(50% - 3% - 5px - 5px - 1px);
     padding: 5px;
+    margin-right: 3%;
     border-right: 1px dashed var(--dividerline-color);
 }
 
 .detected_bus {
-    flex: 50 0 calc(50% - 5px - 5px - 1px);
+    flex: 50 0 calc(50% - 3% - 5px - 5px - 1px);
+    margin-left: 3%;
     padding: 5px;
 }

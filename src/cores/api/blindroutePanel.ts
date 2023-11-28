@@ -112,7 +112,7 @@ export async function sendCapturedImage(userRole: UserRole, params: { arsId: str
 
         const contentType = response.headers['content-type'];
 
-        console.log(response);
+        console.log("sendTest: ", response.data);
         if (contentType.includes('image')) {
             result.data = new Blob([response.data], { type: contentType });
         } else {
@@ -150,13 +150,12 @@ export async function detectedTest(userRole: UserRole, params: { arsId: string, 
                 withCredentials: true
             }
         );
-        console.log(response);
+        console.log("detectedTest: ", response.data);
         data = response.data;
     }
     catch (error) {
         console.error("Search request failed:", error);
     }
-    console.log("detectedTest: ", data);
     return { result: data };
 }
 
