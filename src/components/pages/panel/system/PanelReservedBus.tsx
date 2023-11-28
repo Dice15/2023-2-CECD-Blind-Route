@@ -35,8 +35,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
 
     /** 테이블 헤더 설정  */
     const tableColumns: { name: string, style: React.CSSProperties }[] = [
-        { name: "", style: { width: "50px" } },
-        { name: "예약된 버스", style: { width: "calc(100% - 50px)" } },
+        { name: "예약된 버스", style: { width: "100%" } },
     ];
 
 
@@ -70,7 +69,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 border: "2px solid var(--main-border-color)"
             }}
             numColumns={tableColumns.length}
-            columnHeight={50}
+            columnHeight={50 - 2}
             columnWidths={tableColumns.map((column) => column.style)}
             columnStyles={{
                 userSelect: "none",
@@ -79,6 +78,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 justifyContent: "center",
                 alignItems: "center",
                 fontSize: "20px",
+                borderBottom: "2px solid var(--main-border-color)",
                 fontWeight: "600"
             }}
             renderColumns={({ index, columnClassName, columnStyle }) => {
@@ -107,8 +107,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 console.log(busInfo)
                 return (
                     <div key={index} id={`${index}`} className={rowClassName} style={rowStyle}>
-                        <div className={itemClassName} style={itemStyles[0]}>{index + 1}</div>
-                        <div className={itemClassName} style={itemStyles[1]}>{busInfo.busRouteAbbreviation}</div>
+                        <div className={itemClassName} style={itemStyles[0]}>{busInfo.busRouteAbbreviation || busInfo.busRouteNumber}</div>
                     </div>
                 );
             }}

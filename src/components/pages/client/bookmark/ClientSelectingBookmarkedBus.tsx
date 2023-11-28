@@ -426,7 +426,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
                 bookmark.stationArsId !== bus.stationArsId || bookmark.busRouteId !== bus.busRouteId
             ));
 
-            await SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 해제하였습니다`);
+            await SpeechOutputProvider.speak(`${bus.busRouteAbbreviation || bus.busRouteNumber}를 즐겨찾기에서 해제하였습니다`);
 
             if (!(await loadBookmark())) {
                 await SpeechOutputProvider.speak(`이제 즐겨찾기에 등록된 버스가 없습니다. 홈으로 돌아갑니다.`);
@@ -444,7 +444,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
         VibrationProvider.vibrate(200);
         busListIndexRef.current = swiper.realIndex;
         const bus = bookmarkList[busListIndexRef.current];
-        SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
+        SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation || bus.busRouteNumber}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
         setTimeout(() => isSlidingRef.current = false, 250); // 300ms는 애니메이션 시간에 맞게 조정
     };
 
@@ -465,7 +465,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
             if (!isSlidingRef.current) {
                 VibrationProvider.vibrate(1000);
                 const bus = bookmarkList[busListIndexRef.current];
-                SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
+                SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation || bus.busRouteNumber}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
             }
         },
         onDoubleTouch: () => {
@@ -506,7 +506,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
     useEffect(() => {
         const bus = bookmarkList[busListIndexRef.current];
         if (bus) {
-            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
+            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation || bus.busRouteNumber}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
         }
     }, [bookmarkList]);
 
@@ -531,7 +531,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
                                 onTouchStart={handleBookmark.handleTouchStart}
                                 onTouchEnd={handleBookmark.handleTouchEnd}
                             >
-                                <h1>{bus.busRouteAbbreviation}</h1>
+                                <h1>{bus.busRouteAbbreviation || bus.busRouteNumber}</h1>
                                 <h3>{bus.stationName}</h3>
                             </div>
                         </SwiperSlide>
