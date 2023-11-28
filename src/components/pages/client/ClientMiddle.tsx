@@ -26,20 +26,17 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
     const [actionOption, setActionOption] = useState<ClientAction>("search");
 
 
-    /** */
+    // Handler
     const moveToAction = (action: ClientAction) => {
         setActionOption(action);
         history(`/client/action`);
     };
 
 
-
     // Effects
     useEffect(() => {
         SpeechOutputProvider.speak("화면 중앙을 두번 터치하면 버스 검색하기, 세번 터치하면 즐겨찾기로 이동합니다.");
-        SpeechOutputProvider.speak("상단바를 두번 터치하면 홈으로 이동합니다");
     }, []);
-
 
 
     // Render

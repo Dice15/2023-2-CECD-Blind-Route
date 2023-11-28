@@ -90,19 +90,11 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
         onSingleTouch: () => {
             VibrationProvider.vibrate(1000);
             const bus = busList[busListIndexRef.current];
-            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}" 세번 터치하면 버스를 예약합니다.`);
+            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}", 두번 터치하면 버스를 예약합니다. 세번 터치하면 버스를 즐겨찾기에 등록 합니다.`);
         },
         onDoubleTouch: () => {
             VibrationProvider.repeatVibrate(500, 200, 2);
-            const bus = busList[busListIndexRef.current];
-            isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
-        },
-        onTripleTouch: () => {
-            VibrationProvider.repeatVibrate(500, 200, 3);
-            // 로딩 모션 on
-            setIsLoading(true);
-
-            // 버스 예약
+            setIsLoading(true);     // 로딩 모션 on
             setTimeout(async () => {
                 const reserveResult = await reserveBus(userRole, busList[busListIndexRef.current]);
 
@@ -116,6 +108,12 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
                     setIsLoading(false);    // 로딩 모션 off
                 }
             }, 500);
+
+        },
+        onTripleTouch: () => {
+            VibrationProvider.repeatVibrate(500, 200, 3);
+            const bus = busList[busListIndexRef.current];
+            isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
         }
     });
 
@@ -125,7 +123,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
         (async () => {
             await loadBookmark();
             const bus = busList[busListIndexRef.current];
-            SpeechOutputProvider.speak(`버스를 선택하세요. 두번 터치하면 즐겨찾기에 등록됩니다. "${bus.busRouteAbbreviation}" 세번 터치하면 버스를 예약합니다.`);
+            SpeechOutputProvider.speak(`버스를 선택하세요. 화면을 두번 터치하면 버스를 예약합니다. 세번 터치하면 버스를 즐겨찾기에 등록 합니다. ${bus.busRouteAbbreviation}`);
         })();
     }, [loadBookmark, busList]);
 

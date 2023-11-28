@@ -8,6 +8,7 @@ import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
 import useTapEvents from "../../../../hooks/useTapEvents";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -23,6 +24,10 @@ export interface ClientWaitingBusProps {
 
 /** ClientWaitingBus 컴포넌트 */
 export default function ClientWaitingBus({ userRole, setPageState, wishBus, setWishBus }: ClientWaitingBusProps) {
+    // const 
+    const history = useNavigate();
+
+
     // Refs
     const refreshTaskRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -36,13 +41,10 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
     const handleBusInfoClick = useTapEvents({
         onSingleTouch: () => {
             VibrationProvider.vibrate(1000);
-            wishBus && SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 대기중입니다. 세번 터치를 하면 예약을 취소합니다`);
+            wishBus && SpeechOutputProvider.speak(`"${wishBus.busRouteAbbreviation}", 버스를 대기중입니다. 화면을 두번 터치를 하면 예약을 취소합니다`);
         },
         onDoubleTouch: () => {
             VibrationProvider.repeatVibrate(500, 200, 2);
-        },
-        onTripleTouch: () => {
-            VibrationProvider.repeatVibrate(500, 200, 3);
             // 로딩 모션 On
             setIsLoading(true);
 
@@ -56,7 +58,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
                         setWishBus(null);
                         setTimeout(() => {
                             setIsLoading(false);    // 로딩 모션 off
-                            setPageState("selectingBus");
+                            history("/client");
                         }, 2000);
                     } else {
                         SpeechOutputProvider.speak(`버스를 취소하는데 실패했습니다`);
@@ -64,7 +66,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
                     }
                 }
             }, 500);
-        }
+        },
     });
 
 
@@ -80,7 +82,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
             });
         }, 1000);
 
-        // 컴포넌트가 언마운트될 때 인터벌을 클리어합니다.
+        wishBus && SpeechOutputProvider.speak(`"${wishBus.busRouteAbbreviation}", 버스를 대기중입니다. 화면을 두번 터치를 하면 예약을 취소합니다`);
         return () => clearInterval(intervalId);
     }, []);
 

@@ -47,13 +47,10 @@ export default function ClientSelectingStation({ userRole, setPageState, station
         onSingleTouch: () => {
             VibrationProvider.vibrate(1000);
             const station = stationList[stationListIndexRef.current];
-            SpeechOutputProvider.speak(`"${station.stationName}" 입니다. 세번 터치하면 정류장 버스를 검색합니다.`);
+            SpeechOutputProvider.speak(`"${station.stationName}" 입니다. 화면을 두번 터치하면 정류장 버스를 검색합니다.`);
         },
         onDoubleTouch: () => {
             VibrationProvider.repeatVibrate(500, 200, 2);
-        },
-        onTripleTouch: () => {
-            VibrationProvider.repeatVibrate(500, 200, 3);
             // 음성 출력
             SpeechOutputProvider.speak("버스를 검색합니다");
 
