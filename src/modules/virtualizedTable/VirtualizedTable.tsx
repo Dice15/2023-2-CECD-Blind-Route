@@ -64,10 +64,10 @@ export default function VirtualizedTable({
                 index: i,
                 columnClassName: `${styles.virtualizedTable_column}`,
                 columnStyle: {
-                    ...columnStyles,
                     flex: `0 0 ${columnWidths?.length ? columnWidths[i].width : "100px"}`,
                     height: `${columnHeight}px`,
                     textAlign: "center",
+                    ...columnStyles,
                 }
             }), { key: `column-${i}` })
         );
@@ -81,13 +81,13 @@ export default function VirtualizedTable({
                 index: i,
                 rowClassName: `${styles.virtualizedTable_row}`,
                 rowStyle: {
-                    ...rowStyles?.default,
-                    ...(i === hoveredRow && rowStyles?.hover),
                     display: "flex",
                     position: "absolute",
                     top: `${i * rowHeight}px`,
                     width: "100%",
                     height: `${rowHeight}px`,
+                    ...rowStyles?.default,
+                    ...(i === hoveredRow && rowStyles?.hover),
                 },
                 itemClassName: `${styles.virtualizedTable_item}`,
                 itemStyles: columnWidths.map((column) => ({
@@ -112,6 +112,8 @@ export default function VirtualizedTable({
                 style={{
                     height: `${headerHeight}px`,
                     maxHeight: `${headerHeight}px`,
+                    width: `${hideScrollbar ? "100%" : "calc(100% - 17px)"}`,
+                    marginRight: `${hideScrollbar ? "none" : "17px solid"}`,
                     borderRightColor: `${(columnStyles?.backgroundColor as string)?.split(' ').pop()}`
                 }}>
                 <div className={styles.table__headers_columns}>
