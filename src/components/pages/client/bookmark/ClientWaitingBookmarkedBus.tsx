@@ -6,6 +6,9 @@ import { checkBusArrival, unreserveBus } from "../../../../cores/api/blindrouteA
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { ClientBookmarkState } from "./ClientBookmark";
+import useTouchEvents from "../../../../hooks/useTouchEvents";
+import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -21,6 +24,10 @@ export interface ClientWaitingBookmarkedBusProps {
 
 /** ClientWaitingBookmarkedBus 컴포넌트 */
 export default function ClientWaitingBookmarkedBus({ userRole, setPageState, wishBus, setWishBus }: ClientWaitingBookmarkedBusProps) {
+    // const 
+    const history = useNavigate();
+
+
     // Refs
     const refreshTaskRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -30,24 +37,35 @@ export default function ClientWaitingBookmarkedBus({ userRole, setPageState, wis
     const [isLoading, setIsLoading] = useState(false);
 
 
-    /**
-     * Handler functions
-     */
-    /** 이전 단계로 이동: 예약한 버스를 취소하고 이동 */
-    const onPrevStep = async () => {
-        setIsLoading(true);
-        const unreserveResult = await unreserveBus(userRole, wishBus);
-        setIsLoading(false);
+    // Handler
+    const handleBusInfoClick = useTouchEvents({
+        onSingleTouch: () => {
+            VibrationProvider.vibrate(1000);
+            wishBus && SpeechOutputProvider.speak(`"${wishBus.busRouteAbbreviation}", 버스를 대기중입니다. 화면을 두번 터치를 하면 예약을 취소합니다`);
+        },
+        onDoubleTouch: () => {
+            VibrationProvider.repeatVibrate(500, 200, 2);
+            // 로딩 모션 On
+            setIsLoading(true);
 
-        if (unreserveResult) {
-            SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스 예약을 취소하였습니다`);
-            setWishBus(null);
-            setPageState("selectingBookmarkedBus");
-        } else {
-            SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 취소하는데 실패했습니다`);
-        }
-    };
+            // 버스 검색
+            setTimeout(async () => {
+                if (wishBus) {
+                    const unreserveResult = await unreserveBus(userRole, wishBus);
 
+                    if (unreserveResult) {
+                        await SpeechOutputProvider.speak(`버스 예약을 취소하였습니다. 홈 화면으로 돌아갑니다.`);
+                        setWishBus(null);
+                        setIsLoading(false);    // 로딩 모션 off
+                        history("/client");
+                    } else {
+                        SpeechOutputProvider.speak(`버스를 취소하는데 실패했습니다`);
+                        setIsLoading(false);    // 로딩 모션 off
+                    }
+                }
+            }, 500);
+        },
+    });
 
 
     // Effects
@@ -62,20 +80,22 @@ export default function ClientWaitingBookmarkedBus({ userRole, setPageState, wis
             });
         }, 1000);
 
-        // 컴포넌트가 언마운트될 때 인터벌을 클리어합니다.
+        wishBus && SpeechOutputProvider.speak(`"${wishBus.busRouteAbbreviation}", 버스를 대기중입니다. 화면을 두번 터치를 하면 예약을 취소합니다`);
         return () => clearInterval(intervalId);
-    }, []);
+    }, [wishBus]);
 
 
 
     /** 예약한 버스가 도착했는지 2초마다 확인함 */
     useEffect(() => {
         refreshTaskRef.current = setInterval(async () => {
-            const isWishBusArrived = await checkBusArrival(userRole, wishBus);
+            if (wishBus) {
+                const isWishBusArrived = await checkBusArrival(userRole, wishBus);
 
-            if (isWishBusArrived) {
-                SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스가 도착했습니다`);
-                setPageState("arrivedBookmarkedBus");
+                if (isWishBusArrived) {
+                    SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스가 도착했습니다`);
+                    setPageState("arrivedBookmarkedBus");
+                }
             }
         }, 2000);
 
@@ -92,20 +112,12 @@ export default function ClientWaitingBookmarkedBus({ userRole, setPageState, wis
     return (
         <div className={style.ClientWaitingBookmarkedBus}>
             <LoadingAnimation active={isLoading} />
-
-            <button className={style.button_movePrev} type="button" onClick={onPrevStep}>
-                <svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20,15 L10,30 L20,45" fill="none" stroke="black" strokeWidth="2" />
-                    <path d="M35,15 L25,30 L35,45" fill="none" stroke="black" strokeWidth="2" />
-                </svg>
-            </button>
-
-            <div className={style.wishBusInfo} onClick={() => { SpeechOutputProvider.speak(`${wishBus.busRouteAbbreviation} 버스를 대기중입니다`); }}>
-                <h1>{wishBus.busRouteAbbreviation}</h1>
+            <div className={style.wishBusInfo}
+                onClick={handleBusInfoClick}
+            >
+                <h1>{wishBus && wishBus.busRouteAbbreviation}</h1>
                 <h3>{waitingMessage}</h3>
             </div>
-
-            <button className={style.button_moveNext} type="button" onClick={() => { }}></button>
         </div>
     );
 }

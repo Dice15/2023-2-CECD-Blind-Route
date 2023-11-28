@@ -54,12 +54,10 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
                     const unreserveResult = await unreserveBus(userRole, wishBus);
 
                     if (unreserveResult) {
-                        SpeechOutputProvider.speak(`버스 예약을 취소하였습니다`);
+                        await SpeechOutputProvider.speak(`버스 예약을 취소하였습니다. 홈 화면으로 돌아갑니다.`);
                         setWishBus(null);
-                        setTimeout(() => {
-                            setIsLoading(false);    // 로딩 모션 off
-                            history("/client");
-                        }, 2000);
+                        setIsLoading(false);    // 로딩 모션 off
+                        history("/client");
                     } else {
                         SpeechOutputProvider.speak(`버스를 취소하는데 실패했습니다`);
                         setIsLoading(false);    // 로딩 모션 off

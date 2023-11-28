@@ -55,14 +55,10 @@ export default function ClientArrivedBookmarkedBus({ wishBus, setWishBus }: Clie
     // Render
     return (
         <div className={style.ClientArrivedBookmarkedBus}>
-            <button className={style.button_movePrev} type="button" onClick={() => { }}></button>
-
             <div className={style.wishBusInfo} onClick={onFirstStep}>
                 <h1>{wishBus.busRouteAbbreviation}</h1>
                 <h3>{"버스가 도착했습니다!!"}</h3>
             </div>
-
-            <button className={style.button_moveNext} type="button" onClick={() => { }}></button>
         </div >
     );
 }

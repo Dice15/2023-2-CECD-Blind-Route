@@ -8,8 +8,8 @@
 
 /* ClientSelectingBookmarkedBus's children elements */
 .busInfoContainer {
-    height: 70%;
-    width: 70%;
+    height: 90%;
+    width: 90%;
     margin-bottom: 10%;
     border-radius: 8px;
     border: 1px solid var(--button-border--color);
@@ -33,27 +33,6 @@
             transparent 30%,
             transparent 100%);
     border-radius: 8px;
-}
-
-.button_movePrev,
-.button_moveNext {
-    width: 10%;
-    height: calc(100% - 15%);
-    margin: 0px;
-    margin-bottom: 14%;
-    padding: 0px;
-    border: 0px;
-    background-color: white;
-    font-weight: 500;
-    font-size: 20px;
-}
-
-.button_movePrev {
-    margin-right: 3.5%;
-}
-
-.button_moveNext {
-    margin-left: 3.5%;
 }
 
 
