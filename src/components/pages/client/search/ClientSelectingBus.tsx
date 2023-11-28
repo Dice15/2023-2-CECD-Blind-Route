@@ -9,8 +9,9 @@ import 'swiper/css';
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
-import useTapEvents from "../../../../hooks/useTapEvents";
+import useTouchEvents from "../../../../hooks/useTouchEvents";
 import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
+import useTouchHoldEvents from "../../../../hooks/useTouchHoldEvents";
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -85,12 +86,25 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
     }, [userRole, bookmarkList, setBookmarkList]);
 
 
+    /* 누르고 있으면 즐겨찾기에 추가 */
+    const handleBookmark = useTouchHoldEvents({
+        onTouchStart: {
+            event: () => {
+                VibrationProvider.vibrate(1000);
+                const bus = busList[busListIndexRef.current];
+                isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
+            },
+            duration: 2000
+        }
+    });
+
+
     /** 버스 정보 클릭 이벤트 */
-    const handleBusInfoClick = useTapEvents({
+    const handleBusInfoClick = useTouchEvents({
         onSingleTouch: () => {
             VibrationProvider.vibrate(1000);
             const bus = busList[busListIndexRef.current];
-            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}", 두번 터치하면 버스를 예약합니다. 세번 터치하면 버스를 즐겨찾기에 등록 합니다.`);
+            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기에 추가 또는 해제가 됩니다.`);
         },
         onDoubleTouch: () => {
             VibrationProvider.repeatVibrate(500, 200, 2);
@@ -109,11 +123,6 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
                 }
             }, 500);
 
-        },
-        onTripleTouch: () => {
-            VibrationProvider.repeatVibrate(500, 200, 3);
-            const bus = busList[busListIndexRef.current];
-            isBookmarkedBus(bus) ? removeBookmarkedBus(bus) : addBookmark(bus);
         }
     });
 
@@ -123,7 +132,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
         (async () => {
             await loadBookmark();
             const bus = busList[busListIndexRef.current];
-            SpeechOutputProvider.speak(`버스를 선택하세요. 화면을 두번 터치하면 버스를 예약합니다. 세번 터치하면 버스를 즐겨찾기에 등록 합니다. ${bus.busRouteAbbreviation}`);
+            SpeechOutputProvider.speak(`버스를 선택하세요. "${bus.busRouteAbbreviation}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기에 추가 또는 해제가 됩니다.`);
         })();
     }, [loadBookmark, busList]);
 
@@ -151,6 +160,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
                             <div className={`${style.busInfo} ${isBookmarkedBus(bus) && style.busInfo_bookmark}`}
                                 style={{ height: `${busInfoContainerHeight}px` }}
                                 onClick={handleBusInfoClick}
+                                onTouchStart={handleBookmark.handleTouchStart}
                             >
                                 <h1>{bus.busRouteAbbreviation}</h1>
                                 <h3>{bus.stationName}</h3>

@@ -6,7 +6,7 @@
 
 /* PanelCameraCapture's children elements */
 .detected_bus {
-    height: 20%;
+    height: 30%;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -19,14 +19,6 @@
     overflow: hidden;
 }
 
-.frame_count {
-    height: 10%;
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
 /* detected_bus's children elements */
 .detected_bus h3 {

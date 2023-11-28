@@ -111,6 +111,8 @@ export async function sendCapturedImage(userRole: UserRole, params: { arsId: str
         );
 
         const contentType = response.headers['content-type'];
+
+        console.log(response);
         if (contentType.includes('image')) {
             result.data = new Blob([response.data], { type: contentType });
         } else {
@@ -130,12 +132,12 @@ export async function sendCapturedImage(userRole: UserRole, params: { arsId: str
 
 /** test */
 export interface IDetectedTestApi {
-    result: number;
+    result: boolean;
 };
 
 
 export async function detectedTest(userRole: UserRole, params: { arsId: string, busRouteId: string, busRouteNm: string, busRouteAbrv: string }): Promise<IDetectedTestApi> {
-    let data: number = -1;
+    let data: boolean = false;
     try {
         const postData = qs.stringify(params);
         const response = await axios.post(
@@ -148,7 +150,7 @@ export async function detectedTest(userRole: UserRole, params: { arsId: string, 
                 withCredentials: true
             }
         );
-        console.log(response.data, typeof response.data);
+        console.log(response);
         data = response.data;
     }
     catch (error) {

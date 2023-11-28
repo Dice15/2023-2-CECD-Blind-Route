@@ -4,8 +4,9 @@ import style from "./ClientMiddle.module.css"
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ClientActionForm, { ClientAction } from "./action/ClientActionForm";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
-import useTapEvents from "../../../hooks/useTapEvents";
+import useTouchEvents from "../../../hooks/useTouchEvents";
 import { VibrationProvider } from "../../../modules/vibration/VibrationProvider";
+import useTouchHoldEvents from "../../../hooks/useTouchHoldEvents";
 
 
 
@@ -35,7 +36,7 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
 
     // Effects
     useEffect(() => {
-        SpeechOutputProvider.speak("화면을 두번 터치하면 버스 검색하기, 세번 터치하면 즐겨찾기로 이동합니다.");
+        SpeechOutputProvider.speak("화면을 두번 터치하면 버스 검색하기, 2초간 누르면 즐겨찾기로 이동합니다.");
     }, []);
 
 
@@ -49,11 +50,13 @@ export default function ClientMiddle({ userRole }: ClientMiddleProps) {
                 <Route path="/" element={
                     <div className={style.selectAction}>
                         <button type="button"
-                            onClick={useTapEvents({
-                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("화면을 두번 터치하면 버스 검색하기, 세번 터치하면 즐겨찾기로 이동합니다."); },
+                            onClick={useTouchEvents({
+                                onSingleTouch: () => { VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("화면을 두번 터치하면 버스 검색하기, 2초간 누르면 즐겨찾기로 이동합니다."); },
                                 onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); moveToAction("search"); },
-                                onTripleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 3); moveToAction("bookmark"); }
                             })}
+                            onTouchStart={useTouchHoldEvents({
+                                onTouchStart: { event: () => { VibrationProvider.vibrate(1000); moveToAction("bookmark"); }, duration: 2000 }
+                            }).handleTouchStart}
                         >
                             버스 예약하기
                         </button>

@@ -13,7 +13,7 @@ import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { useNavigate } from "react-router-dom";
-import useTapEvents from "../../../../hooks/useTapEvents";
+import useTouchEvents from "../../../../hooks/useTouchEvents";
 import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
 
 
@@ -51,7 +51,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
      * Handler functions
      */
     /** 이전 단계로 이동: 선택한 버스를 제거하고 이전 단계로 이동 */
-    const handlePrevStepClick = useTapEvents({
+    const handlePrevStepClick = useTouchEvents({
         onSingleTouch: () => {
             // 진동 1초
             VibrationProvider.vibrate(1000);
@@ -67,7 +67,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
 
 
     /** 다음 단계로 이동: 선택한 버스를 예약 등록을 함 */
-    const handleNextStepClick = useTapEvents({
+    const handleNextStepClick = useTouchEvents({
         onSingleTouch: () => {
             // 진동 1초
             VibrationProvider.vibrate(1000);
@@ -466,6 +466,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
         const busList = await getBookmarkList(userRole);
         if (busList.length > 0) {
             setBookmarkList(busList);
+            SpeechOutputProvider.speak(`버스를 선택하세요, ${busList[0].busRouteAbbreviation}`);
         }
         setIsLoading(false);
         return busList.length > 0;
@@ -480,11 +481,16 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
             setBookmarkList(bookmarkList.filter(bookmark =>
                 bookmark.stationArsId !== bus.stationArsId || bookmark.busRouteId !== bus.busRouteId
             ));
-            if (await loadBookmark()) {
-                SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 해제하였습니다`);
-            } else {
-                SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 해제하였습니다. 이제 즐겨찾기에 등록된 버스가 없습니다`);
-                history(`/client`);
+
+            SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}를 즐겨찾기에서 해제하였습니다`);
+
+            if (!(await loadBookmark())) {
+                setTimeout(() => {
+                    SpeechOutputProvider.speak(`이제 즐겨찾기에 등록된 버스가 없습니다. 홈으로 돌아갑니다.`);
+                    setTimeout(() => {
+                        history(`/client`);
+                    }, 3000);
+                }, 3000);
             }
         }
         setIsLoading(false);
@@ -493,7 +499,7 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
 
 
     /** 버스 정보 클릭 이벤트 */
-    const handleBusInfoClick = useTapEvents({
+    const handleBusInfoClick = useTouchEvents({
         onSingleTouch: () => {
             const bus = bookmarkList[busListIndexRef.current];
             SpeechOutputProvider.speak(`${bus.busRouteAbbreviation}, ${bus.stationName}`);
@@ -505,22 +511,17 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
     });
 
 
-
     // Effects
     useEffect(() => {
         (async () => {
             if (await loadBookmark()) {
-                const bus = bookmarkList[busListIndexRef.current];
-                setTimeout(() => {
-                    SpeechOutputProvider.speak(`버스를 선택하세요, ${bus.busRouteAbbreviation}`);
-                }, 1000);
+                SpeechOutputProvider.speak("버스를 선택하세요");
             } else {
                 SpeechOutputProvider.speak("즐겨찾기에 등록된 버스가 없습니다");
                 history(`/client`);
             }
         })();
-    }, [history, loadBookmark, bookmarkList]);
-
+    }, [history, loadBookmark]);
 
 
     // Render

@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { isSessionValid } from "../../../cores/api/blindrouteApi";
 import { LocalStorageProvider } from "../../../modules/storage/AppStorageProvider";
 import { AppType } from "../../../cores/types/AppType";
-import useTapEvents from "../../../hooks/useTapEvents";
+import useTouchEvents from "../../../hooks/useTouchEvents";
 import { VibrationProvider } from "../../../modules/vibration/VibrationProvider";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
 
@@ -46,7 +46,7 @@ export default function Home({ setUserRole, authenticationAction, setAuthenticat
     };
 
 
-    const handleAuthenticationClick = useTapEvents({
+    const handleAuthenticationClick = useTouchEvents({
         onSingleTouch: () => {  VibrationProvider.vibrate(1000); SpeechOutputProvider.speak("화면을 두번 터치하면 로그인을 합니다."); },
         onDoubleTouch: () => { VibrationProvider.repeatVibrate(500, 200, 2); onAuthentication("login"); }
     });

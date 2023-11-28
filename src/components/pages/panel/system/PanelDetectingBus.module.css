@@ -16,10 +16,12 @@
 
 .reserved_bus {
     flex-grow: 1;
+    padding-right: 2%;
 }
 
 .detected_bus {
     flex-grow: 1;
+    padding-left: 2%;
 }
 
 .button_movePrev,

@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 
 /**
- * useTapEvents Hook은 단일 탭, 더블 탭, 그리고 트리플 탭 이벤트를 처리합니다.
+ * useTouchEvents Hook은 단일 탭, 더블 탭, 그리고 트리플 탭 이벤트를 처리합니다.
  * 각각의 이벤트에 대한 콜백 함수를 제공합니다.
  *
  * @param {Object} param0 - Hook의 옵션 객체입니다.
@@ -11,7 +11,7 @@ import { useCallback, useRef } from 'react';
  * @param {number} delay - 더블 및 트리플 탭 감지를 위한 지연 시간입니다. 기본값은 300ms입니다.
  * @returns {Function} 이벤트 핸들러 함수를 반환합니다. 이 함수는 단일, 더블, 트리플 탭 이벤트를 처리합니다.
  */
-export default function useTapEvents(
+export default function useTouchEvents(
     { onSingleTouch, onDoubleTouch, onTripleTouch }: { onSingleTouch?: () => void, onDoubleTouch?: () => void, onTripleTouch?: () => void },
     delay: number = 300
 ) {

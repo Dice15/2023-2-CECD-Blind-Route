@@ -481,7 +481,6 @@ export async function getBookmarkList(userRole: UserRole): Promise<Bus[]> {
                 withCredentials: true
             }
         );
-        console.log(response.data)
         bookmarkListData = response.data;
     }
     catch (error) {

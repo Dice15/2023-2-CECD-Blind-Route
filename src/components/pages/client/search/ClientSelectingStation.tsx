@@ -13,7 +13,7 @@ import useElementDimensions from "../../../../hooks/useElementDimensions";
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
-import useTapEvents from "../../../../hooks/useTapEvents";
+import useTouchEvents from "../../../../hooks/useTouchEvents";
 
 
 /** ClientSelectingStation 컴포넌트 프로퍼티 */
@@ -43,11 +43,11 @@ export default function ClientSelectingStation({ userRole, setPageState, station
 
     // Handler
     /** 버스 정보 클릭 이벤트 */
-    const handleBusInfoClick = useTapEvents({
+    const handleBusInfoClick = useTouchEvents({
         onSingleTouch: () => {
             VibrationProvider.vibrate(1000);
             const station = stationList[stationListIndexRef.current];
-            SpeechOutputProvider.speak(`"${station.stationName}" 입니다. 화면을 두번 터치하면 정류장 버스를 검색합니다.`);
+            SpeechOutputProvider.speak(`"${station.stationName}", 화면을 두번 터치하면 정류장의 버스를 검색합니다.`);
         },
         onDoubleTouch: () => {
             VibrationProvider.repeatVibrate(500, 200, 2);
@@ -84,7 +84,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
     // Effects
     useEffect(() => {
         const station = stationList[stationListIndexRef.current];
-        SpeechOutputProvider.speak(`정류장을 선택하세요, ${station.stationName}`);
+        SpeechOutputProvider.speak(`정류장을 선택하세요, "${station.stationName}", 화면을 두번 터치하면 정류장의 버스를 검색합니다.`);
     }, [stationList]);
 
 

@@ -7,7 +7,7 @@ import { checkBusArrival, unreserveBus } from "../../../../cores/api/blindrouteA
 import LoadingAnimation from "../../common/loadingAnimation/LoadingAnimation";
 import { SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 import { VibrationProvider } from "../../../../modules/vibration/VibrationProvider";
-import useTapEvents from "../../../../hooks/useTapEvents";
+import useTouchEvents from "../../../../hooks/useTouchEvents";
 import { useNavigate } from "react-router-dom";
 
 
@@ -38,7 +38,7 @@ export default function ClientWaitingBus({ userRole, setPageState, wishBus, setW
 
 
     // Handler
-    const handleBusInfoClick = useTapEvents({
+    const handleBusInfoClick = useTouchEvents({
         onSingleTouch: () => {
             VibrationProvider.vibrate(1000);
             wishBus && SpeechOutputProvider.speak(`"${wishBus.busRouteAbbreviation}", 버스를 대기중입니다. 화면을 두번 터치를 하면 예약을 취소합니다`);

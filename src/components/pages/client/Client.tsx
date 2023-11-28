@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { isSessionValid } from "../../../cores/api/blindrouteApi";
 import { useNavigate } from "react-router-dom";
 import { SpeechOutputProvider } from "../../../modules/speech/SpeechProviders";
-import useTapEvents from "../../../hooks/useTapEvents";
+import useTouchEvents from "../../../hooks/useTouchEvents";
 import { VibrationProvider } from "../../../modules/vibration/VibrationProvider";
 
 
@@ -34,7 +34,7 @@ export default function Client({ userRole }: ClientProps) {
     };
 
 
-    const handleHeaderTitleClick = useTapEvents({
+    const handleHeaderTitleClick = useTouchEvents({
         onSingleTouch: () => {
             VibrationProvider.vibrate(1000);
             SpeechOutputProvider.speak("상단바를 두번 터치하면 홈으로 이동합니다");
