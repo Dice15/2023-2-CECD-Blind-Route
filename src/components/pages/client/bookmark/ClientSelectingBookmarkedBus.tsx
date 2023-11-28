@@ -429,11 +429,14 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
             await SpeechOutputProvider.speak(`${bus.busRouteAbbreviation || bus.busRouteNumber}를 즐겨찾기에서 해제하였습니다`);
 
             if (!(await loadBookmark())) {
+                setIsLoading(false);
                 await SpeechOutputProvider.speak(`이제 즐겨찾기에 등록된 버스가 없습니다. 홈으로 돌아갑니다.`);
                 history(`/client`);
+            } else {
+                setIsLoading(false);
             }
         }
-        setIsLoading(false);
+
     }, [userRole, history, bookmarkList, setBookmarkList, loadBookmark]);
 
 
@@ -444,7 +447,9 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
         VibrationProvider.vibrate(200);
         busListIndexRef.current = swiper.realIndex;
         const bus = bookmarkList[busListIndexRef.current];
-        SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation || bus.busRouteNumber}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
+        if (bus) {
+            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation || bus.busRouteNumber}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
+        }
         setTimeout(() => isSlidingRef.current = false, 250); // 300ms는 애니메이션 시간에 맞게 조정
     };
 

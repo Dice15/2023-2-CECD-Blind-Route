@@ -79,7 +79,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                fontSize: "20px",
+                fontSize: "24px",
                 height: "calc(60px - 2px)",
                 borderBottom: "2px solid var(--main-border-color)",
                 fontWeight: "600"
@@ -93,14 +93,14 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
             }}
 
             numRows={busList.length}
-            rowHeight={50}
+            rowHeight={60}
             rowStyles={{
                 default: {
                     userSelect: "none",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    fontSize: "20px",
+                    fontSize: "24px",
                     cursor: "pointer",
                     backgroundColor: "var(--main-background-color)"
                 }
