@@ -68,8 +68,10 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 borderRadius: "10px",
                 border: "2px solid var(--main-border-color)"
             }}
+            hideScrollbar={true}
+
             numColumns={tableColumns.length}
-            columnHeight={50 - 2}
+            columnHeight={60}
             columnWidths={tableColumns.map((column) => column.style)}
             columnStyles={{
                 userSelect: "none",
@@ -78,6 +80,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 justifyContent: "center",
                 alignItems: "center",
                 fontSize: "20px",
+                height: "calc(60px - 2px)",
                 borderBottom: "2px solid var(--main-border-color)",
                 fontWeight: "600"
             }}
