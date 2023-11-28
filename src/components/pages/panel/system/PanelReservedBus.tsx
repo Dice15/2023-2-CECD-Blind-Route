@@ -47,7 +47,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
             const reponsedReservedBusList = await getReservedBusList(userRole, { arsId: wishStation.arsId });
             setIsLoading(!busList && false);
             setBusList(reponsedReservedBusList);
-        }, 1500);
+        }, 2000);
 
 
         return () => {
@@ -59,13 +59,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
     }, [userRole, wishStation, busList]);
 
 
-
-    useEffect(() => {
-        console.log("busList: ", busList);
-    }, [busList])
-
-    // TODO: row 크기 조정
-
+    // Render
     return (<div className={style.PanelReservedBus} ref={reservedBusTableRef}>
         <LoadingAnimation active={isLoading} />
 
