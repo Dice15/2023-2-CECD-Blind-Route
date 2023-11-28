@@ -37,6 +37,8 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
     // Refs
     const busInfoContainer = useRef<HTMLDivElement>(null);
     const busListIndexRef = useRef<number>(0);
+    const isSlidingRef = useRef(false); // 슬라이딩 상태 추적을 위한 useRef 사용
+
 
     // States
     const [bookmarkList, setBookmarkList] = useState<Bus[]>([]);
@@ -437,11 +439,20 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
 
 
     /** 버스 정보 클릭 이벤트 */
+    const handleSlideChange = (swiper: any) => {
+        isSlidingRef.current = true; // 슬라이드 중으로 상태 변경
+        busListIndexRef.current = swiper.realIndex;
+        VibrationProvider.vibrate(200);
+        setTimeout(() => isSlidingRef.current = false, 300); // 300ms는 애니메이션 시간에 맞게 조정
+    };
+
     const handleBookmark = useTouchHoldEvents({
         onTouchStart: () => {
-            VibrationProvider.vibrate(1000);
-            const bus = bookmarkList[busListIndexRef.current];
-            removeBookmarkedBus(bus);
+            if (!isSlidingRef.current) {
+                VibrationProvider.vibrate(1000);
+                const bus = bookmarkList[busListIndexRef.current];
+                removeBookmarkedBus(bus);
+            }
         },
         touchDuration: 2000
 
@@ -449,27 +460,30 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
 
     const handleBusInfoClick = useTouchEvents({
         onSingleTouch: () => {
-            VibrationProvider.vibrate(1000);
-            const bus = bookmarkList[busListIndexRef.current];
-            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
+            if (!isSlidingRef.current) {
+                VibrationProvider.vibrate(1000);
+                const bus = bookmarkList[busListIndexRef.current];
+                SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
+            }
         },
         onDoubleTouch: () => {
-            VibrationProvider.repeatVibrate(500, 200, 2);
-            setIsLoading(true);     // 로딩 모션 on
-            setTimeout(async () => {
-                const reserveResult = await reserveBus(userRole, bookmarkList[busListIndexRef.current]);
+            if (!isSlidingRef.current) {
+                VibrationProvider.repeatVibrate(500, 200, 2);
+                setIsLoading(true);     // 로딩 모션 on
+                setTimeout(async () => {
+                    const reserveResult = await reserveBus(userRole, bookmarkList[busListIndexRef.current]);
 
-                if (reserveResult) {
-                    SpeechOutputProvider.speak(`버스를 예약하였습니다`);
-                    setWishBus(bookmarkList[busListIndexRef.current]);
-                    setIsLoading(false);    // 로딩 모션 off
-                    setPageState("waitingBookmarkedBus");
-                } else {
-                    SpeechOutputProvider.speak(`버스를 예약하는데 실패했습니다`);
-                    setIsLoading(false);    // 로딩 모션 off
-                }
-            }, 500);
-
+                    if (reserveResult) {
+                        SpeechOutputProvider.speak(`버스를 예약하였습니다`);
+                        setWishBus(bookmarkList[busListIndexRef.current]);
+                        setIsLoading(false);    // 로딩 모션 off
+                        setPageState("waitingBookmarkedBus");
+                    } else {
+                        SpeechOutputProvider.speak(`버스를 예약하는데 실패했습니다`);
+                        setIsLoading(false);    // 로딩 모션 off
+                    }
+                }, 500);
+            }
         }
     });
 
@@ -503,11 +517,8 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
                 <Swiper
                     slidesPerView={1}
                     spaceBetween={50}
-                    onSlideChange={(swiper: any) => {
-                        busListIndexRef.current = swiper.realIndex;
-                        VibrationProvider.vibrate(200);
-                        handleBusInfoClick();
-                    }}
+                    onSlideChange={handleSlideChange}
+                    speed={300}
                     loop={true}
                 >
                     {bookmarkList.map((bus, index) => (

@@ -61,6 +61,7 @@ export async function getReservedBusList(userRole: UserRole, params: { arsId: st
             }
         );
         responsedReservedBusList = response.data;
+        console.log("getReservedBusList", response.data)
     }
     catch (error) {
         console.error("Search request failed:", error);
