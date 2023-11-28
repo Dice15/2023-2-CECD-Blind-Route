@@ -548,7 +548,9 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
 
     useEffect(() => {
         const bus = bookmarkList[busListIndexRef.current];
-        SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기에 추가 또는 해제가 됩니다.`);
+        if (bus) {
+            SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기에 추가 또는 해제가 됩니다.`);
+        }
     }, [bookmarkList]);
 
 
