@@ -106,7 +106,7 @@ export async function sendCapturedImage(userRole: UserRole, params: { arsId: str
                     "Content-Type": "multipart/form-data",
                 },
                 withCredentials: true,
-                responseType: 'blob' // Important: to receive blob data
+                //responseType: 'blob' // Important: to receive blob data
             }
         );
 
@@ -150,7 +150,7 @@ export async function detectedTest(userRole: UserRole, params: { arsId: string, 
                 withCredentials: true
             }
         );
-        console.log("detectedTest: ", response.data);
+        //console.log("detectedTest: ", response.data);
         data = response.data;
     }
     catch (error) {

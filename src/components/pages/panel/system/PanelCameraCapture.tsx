@@ -216,7 +216,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
 
             index = (index + 1) % busList.length;
 
-        }, 2000);
+        }, 3000);
 
         return () => clearInterval(intervalId);
 

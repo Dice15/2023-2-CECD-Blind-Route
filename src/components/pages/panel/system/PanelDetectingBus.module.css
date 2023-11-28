@@ -41,12 +41,12 @@
 .reserved_bus {
     flex: 48 0 calc(50% - 3% - 5px - 5px - 1px);
     padding: 5px;
-    margin-right: 3%;
+    padding-right: 3%;
     border-right: 1px dashed var(--dividerline-color);
 }
 
 .detected_bus {
     flex: 50 0 calc(50% - 3% - 5px - 5px - 1px);
-    margin-left: 3%;
     padding: 5px;
+    padding-left: 3%;
 }

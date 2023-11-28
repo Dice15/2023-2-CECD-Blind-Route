@@ -47,7 +47,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
             const reponsedReservedBusList = await getReservedBusList(userRole, { arsId: wishStation.arsId });
             setIsLoading(!busList && false);
             setBusList(reponsedReservedBusList);
-        }, 2000);
+        }, 1500);
 
 
         return () => {
@@ -57,6 +57,12 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
             }
         };
     }, [userRole, wishStation, busList]);
+
+
+
+    useEffect(() => {
+        console.log("busList: ", busList);
+    }, [busList])
 
     // TODO: row 크기 조정
 
