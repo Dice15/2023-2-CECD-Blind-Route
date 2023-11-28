@@ -441,9 +441,11 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
     /** 버스 정보 클릭 이벤트 */
     const handleSlideChange = (swiper: any) => {
         isSlidingRef.current = true; // 슬라이드 중으로 상태 변경
-        busListIndexRef.current = swiper.realIndex;
         VibrationProvider.vibrate(200);
-        setTimeout(() => isSlidingRef.current = false, 300); // 300ms는 애니메이션 시간에 맞게 조정
+        busListIndexRef.current = swiper.realIndex;
+        const bus = bookmarkList[busListIndexRef.current];
+        SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기 해제가 됩니다.`);
+        setTimeout(() => isSlidingRef.current = false, 250); // 300ms는 애니메이션 시간에 맞게 조정
     };
 
     const handleBookmark = useTouchHoldEvents({

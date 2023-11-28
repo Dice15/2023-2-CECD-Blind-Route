@@ -70,8 +70,7 @@ export default function ClientSelectingBus({ userRole, setPageState, busList, bo
         busListIndexRef.current = swiper.realIndex;
         const bus = busList[busListIndexRef.current];
         SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기에 추가 또는 해제가 됩니다.`);
-
-        setTimeout(() => isSlidingRef.current = false, 300); // 300ms는 애니메이션 시간에 맞게 조정
+        setTimeout(() => isSlidingRef.current = false, 250); // 300ms는 애니메이션 시간에 맞게 조정
     };
 
     const addBookmark = useCallback(async (bus: Bus) => {

@@ -49,7 +49,7 @@ export default function ClientSelectingStation({ userRole, setPageState, station
         stationListIndexRef.current = swiper.realIndex;
         const station = stationList[stationListIndexRef.current];
         SpeechOutputProvider.speak(`"${station.stationName}", 화면을 두번 터치하면 정류장의 버스를 검색합니다.`);
-        setTimeout(() => isSlidingRef.current = false, 300); // 300ms는 애니메이션 시간에 맞게 조정
+        setTimeout(() => isSlidingRef.current = false, 250); // 300ms는 애니메이션 시간에 맞게 조정
     };
 
     const handleBusInfoClick = useTouchEvents({

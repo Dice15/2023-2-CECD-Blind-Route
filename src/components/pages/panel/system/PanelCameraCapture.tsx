@@ -6,6 +6,7 @@ import { detectedTest, extractBusNumberFromImage } from "../../../../cores/api/b
 import Bus from "../../../../cores/types/Bus";
 import Station from "../../../../cores/types/Station";
 import { getBusList } from "../../../../cores/api/blindrouteApi";
+import { SpeechInputProvider, SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 
 
 
@@ -175,6 +176,9 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
             if (capturedImage) {
                 const result = await extractBusNumberFromImage(userRole, { arsId: arsId, image: capturedImage });
                 setDetectedBus(result.busRouteNm);
+                if (result.busRouteNm !== -1) {
+                    await SpeechOutputProvider.speak(`${result.busRouteNm}가 도착했습니다.`);
+                }
             }
         }
         sendImage();
@@ -199,7 +203,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     return (
         <div className={style.PanelCameraCapture} >
             <div className={style.detected_bus}>
-                <h3>{detectedBus && `도착한 버스: ${detectedBus === -1 ? "도착한 버스가 없습니다" : detectedBus}`}</h3>
+                <h3>{detectedBus === -1 ? "도착한 버스가 없습니다" : `${detectedBus}가 도착했습니다`}</h3>
             </div>
             <div className={style.captured_image} ref={displayCameraRef}>
                 <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef}></video>
@@ -211,30 +215,30 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
 
 
 
-    /** Test Code : 버스 도착 테스트 */
-    /*useEffect(() => {
-        let index = 0;
+/** Test Code : 버스 도착 테스트 */
+/*useEffect(() => {
+    let index = 0;
 
-        const intervalId = setInterval(async () => {
-            const bus = busList[index];
-           
+    const intervalId = setInterval(async () => {
+        const bus = busList[index];
+       
 
-            try {
-                const res = await detectedTest(userRole, {
-                    arsId: bus.stationArsId,
-                    busRouteId: bus.busRouteId,
-                    busRouteNm: bus.busRouteNumber,
-                    busRouteAbrv: bus.busRouteAbbreviation
-                });
-            } catch (error) {
-                console.error("Error in detectedTest:", error);
-            }
+        try {
+            const res = await detectedTest(userRole, {
+                arsId: bus.stationArsId,
+                busRouteId: bus.busRouteId,
+                busRouteNm: bus.busRouteNumber,
+                busRouteAbrv: bus.busRouteAbbreviation
+            });
+        } catch (error) {
+            console.error("Error in detectedTest:", error);
+        }
 
-            index = (index + 1) % busList.length;
+        index = (index + 1) % busList.length;
 
-        }, 3000);
+    }, 3000);
 
-        return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId);
 
-    }, [userRole, busList, setDetectedBus]);*/
+}, [userRole, busList, setDetectedBus]);*/
 
