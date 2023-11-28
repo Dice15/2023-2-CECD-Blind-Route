@@ -537,14 +537,19 @@ export default function ClientSelectingBookmarkedBus({ userRole, setPageState, s
     useEffect(() => {
         (async () => {
             if (await loadBookmark()) {
-                const bus = bookmarkList[busListIndexRef.current];
-                SpeechOutputProvider.speak(`버스를 선택하세요. "${bus.busRouteAbbreviation}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기에 추가 또는 해제가 됩니다.`);
+                await SpeechOutputProvider.speak(`버스를 선택하세요.`);
             } else {
-                SpeechOutputProvider.speak("즐겨찾기에 등록된 버스가 없습니다");
+                await SpeechOutputProvider.speak("즐겨찾기에 등록된 버스가 없습니다. 홈으로 돌아갑니다.");
                 history(`/client`);
             }
         })();
-    }, [history, loadBookmark, bookmarkList]);
+    }, [history, loadBookmark]);
+
+
+    useEffect(() => {
+        const bus = bookmarkList[busListIndexRef.current];
+        SpeechOutputProvider.speak(`"${bus.busRouteAbbreviation}, ${bus.stationName}", 화면을 두번 터치하면 버스를 예약합니다. 2초간 누르면 즐겨찾기에 추가 또는 해제가 됩니다.`);
+    }, [bookmarkList]);
 
 
     // Render
