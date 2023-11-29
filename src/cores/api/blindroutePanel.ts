@@ -102,11 +102,13 @@ export async function extractBusNumberFromImage(userRole: UserRole, params: { ar
             formData,
             {
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+                    //"Content-Type": "application/x-www-form-urlencoded"
+                    "Content-Type": "multipart/form-data",
                 },
                 withCredentials: true
             }
         );
+        console.log(response, response.data, typeof response.data);
         result.busRouteNm = response.data;
 
     } catch (error) {
