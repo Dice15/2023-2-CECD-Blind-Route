@@ -169,20 +169,25 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     }, [canvasRef, videoRef, captureTaskRef, startCamera, imageCapture, stopCamera]);
 
 
-
-    /** 캡쳐된 이미지를 서버에 보냄 */
+    /** Test Code : 버스 도착 테스트 */
     useEffect(() => {
-        const sendImage = async () => {
-            if (capturedImage) {
-                const result = await extractBusNumberFromImage(userRole, { arsId: arsId, image: capturedImage });
-                setDetectedBus(result.busRouteNm);
-                if (result.busRouteNm !== -1) {
-                    await SpeechOutputProvider.speak(`${result.busRouteNm}가 도착했습니다.`);
-                }
+        let index = 0;
+        const intervalId = setInterval(async () => {
+            const bus = busList[index];
+            try {
+                const res = await detectedTest(userRole, {
+                    arsId: bus.stationArsId,
+                    busRouteId: bus.busRouteId,
+                    busRouteNm: bus.busRouteNumber,
+                    busRouteAbrv: bus.busRouteAbbreviation
+                });
+            } catch (error) {
+                console.error("Error in detectedTest:", error);
             }
-        }
-        sendImage();
-    }, [userRole, arsId, capturedImage]);
+            index = (index + 1) % busList.length;
+        }, 3000);
+        return () => clearInterval(intervalId);
+    }, [userRole, busList, setDetectedBus]);
 
 
 
@@ -215,30 +220,19 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
 
 
 
-/** Test Code : 버스 도착 테스트 */
+
+/**/
+
+/** 캡쳐된 이미지를 서버에 보냄 */
 /*useEffect(() => {
-    let index = 0;
-
-    const intervalId = setInterval(async () => {
-        const bus = busList[index];
-       
-
-        try {
-            const res = await detectedTest(userRole, {
-                arsId: bus.stationArsId,
-                busRouteId: bus.busRouteId,
-                busRouteNm: bus.busRouteNumber,
-                busRouteAbrv: bus.busRouteAbbreviation
-            });
-        } catch (error) {
-            console.error("Error in detectedTest:", error);
+    const sendImage = async () => {
+        if (capturedImage) {
+            const result = await extractBusNumberFromImage(userRole, { arsId: arsId, image: capturedImage });
+            setDetectedBus(result.busRouteNm);
+            if (result.busRouteNm !== -1) {
+                await SpeechOutputProvider.speak(`${result.busRouteNm}가 도착했습니다.`);
+            }
         }
-
-        index = (index + 1) % busList.length;
-
-    }, 3000);
-
-    return () => clearInterval(intervalId);
-
-}, [userRole, busList, setDetectedBus]);*/
-
+    }
+    sendImage();
+}, [userRole, arsId, capturedImage]);*/
