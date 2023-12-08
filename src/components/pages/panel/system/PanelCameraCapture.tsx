@@ -172,23 +172,24 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     useEffect(() => {
         let index = 0;
         const intervalId = setInterval(async () => {
-            const bus = busList[index];
-            setDetectedBus(bus);
-            try {
-                const res = await detectedTest(userRole, {
-                    arsId: bus.stationArsId,
-                    busRouteId: bus.busRouteId,
-                    busRouteNm: bus.busRouteNumber,
-                    busRouteAbrv: bus.busRouteAbbreviation
-                });
-            } catch (error) {
-                console.error("Error in detectedTest:", error);
+            if (busList.length > 0) {
+                const bus = busList[index];
+                setDetectedBus(bus);
+                try {
+                    const res = await detectedTest(userRole, {
+                        arsId: bus.stationArsId,
+                        busRouteId: bus.busRouteId,
+                        busRouteNm: bus.busRouteNumber,
+                        busRouteAbrv: bus.busRouteAbbreviation
+                    });
+                } catch (error) {
+                    console.error("Error in detectedTest:", error);
+                }
+                index = (index + 1) % busList.length;
             }
-            index = (index + 1) % busList.length;
         }, 2000);
         return () => clearInterval(intervalId);
     }, [userRole, busList, setDetectedBus]);
-
 
 
     /** 촬영중인 영상 프레임 업데이트 */
@@ -208,7 +209,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     return (
         <div className={style.PanelCameraCapture} >
             <div className={style.detected_bus}>
-                <h3>{detectedBus && `도착한 버스: ${detectedBus.busRouteAbbreviation}`}</h3>
+                <h3>{detectedBus ? `도착한 버스: ${detectedBus.busRouteAbbreviation}` : "도착한 버스가 없습니다"}</h3>
             </div>
             <div className={style.captured_image} ref={displayCameraRef}>
                 <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef}></video>
