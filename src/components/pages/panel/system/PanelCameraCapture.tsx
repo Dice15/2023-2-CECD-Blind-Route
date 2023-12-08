@@ -113,10 +113,26 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     }, []);
 
 
+    /** 랜덤 버스 도착 이벤트 */
+    const randomArrivedBus = async () => {
+        if (busList.length > 0) {
+            const bus = busList[Math.floor(Math.random() * busList.length)];
+            setDetectedBus(bus);
+            try {
+                const res = await detectedTest(userRole, {
+                    arsId: bus.stationArsId,
+                    busRouteId: bus.busRouteId,
+                    busRouteNm: bus.busRouteNumber,
+                    busRouteAbrv: bus.busRouteAbbreviation
+                });
+            } catch (error) {
+                console.error("Error in detectedTest:", error);
+            }
+        }
+    };
 
-    /** 
-     * Effects
-     */
+
+    // Effects
     /** 버스 정류장의 버스 리스트를 가져옴 */
     useEffect(() => {
         const getWishStationBusList = async () => {
@@ -168,35 +184,9 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     }, [canvasRef, videoRef, captureTaskRef, startCamera, imageCapture, stopCamera]);
 
 
-    /** Test Code : 버스 도착 테스트 */
-    useEffect(() => {
-        let index = 0;
-        const intervalId = setInterval(async () => {
-            if (busList.length > 0) {
-                const bus = busList[index];
-                setDetectedBus(bus);
-                try {
-                    const res = await detectedTest(userRole, {
-                        arsId: bus.stationArsId,
-                        busRouteId: bus.busRouteId,
-                        busRouteNm: bus.busRouteNumber,
-                        busRouteAbrv: bus.busRouteAbbreviation
-                    });
-                } catch (error) {
-                    console.error("Error in detectedTest:", error);
-                }
-                index = (index + 1) % busList.length;
-            }
-        }, 2000);
-        return () => clearInterval(intervalId);
-    }, [userRole, busList, setDetectedBus]);
-
-
     /** 촬영중인 영상 프레임 업데이트 */
     useEffect(() => {
-        // 카메라가 활성화되고 난 후에 프레임 카운트를 시작
         updateFrameCount();
-        // 컴포넌트가 언마운트될 때 프레임 카운트 업데이트를 중지
         return () => {
             if (frameIdRef.current !== null) {
                 cancelAnimationFrame(frameIdRef.current);
@@ -208,6 +198,9 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     // Render
     return (
         <div className={style.PanelCameraCapture} >
+            <div className={style.arrived_evnet}>
+                <button className={style.random} onClick={() => { randomArrivedBus(); }}>버스 도착 이벤트</button>
+            </div>
             <div className={style.detected_bus}>
                 <h3>{detectedBus ? `도착한 버스: ${detectedBus.busRouteAbbreviation}` : "도착한 버스가 없습니다"}</h3>
             </div>
@@ -237,3 +230,26 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     }
     sendImage();
 }, [userRole, arsId, capturedImage]);*/
+
+/** Test Code : 버스 도착 테스트 */
+/*useEffect(() => {
+    let index = 0;
+    const intervalId = setInterval(async () => {
+        if (busList.length > 0) {
+            const bus = busList[index];
+            setDetectedBus(bus);
+            try {
+                const res = await detectedTest(userRole, {
+                    arsId: bus.stationArsId,
+                    busRouteId: bus.busRouteId,
+                    busRouteNm: bus.busRouteNumber,
+                    busRouteAbrv: bus.busRouteAbbreviation
+                });
+            } catch (error) {
+                console.error("Error in detectedTest:", error);
+            }
+            index = (index + 1) % busList.length;
+        }
+    }, 2000);
+    return () => clearInterval(intervalId);
+}, [userRole, busList, setDetectedBus]);*/

@@ -71,7 +71,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
             hideScrollbar={true}
 
             numColumns={tableColumns.length}
-            columnHeight={60}
+            columnHeight={100}
             columnWidths={tableColumns.map((column) => column.style)}
             columnStyles={{
                 userSelect: "none",
@@ -79,10 +79,10 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                fontSize: "24px",
+                fontSize: "35px",
                 height: "calc(60px - 2px)",
                 borderBottom: "2px solid var(--main-border-color)",
-                fontWeight: "600"
+                fontWeight: "800"
             }}
             renderColumns={({ index, columnClassName, columnStyle }) => {
                 return (
@@ -93,14 +93,15 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
             }}
 
             numRows={busList.length}
-            rowHeight={60}
+            rowHeight={100}
             rowStyles={{
                 default: {
                     userSelect: "none",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    fontSize: "24px",
+                    fontSize: "35px",
+                    fontWeight: "600",
                     cursor: "pointer",
                     backgroundColor: "var(--main-background-color)"
                 }
