@@ -6,7 +6,7 @@
 
 /* PanelCameraCapture's children elements */
 .arrived_evnet {
-    height: 20%;
+    height: 15%;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -14,7 +14,7 @@
 }
 
 .detected_bus {
-    height: 30%;
+    height: 20%;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -22,7 +22,7 @@
 }
 
 .captured_image {
-    height: 50%;
+    height: 65%;
     width: 100%;
     overflow: hidden;
 }
@@ -37,12 +37,17 @@
 
 
 /* arrived_evnet's elements */
+.h3 {
+    font-size: 30px;
+    font-weight: 600;
+}
+
 .random {
     height: calc(100% - 4px);
     width: calc(100% - 4px);
     border-radius: 10px;
     border: 2px solid var(--main-border-color);
-    font-size: 25px;
+    font-size: 30px;
     font-weight: 600;
     overflow: hidden;
 }

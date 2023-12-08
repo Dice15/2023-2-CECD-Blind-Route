@@ -71,7 +71,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
             hideScrollbar={true}
 
             numColumns={tableColumns.length}
-            columnHeight={100}
+            columnHeight={120}
             columnWidths={tableColumns.map((column) => column.style)}
             columnStyles={{
                 userSelect: "none",
@@ -93,7 +93,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
             }}
 
             numRows={busList.length}
-            rowHeight={100}
+            rowHeight={120}
             rowStyles={{
                 default: {
                     userSelect: "none",
