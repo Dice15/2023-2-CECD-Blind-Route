@@ -118,16 +118,24 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
         if (busList.length > 0) {
             const bus = busList[Math.floor(Math.random() * busList.length)];
             setDetectedBus(bus);
-            try {
-                const res = await detectedTest(userRole, {
-                    arsId: bus.stationArsId,
-                    busRouteId: bus.busRouteId,
-                    busRouteNm: bus.busRouteNumber,
-                    busRouteAbrv: bus.busRouteAbbreviation
-                });
-            } catch (error) {
-                console.error("Error in detectedTest:", error);
-            }
+
+            const interval = setInterval(async () => {
+                try {
+                    const res = await detectedTest(userRole, {
+                        arsId: bus.stationArsId,
+                        busRouteId: bus.busRouteId,
+                        busRouteNm: bus.busRouteNumber,
+                        busRouteAbrv: bus.busRouteAbbreviation
+                    });
+                } catch (error) {
+                    console.error("Error in detectedTest:", error);
+                }
+            }, 1000);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                setDetectedBus(null);
+            }, 5000);
         }
     };
 
