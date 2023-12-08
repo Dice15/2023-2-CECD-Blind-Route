@@ -108,7 +108,7 @@ export async function extractBusNumberFromImage(userRole: UserRole, params: { ar
                 withCredentials: true
             }
         );
-        console.log(response, response.data, typeof response.data);
+        //console.log(response, response.data, typeof response.data);
         result.busRouteNm = response.data;
 
     } catch (error) {

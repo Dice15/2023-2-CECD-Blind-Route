@@ -36,8 +36,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     // States
     const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
     const [busList, setBusList] = useState<Bus[]>([]);
-    const [detectedBus, setDetectedBus] = useState<number>(-1);
-    const [frameCount, setFrameCount] = useState<number>(0);
+    const [detectedBus, setDetectedBus] = useState<Bus | null>(null);
     const [framesPerSecond, setFramesPerSecond] = useState<number>(0);  // 초당 프레임 상태 추가
 
 
@@ -174,6 +173,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
         let index = 0;
         const intervalId = setInterval(async () => {
             const bus = busList[index];
+            setDetectedBus(bus);
             try {
                 const res = await detectedTest(userRole, {
                     arsId: bus.stationArsId,
@@ -185,7 +185,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                 console.error("Error in detectedTest:", error);
             }
             index = (index + 1) % busList.length;
-        }, 3000);
+        }, 2000);
         return () => clearInterval(intervalId);
     }, [userRole, busList, setDetectedBus]);
 
@@ -208,7 +208,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     return (
         <div className={style.PanelCameraCapture} >
             <div className={style.detected_bus}>
-                <h3>{detectedBus === -1 ? "도착한 버스가 없습니다" : `${detectedBus}가 도착했습니다`}</h3>
+                <h3>{detectedBus && `도착한 버스: ${detectedBus.busRouteAbbreviation}`}</h3>
             </div>
             <div className={style.captured_image} ref={displayCameraRef}>
                 <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef}></video>
