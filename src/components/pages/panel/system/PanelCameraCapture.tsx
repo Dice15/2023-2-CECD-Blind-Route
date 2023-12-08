@@ -2,11 +2,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import style from "./PanelCameraCapture.module.css"
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import { UserRole } from "../../../../cores/types/UserRole";
-import { detectedTest, extractBusNumberFromImage } from "../../../../cores/api/blindroutePanel";
+import { detectedTest } from "../../../../cores/api/blindroutePanel";
 import Bus from "../../../../cores/types/Bus";
 import Station from "../../../../cores/types/Station";
 import { getBusList } from "../../../../cores/api/blindrouteApi";
-import { SpeechInputProvider, SpeechOutputProvider } from "../../../../modules/speech/SpeechProviders";
 
 
 
@@ -21,75 +20,33 @@ export interface PanelCameraCaptureProps {
 /** PanelCameraCapture 컴포넌트 */
 export default function PanelCameraCapture({ userRole, wishStation }: PanelCameraCaptureProps) {
     // Const 
-    const { arsId, stationName } = wishStation;  // 비구조화를 통해 arsId 추출
-
+    const { arsId, stationName } = wishStation;
 
     // Refs 
     const displayCameraRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const captureTaskRef = useRef<NodeJS.Timeout | null>(null);
-    const frameIdRef = useRef<number | null>(null);
-    const lastFrameTimeRef = useRef<number | null>(null);  // 이전 프레임 시간을 저장하기 위한 ref
-
 
     // States
-    const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
     const [busList, setBusList] = useState<Bus[]>([]);
     const [detectedBus, setDetectedBus] = useState<Bus | null>(null);
-    const [framesPerSecond, setFramesPerSecond] = useState<number>(0);  // 초당 프레임 상태 추가
-
 
     // Custom hooks
     const [videoWidth, videoHeight] = useElementDimensions<HTMLDivElement>(displayCameraRef, "Pure");
 
-
-
-    /**
-     * Handler functions
-     */
-    /** 카메라 활성화 함수 */
-    const startCamera = useCallback(async (video: HTMLVideoElement) => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: { ideal: videoWidth },
-                    height: { ideal: videoHeight },
-                    facingMode: "environment"  // 후면 카메라를 우선적으로 사용
-                }
-            });
-            video.srcObject = stream;
-        } catch (error) {
-            console.error("Failed to start the camera:", error);
-        }
-    }, [videoWidth, videoHeight]);
-
-
-
-    /** 카메라 종료 함수 */
-    const stopCamera = useCallback(async (video: HTMLVideoElement) => {
-        try {
-            const srcObject = video.srcObject as MediaStream;
-            const tracks = srcObject.getTracks();
-            tracks.forEach((track: MediaStreamTrack) => track.stop());
-        } catch (error) {
-            console.error("Failed to end the camera:", error);
-        }
-    }, []);
-
-
-
-    /** 이미지 캡쳐 */
-    const imageCapture = useCallback((video: HTMLVideoElement, canvas: HTMLCanvasElement): Promise<Blob | null> => {
+    // 이미지 캡쳐 함수
+    const imageCapture = useCallback((canvas: HTMLCanvasElement): Promise<Blob | null> => {
         return new Promise((resolve) => {
-            if (video.srcObject) {
+            const video = videoRef.current;
+            if (video && canvas) {
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
 
-                const canvasContext2D = canvas.getContext('2d');
-                if (canvasContext2D) {
-                    canvasContext2D.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-                    canvas.toBlob((blob) => { resolve(blob); }, 'image/jpeg');
+                const canvasContext = canvas.getContext('2d');
+                if (canvasContext) {
+                    canvasContext.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                    canvas.toBlob((blob) => resolve(blob), 'image/jpeg');
                 } else {
                     resolve(null);
                 }
@@ -100,121 +57,75 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     }, []);
 
 
-
-    /** 프레임 카운트 업데이트 */
-    const updateFrameCount = useCallback(() => {
-        const currentTime = performance.now();
-        if (lastFrameTimeRef.current !== null) {
-            const deltaTime = currentTime - lastFrameTimeRef.current;  // 시간 차이 계산
-            setFramesPerSecond(1000 / deltaTime);  // 초당 프레임 계산
-        }
-        lastFrameTimeRef.current = currentTime;  // 현재 시간을 이전 프레임 시간으로 저장
-        frameIdRef.current = requestAnimationFrame(updateFrameCount);  // 프레임 ID 저장
-    }, []);
-
-
-    /** 랜덤 버스 도착 이벤트 */
-    const randomArrivedBus = async () => {
-        if (busList.length > 0) {
-            const bus = busList[Math.floor(Math.random() * busList.length)];
-            setDetectedBus(bus);
-
-            const interval = setInterval(async () => {
-                try {
-                    const res = await detectedTest(userRole, {
-                        arsId: bus.stationArsId,
-                        busRouteId: bus.busRouteId,
-                        busRouteNm: bus.busRouteNumber,
-                        busRouteAbrv: bus.busRouteAbbreviation
-                    });
-                } catch (error) {
-                    console.error("Error in detectedTest:", error);
-                }
-            }, 1000);
-
-            setTimeout(() => {
-                clearInterval(interval);
-                setDetectedBus(null);
-            }, 5000);
-        }
-    };
-
-
-    // Effects
-    /** 버스 정류장의 버스 리스트를 가져옴 */
+    // 버스 리스트 가져오기
     useEffect(() => {
         const getWishStationBusList = async () => {
             const responsedBusList: Bus[] = await getBusList(userRole, arsId, stationName);
             setBusList(responsedBusList);
         };
-
         getWishStationBusList();
-
     }, [userRole, arsId, stationName]);
 
 
-
-    /** 카메라로 taskInterval밀리초 마다 이미지 캡쳐 */
     useEffect(() => {
-        const videoElement = videoRef.current;
+        if (busList.length > 0) {
+            setTimeout(() => {
+                const bus = busList.find((bus) => bus.busRouteNumber === "721");
+                if (bus) {
+                    setDetectedBus(bus);
+                    const interval = setInterval(async () => {
+                        try {
+                            await detectedTest(userRole, {
+                                arsId: bus.stationArsId,
+                                busRouteId: bus.busRouteId,
+                                busRouteNm: bus.busRouteNumber,
+                                busRouteAbrv: bus.busRouteAbbreviation
+                            });
+                        } catch (error) {
+                            console.error("Error in detectedTest:", error);
+                        }
+                    }, 1000);
+                    setTimeout(() => {
+                        clearInterval(interval);
+                        setDetectedBus(null);
+                    }, 5000);
+                }
+            }, 10000);
+        }
+    }, [busList, userRole]);
+
+    // 영상 캡쳐
+    useEffect(() => {
         const canvasElement = canvasRef.current;
-        const taskRef = captureTaskRef;
-        const taskInterval = 2000;
+        const captureInterval = 2000; // 2초 간격
 
-        const startCapture = async (video: HTMLVideoElement, canvas: HTMLCanvasElement, task: React.MutableRefObject<NodeJS.Timeout | null>) => {
-            if (task && !task.current) {
-                await startCamera(video);
-                task.current = setInterval(async () => { setCapturedImage(await imageCapture(video, canvas)); }, taskInterval);
+        const startCapture = async () => {
+            if (canvasElement && !captureTaskRef.current) {
+                captureTaskRef.current = setInterval(async () => {
+                    const capturedImage = await imageCapture(canvasElement);
+                }, captureInterval);
             }
         };
 
-        const stopCapture = async (video: HTMLVideoElement, task: React.MutableRefObject<NodeJS.Timeout | null>) => {
-            if (task.current) {
-                clearInterval(task.current);
-                task.current = null;
-                await stopCamera(video);
-                setCapturedImage(null);
-            }
-        };
-
-        if (videoElement && canvasElement) {
-            if (!captureTaskRef.current) {
-                startCapture(videoElement, canvasElement, taskRef);
-            }
-        };
+        startCapture();
 
         return () => {
-            if (videoElement && taskRef.current) {
-                stopCapture(videoElement, taskRef);
-                clearInterval(taskRef.current);
+            if (captureTaskRef.current) {
+                clearInterval(captureTaskRef.current);
             }
         }
-    }, [canvasRef, videoRef, captureTaskRef, startCamera, imageCapture, stopCamera]);
-
-
-    /** 촬영중인 영상 프레임 업데이트 */
-    useEffect(() => {
-        updateFrameCount();
-        return () => {
-            if (frameIdRef.current !== null) {
-                cancelAnimationFrame(frameIdRef.current);
-            }
-        };
-    }, [updateFrameCount]);
+    }, [imageCapture]);
 
 
     // Render
     return (
         <div className={style.PanelCameraCapture} >
-            <div className={style.arrived_evnet}>
-                <button className={style.random} onClick={() => { randomArrivedBus(); }}>버스 도착 이벤트</button>
-            </div>
             <div className={style.detected_bus}>
                 <div className={style.arriveed_bus} >{detectedBus ? `도착한 버스: ${detectedBus.busRouteAbbreviation}` : "도착한 버스가 없습니다"}</div>
             </div>
             <div className={style.captured_image} ref={displayCameraRef}>
-                <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef}></video>
-                <canvas style={{ display: "none" }} ref={canvasRef} ></canvas>
+                <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef} src="/videos/721bus.mp4"></video>
+                <canvas style={{ display: "none" }} ref={canvasRef}></canvas>
             </div>
         </div>
     );
