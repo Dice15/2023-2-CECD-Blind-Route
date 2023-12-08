@@ -202,7 +202,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                 <button className={style.random} onClick={() => { randomArrivedBus(); }}>버스 도착 이벤트</button>
             </div>
             <div className={style.detected_bus}>
-                <h3>{detectedBus ? `도착한 버스: ${detectedBus.busRouteAbbreviation}` : "도착한 버스가 없습니다"}</h3>
+                <div className={style.arriveed_bus} >{detectedBus ? `도착한 버스: ${detectedBus.busRouteAbbreviation}` : "도착한 버스가 없습니다"}</div>
             </div>
             <div className={style.captured_image} ref={displayCameraRef}>
                 <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef}></video>

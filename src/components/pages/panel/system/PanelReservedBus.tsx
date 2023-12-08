@@ -80,7 +80,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
                 justifyContent: "center",
                 alignItems: "center",
                 fontSize: "35px",
-                height: "calc(60px - 2px)",
+                height: "calc(120px - 2px)",
                 borderBottom: "2px solid var(--main-border-color)",
                 fontWeight: "800"
             }}
