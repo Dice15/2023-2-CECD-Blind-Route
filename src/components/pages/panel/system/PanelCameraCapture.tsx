@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import style from "./PanelCameraCapture.module.css"
 import useElementDimensions from "../../../../hooks/useElementDimensions";
 import { UserRole } from "../../../../cores/types/UserRole";
-import { detectedTest } from "../../../../cores/api/blindroutePanel";
+import { detectedTest, extractBusNumberFromImage } from "../../../../cores/api/blindroutePanel";
 import Bus from "../../../../cores/types/Bus";
 import Station from "../../../../cores/types/Station";
 import { getBusList } from "../../../../cores/api/blindrouteApi";
@@ -31,6 +31,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     // States
     const [busList, setBusList] = useState<Bus[]>([]);
     const [detectedBus, setDetectedBus] = useState<Bus | null>(null);
+    const [busImage, setBusImage] = useState<Blob | null>(null);
 
     // Custom hooks
     const [videoWidth, videoHeight] = useElementDimensions<HTMLDivElement>(displayCameraRef, "Pure");
@@ -67,7 +68,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     }, [userRole, arsId, stationName]);
 
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (busList.length > 0) {
             setTimeout(() => {
                 const bus = busList.find((bus) => bus.busRouteNumber === "2222");
@@ -88,32 +89,9 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                     setTimeout(() => {
                         clearInterval(interval);
                         setDetectedBus(null);
-                    }, 2000);
+                    }, 15000);
                 }
-            }, 9500);
-
-            setTimeout(() => {
-                const bus = busList.find((bus) => bus.busRouteNumber === "2222");
-                if (bus) {
-                    setDetectedBus(bus);
-                    const interval = setInterval(async () => {
-                        try {
-                            await detectedTest(userRole, {
-                                arsId: bus.stationArsId,
-                                busRouteId: bus.busRouteId,
-                                busRouteNm: bus.busRouteNumber,
-                                busRouteAbrv: bus.busRouteAbbreviation
-                            });
-                        } catch (error) {
-                            console.error("Error in detectedTest:", error);
-                        }
-                    }, 1000);
-                    setTimeout(() => {
-                        clearInterval(interval);
-                        setDetectedBus(null);
-                    }, 2000);
-                }
-            }, 18500);
+            }, 5000);
 
             setTimeout(() => {
                 const bus = busList.find((bus) => bus.busRouteNumber === "721");
@@ -138,7 +116,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                 }
             }, 28000);
         }
-    }, [busList, userRole]);
+    }, [busList, userRole]);*/
 
     // 영상 캡쳐
     useEffect(() => {
@@ -149,6 +127,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
             if (canvasElement && !captureTaskRef.current) {
                 captureTaskRef.current = setInterval(async () => {
                     const capturedImage = await imageCapture(canvasElement);
+                    setBusImage(capturedImage);
                 }, captureInterval);
             }
         };
@@ -161,6 +140,21 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
             }
         }
     }, [imageCapture]);
+
+    useEffect(() => {
+        const sendImage = async () => {
+            if (busImage) {
+                const result = await extractBusNumberFromImage(userRole, { arsId: arsId, image: busImage });
+                const bus = busList.find((bus) => bus.busRouteNumber === result.toString());
+                if (bus) {
+                    setDetectedBus(bus);
+                } else {
+                    setDetectedBus(null);
+                }
+            }
+        }
+        sendImage();
+    }, [userRole, arsId, busImage, busList]);
 
 
     // Render

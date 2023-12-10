@@ -115,7 +115,7 @@ export async function extractBusNumberFromImage(userRole: UserRole, params: { ar
         console.error("Image upload failed:", error);
     }
 
-    return result;
+    return result.busRouteNm;
 }
 
 
