@@ -43,7 +43,6 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
     useEffect(() => {
         refreshTaskRef.current = setInterval(async () => {
             const reponsedReservedBusList = await getReservedBusList(userRole, { arsId: wishStation.arsId });
-            console.log(reponsedReservedBusList);
             setBusList(reponsedReservedBusList);
         }, 2000);
 
@@ -108,7 +107,6 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
             }}
             renderRows={({ index, rowClassName, rowStyle, itemClassName, itemStyles }) => {
                 const busInfo = busList[index];
-                console.log(busInfo)
                 return (
                     <div key={index} id={`${index}`} className={rowClassName} style={rowStyle}>
                         <div className={itemClassName} style={itemStyles[0]}>{busInfo.busRouteAbbreviation || busInfo.busRouteNumber}</div>

@@ -121,7 +121,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     // 영상 캡쳐
     useEffect(() => {
         const canvasElement = canvasRef.current;
-        const captureInterval = 2000; // 2초 간격
+        const captureInterval = 5000; // 2초 간격
 
         const startCapture = async () => {
             if (canvasElement && !captureTaskRef.current) {
