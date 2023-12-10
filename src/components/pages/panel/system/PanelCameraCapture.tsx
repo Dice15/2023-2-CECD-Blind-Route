@@ -121,7 +121,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     // 영상 캡쳐
     useEffect(() => {
         const canvasElement = canvasRef.current;
-        const captureInterval = 5000; // 2초 간격
+        const captureInterval = 3500; // 2초 간격
 
         const startCapture = async () => {
             if (canvasElement && !captureTaskRef.current) {
@@ -148,6 +148,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                 const bus = busList.find((bus) => bus.busRouteNumber === result.toString());
                 if (bus) {
                     setDetectedBus(bus);
+                    detectedTest(userRole, { arsId: arsId, busRouteId: bus.busRouteId, busRouteNm: bus.busRouteNumber, busRouteAbrv: bus.busRouteAbbreviation });
                 } else {
                     setDetectedBus(null);
                 }

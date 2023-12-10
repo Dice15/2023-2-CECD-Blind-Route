@@ -44,7 +44,7 @@ export default function PanelReservedBus({ userRole, wishStation }: PanelReserve
         refreshTaskRef.current = setInterval(async () => {
             const reponsedReservedBusList = await getReservedBusList(userRole, { arsId: wishStation.arsId });
             setBusList(reponsedReservedBusList);
-        }, 2000);
+        }, 1500);
 
         return () => {
             if (refreshTaskRef.current) {
