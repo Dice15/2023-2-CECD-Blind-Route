@@ -70,6 +70,52 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     useEffect(() => {
         if (busList.length > 0) {
             setTimeout(() => {
+                const bus = busList.find((bus) => bus.busRouteNumber === "2222");
+                if (bus) {
+                    setDetectedBus(bus);
+                    const interval = setInterval(async () => {
+                        try {
+                            await detectedTest(userRole, {
+                                arsId: bus.stationArsId,
+                                busRouteId: bus.busRouteId,
+                                busRouteNm: bus.busRouteNumber,
+                                busRouteAbrv: bus.busRouteAbbreviation
+                            });
+                        } catch (error) {
+                            console.error("Error in detectedTest:", error);
+                        }
+                    }, 1000);
+                    setTimeout(() => {
+                        clearInterval(interval);
+                        setDetectedBus(null);
+                    }, 2000);
+                }
+            }, 9500);
+
+            setTimeout(() => {
+                const bus = busList.find((bus) => bus.busRouteNumber === "2222");
+                if (bus) {
+                    setDetectedBus(bus);
+                    const interval = setInterval(async () => {
+                        try {
+                            await detectedTest(userRole, {
+                                arsId: bus.stationArsId,
+                                busRouteId: bus.busRouteId,
+                                busRouteNm: bus.busRouteNumber,
+                                busRouteAbrv: bus.busRouteAbbreviation
+                            });
+                        } catch (error) {
+                            console.error("Error in detectedTest:", error);
+                        }
+                    }, 1000);
+                    setTimeout(() => {
+                        clearInterval(interval);
+                        setDetectedBus(null);
+                    }, 2000);
+                }
+            }, 18500);
+
+            setTimeout(() => {
                 const bus = busList.find((bus) => bus.busRouteNumber === "721");
                 if (bus) {
                     setDetectedBus(bus);
@@ -88,9 +134,9 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                     setTimeout(() => {
                         clearInterval(interval);
                         setDetectedBus(null);
-                    }, 5000);
+                    }, 20000);
                 }
-            }, 10000);
+            }, 28000);
         }
     }, [busList, userRole]);
 
@@ -124,7 +170,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                 <div className={style.arriveed_bus} >{detectedBus ? `도착한 버스: ${detectedBus.busRouteAbbreviation}` : "도착한 버스가 없습니다"}</div>
             </div>
             <div className={style.captured_image} ref={displayCameraRef}>
-                <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef} src="/videos/721bus.mp4"></video>
+                <video autoPlay width={videoWidth} height={videoHeight} ref={videoRef} src="/videos/konkuk_station.mp4"></video>
                 <canvas style={{ display: "none" }} ref={canvasRef}></canvas>
             </div>
         </div>
