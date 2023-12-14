@@ -119,7 +119,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
                     setDetectedBus(bus);
                     detectedTest(userRole, { arsId: arsId, busRouteId: bus.busRouteId, busRouteNm: bus.busRouteNumber, busRouteAbrv: bus.busRouteAbbreviation });
                 } else {
-                    setDetectedBus(null);
+                    setDetectedBus(new Bus("", "", "", result.toString(), result.toString(), []));
                 }
             }
         }
