@@ -89,7 +89,7 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
     // 영상 캡쳐
     useEffect(() => {
         const canvasElement = canvasRef.current;
-        const captureInterval = 5000; // 5초 간격
+        const captureInterval = 4000; // 4초 간격
 
         const startCapture = async () => {
             if (canvasElement && !captureTaskRef.current) {
@@ -114,12 +114,16 @@ export default function PanelCameraCapture({ userRole, wishStation }: PanelCamer
         const sendImage = async () => {
             if (busImage) {
                 const result = await extractBusNumberFromImage(userRole, { arsId: arsId, image: busImage });
-                const bus = busList.find((bus) => bus.busRouteNumber === result.toString());
-                if (bus) {
-                    setDetectedBus(bus);
-                    detectedTest(userRole, { arsId: arsId, busRouteId: bus.busRouteId, busRouteNm: bus.busRouteNumber, busRouteAbrv: bus.busRouteAbbreviation });
+                if (result !== -1) {
+                    const bus = busList.find((bus) => bus.busRouteNumber === result.toString());
+                    if (bus) {
+                        setDetectedBus(bus);
+                        detectedTest(userRole, { arsId: arsId, busRouteId: bus.busRouteId, busRouteNm: bus.busRouteNumber, busRouteAbrv: bus.busRouteAbbreviation });
+                    } else {
+                        setDetectedBus(new Bus("", "", "", result.toString(), result.toString(), []));
+                    }
                 } else {
-                    setDetectedBus(new Bus("", "", "", result.toString(), result.toString(), []));
+                    setDetectedBus(null);
                 }
             }
         }
