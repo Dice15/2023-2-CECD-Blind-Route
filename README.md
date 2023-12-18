@@ -1,5 +1,6 @@
 # 컴퓨터공학종합설계 2조 라케 - BlindRoute
-시각장애인을 위한 버스 탑승 보조 시스템 설계
+- 주제: 시각장애인을 위한 버스 탑승 보조 시스템 설계<br>
+- 링크: https://github.com/CSID-DGU/2023-2-CECD4-Lake-2<br>
 <br>
 <br>
 
