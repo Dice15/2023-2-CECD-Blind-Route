@@ -18,3 +18,4 @@
 
 ## 2023 겨울 ICIP & 캡스톤디자인 - 우수상
 <img src="https://github.com/Dice15/2023-2-CECD-Blind-Route/assets/102275981/33550f76-e779-4370-b341-bc282fe1a7a0" height="700px">
+<img src="https://github.com/Dice15/2023-2-CECD-Blind-Route/assets/102275981/ee85e3c8-a812-4ed2-af66-f6c12530acf7" height="700px">
